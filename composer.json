@@ -23,6 +23,12 @@
 		    "permission": [{
 		    	"# folder ": "mode",
 		    	"/var": "777",
+		    	"/var/cache": "777",
+		    	"/var/uploads": "777",
+		    	"/var/downloads": "777",
+		    	"/var/emails": "777",
+		    	"/var/logs": "777",
+		    	"/var/sessions": "777",
 		    	"/support": "777"
 		    }]
     }

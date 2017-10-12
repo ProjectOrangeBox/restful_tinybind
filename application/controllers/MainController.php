@@ -23,18 +23,6 @@ class MainController extends MY_Controller {
 		$this->orange_tools->migration($action);
 	}
 	
-	public function symlinkCliAction() {
-		$this->load->library('orange_tools');
-
-		$this->orange_tools->symlink();
-	}
-
-	public function permissionsCliAction() {
-		$this->load->library('orange_tools');
-
-		$this->orange_tools->fix_permissions();
-	}
-
 	public function fixCliAction() {
 		$this->load->library('orange_tools');
 
