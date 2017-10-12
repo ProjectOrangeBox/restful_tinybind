@@ -1,0 +1,29 @@
+{
+    "require": {
+        "codeigniter/framework": "^3.1",
+        "mmucklo/krumo": "*"
+    },
+    "orange": {
+        "version": "2.0.0",
+        "type": "package",
+        "priority": 50,
+        "notes": "",
+        "cli": {},
+        "help": "",
+        "tables": "",
+        "access": "",
+        "menubar": "",
+        "setting": "",
+		    "symlink": [{
+		    	"# /public/... ": "# /vendor/... ",
+		    	"/public/theme/orange": "/packages/projectorangebox/theme-orange/public/theme/orange",
+		    	"/public/assets/backorder": "/packages/quadratec/backorder/public/assets/backorder",
+		    	"/public/assets/stock-status-check": "/packages/quadratec/stock-status-check/public/assets/stock-status-check"
+		    }],
+		    "permission": [{
+		    	"# folder ": "mode",
+		    	"/var": "777",
+		    	"/support": "777"
+		    }]
+    }
+}

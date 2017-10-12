@@ -1,0 +1,34 @@
+<?php
+/*
+NOTE: NO trailing slashes on folders
+*/
+
+$config['WWW Image'] = '/images';
+$config['WWW Themes'] = '/theme';
+$config['WWW Shared Plugins'] = '/plugins';
+$config['WWW Shared Assets'] = '/assets';
+
+$config['cache'] = '/var/cache';
+$config['logs'] = '/var/logs';
+$config['sessions'] = '/var/sessions';
+$config['upload temp'] = '/var/upload_temp';
+$config['uploads'] = '/var/uploads';
+$config['downloads'] = '/var/downloads';
+
+$config['viewpath'] = VIEWPATH;
+$config['www'] = WWW;
+$config['rootpath'] = ROOTPATH;
+$config['apppath'] = APPPATH;
+$config['application'] = APPPATH;
+$config['basepath'] = BASEPATH;
+$config['environment'] = ENVIRONMENT;
+$config['fcpath'] = FCPATH;
+$config['sysdir'] = SYSDIR;
+$config['orangepath'] = ORANGEPATH;
+
+$config['login'] = 'login';
+
+/* redirects */
+$config['login'] = 'login';
+$config['logout'] = 'login/inverted';
+$config['dashboard'] = 'admin/dashboard';
