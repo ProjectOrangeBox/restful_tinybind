@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://www.fluffer.dev/';
+$config['base_url'] = $_ENV['DOMAIN'];
 
 /*
 |--------------------------------------------------------------------------
@@ -329,7 +329,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '3927c789a82aa8fe0846634a2317b488';
+$config['encryption_key'] = '9a82aa8fe0846634a3927c782317b488';
 
 /*
 |--------------------------------------------------------------------------
