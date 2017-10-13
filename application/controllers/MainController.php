@@ -6,15 +6,10 @@ class MainController extends MY_Controller {
 		$this->page->render();
 	}
 
-	public function testAction($a=null,$b=null,$c=null) {
-		$this->validate
-			->variable('filter_slug',$a)
-			->variable('filter_slug',$b)
-			->variable('filter_slug|filter_md5',$c)
-			->die_on_fail();
-		
-		
-		var_dump($a,$b,$c);
+	public function gitAction() {
+		$this->load->library('orange_tools');
+
+		$this->page->data(['html'=>$this->orange_tools->git_status()])->render();
 	}
 	
 	public function migrationCliAction($action='current') {
