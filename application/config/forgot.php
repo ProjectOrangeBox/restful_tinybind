@@ -7,8 +7,8 @@ $config['error url'] = '/forgot-password/error';
 $config['change url'] = '/forgot-password/change';
 $config['changed url'] = '/forgot-password/changed';
 
-$config['email from'] = 'admin@example.com';
-$config['email from human'] = 'administrator';
+$config['email from'] = 'skynet@quadratec.com';
+$config['email from human'] = 'skynet administrator';
 $config['email template'] = '/forgot_password/email/forgot';
 
-$config['site name'] = 'Example Site';
+$config['site name'] = 'Quadratec SkyNet';
