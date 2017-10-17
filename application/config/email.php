@@ -1,7 +1,7 @@
 <?php 
 
-$config['protocol'] = 'filesystem_eml';
-$config['mailpath'] = ROOTPATH.'/var/emails';
+$config['protocol'] = 'sendmail';
+
 $config['mailtype'] = 'html';
 $config['charset'] = 'iso-8859-1';
 $config['wordwrap'] = TRUE;
