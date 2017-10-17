@@ -295,7 +295,7 @@ $config['error_views_path'] = '';
 */
 $config['cache_path'] = ROOTPATH.'/var/cache/';
 
-$config['cache_default'] = 'file';
+$config['cache_default'] = 'apc'; /* production */
 $config['cache_backup'] = 'file';
 
 
