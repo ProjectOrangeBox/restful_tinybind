@@ -10,4 +10,4 @@
 |
 */
 
-$config['cache_default'] = 'apc';
+$config['cache_default'] = 'file';
