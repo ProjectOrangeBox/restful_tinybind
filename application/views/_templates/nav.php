@@ -11,13 +11,15 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-						<? if (user::can('url::/backorder/index')) { ?>
+						<? if (user::can('url::/backorder/get~index')) { ?>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Backorder <span class="caret"></span></a>
 
 								<ul class="dropdown-menu">
 									<li><a href="/backorder">Backorder Mgr</a></li>
+									<? if(user::can('url::/backorder_status/get~index')) { ?>
 									<li><a href="/backorder_status">Backorder Mgr Status</a></li>
+									<? } ?>
 								</ul>
 							</li>
 						<? } ?>

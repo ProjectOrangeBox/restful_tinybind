@@ -44,7 +44,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/orange',
 	ROOTPATH.'/packages/projectorangebox/extra-validations',
 	ROOTPATH.'/packages/projectorangebox/theme-orange',
-	ROOTPATH.'/packages/projectorangebox/forget',
+	ROOTPATH.'/packages/projectorangebox/forgot',
 	ROOTPATH.'/packages/projectorangebox/remember',
 	ROOTPATH.'/packages/projectorangebox/register',
 	ROOTPATH.'/packages/projectorangebox/opcache',
