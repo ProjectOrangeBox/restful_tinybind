@@ -8,5 +8,5 @@ $middleware = [
 	'/login' => ['PublicMiddleware','GuiMiddleware','ThemeMiddleware'],
 
 	/* must be last because it's a catach all */
-	'/*' => ['PublicMiddleware','GuiMiddleware'],
+	'/*' => ['PublicMiddleware','GuiMiddleware','AuthMiddleware'],
 ];
