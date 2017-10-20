@@ -1,12 +1,4 @@
-<?php
-/* dump the session and destroy all cookies */
-ci()->session->sess_destroy();
-
-ci()->load->helper('cookie');
-
-delete_cookie('autologin');
-
-?>
+<?php o::delete_all_cookies() ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
