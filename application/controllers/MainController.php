@@ -3,6 +3,8 @@
 class MainController extends MY_Controller {
 
 	public function indexAction() {
+		redirect('/login');
+	
 		$this->page->render();
 	}
 
