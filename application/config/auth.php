@@ -7,12 +7,16 @@ $config['password regex'] = '/((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32})/';
 $config['password copy'] = 'Password must be at least: 8 characters, 1 upper, 1 lower case letter, 1 number, Less than 32 characters';
 
 /* Database settings */
-$config['root user id'] = 1;
-$config['root role id'] = 1;
 
-$config['guest user id'] = 2;
-$config['guest role id'] = 2;
+/* logged in and should be super user */
+$config['admin user id'] = 1;
+$config['admin role id'] = 1;
 
+/* logged in but NOT super user */
+$config['user user id'] = 2;
+$config['user role id'] = 2;
+
+/* not logged in */
 $config['nobody user id'] = 3;
 $config['nobody role id'] = 3;
 
