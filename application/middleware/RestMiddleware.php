@@ -1,6 +1,6 @@
 <?php
 
-class LogMiddleware extends Middleware_base {
+class RestMiddleware extends Middleware_base {
 
 	public function run() {
 	}
