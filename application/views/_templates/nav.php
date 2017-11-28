@@ -11,40 +11,27 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-						<? if (user::can('url::/backorder/get~index')) { ?>
+						<? if (user::has_one_permission_of('url::/backorder/get~index')) { ?>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Backorder <span class="caret"></span></a>
 
 								<ul class="dropdown-menu">
-									<li><a href="/backorder">Backorder Mgr</a></li>
-									<? if(user::can('url::/backorder_status/get~index')) { ?>
-									<li><a href="/backorder_status">Backorder Mgr Status</a></li>
-									<? } ?>
+									<?=html::menu_li('url::/backorder/get~index','/backorder','Backorder Mgr') ?>
+									<?=html::menu_li('url::/backorder_status/get~index','/backorder_status','Backorder Mgr Status') ?>
 								</ul>
 							</li>
 						<? } ?>
 
-						<? if (user::can(['url::/admin/users/index','url::/admin/roles/index','url::/admin/permissions/index','url::/admin/settings/index'])) { ?>
+						<? if (user::has_one_permission_of(['url::/admin/users/get~index','url::/admin/roles/get~index','url::/admin/permissions/get~index','url::/admin/permissions/get~index'])) { ?>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
 						
 								<ul class="dropdown-menu">
-									<? if (user::can('url::/admin/users/index')) { ?>
-									<li><a href="<?=site_url('/admin/users') ?>">Users</a></li>
-									<? } ?>
-						
-									<? if (user::can('url::/admin/roles/index')) { ?>
-									<li><a href="<?=site_url('/admin/roles') ?>">Roles</a></li>
-									<? } ?>
-						
-									<? if (user::can('url::/admin/permissions/index')) { ?>
-									<li><a href="<?=site_url('/admin/permissions') ?>">Permissions</a></li>
-									<? } ?>
-									
-									<? if (user::can('url::/admin/settings/index')) { ?>
-									<li><a href="<?=site_url('/admin/settings') ?>">Settings</a></li>
-									<li><a href="<?=site_url('/admin/utilities/config-viewer') ?>">Config Viewer</a></li>
-									<? } ?>
+									<?=html::menu_li('url::/admin/users/get~index','/admin/users','Users') ?>
+									<?=html::menu_li('url::/admin/roles/get~index','/admin/roles/','Roles') ?>
+									<?=html::menu_li('url::/admin/permissions/get~index','/admin/permissions','Permissions') ?>
+									<?=html::menu_li('url::/admin/settings/get~index','/admin/settings','Settings') ?>
+									<?=html::menu_li('url::/admin/utilities/config_viewer/get~index','/admin/utilities/config-viewer','Config Viewer') ?>
 								</ul>
 						</li>
 						<? } ?>
