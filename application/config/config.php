@@ -295,9 +295,8 @@ $config['error_views_path'] = '';
 */
 $config['cache_path'] = ROOTPATH.'/var/cache/';
 
-$config['cache_default'] = 'file';
-$config['cache_backup'] = 'file';
-
+$config['cache_default'] = $_ENV['config.cache_default'];
+$config['cache_backup'] = 'dummy';
 
 
 /*
