@@ -3,7 +3,7 @@
 <? page::section('section_container') ?>
 
 <div class="row">
-  <div class="col-md-6"><?=html::title('Dashboard','th') ?></div>
+  <div class="col-md-6"><?=plugin::title('Dashboard','th') ?></div>
   <div class="col-md-6"></div>
 </div>
 

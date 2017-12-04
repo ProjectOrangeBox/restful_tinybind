@@ -16,8 +16,8 @@
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Backorder <span class="caret"></span></a>
 
 								<ul class="dropdown-menu">
-									<?=html::menu_li('url::/backorder/get~index','/backorder','Backorder Mgr') ?>
-									<?=html::menu_li('url::/backorder_status/get~index','/backorder_status','Backorder Mgr Status') ?>
+									<?=plugin::menu_li('url::/backorder/get~index','/backorder','Backorder Mgr') ?>
+									<?=plugin::menu_li('url::/backorder_status/get~index','/backorder_status','Backorder Mgr Status') ?>
 								</ul>
 							</li>
 						<? } ?>
@@ -27,11 +27,11 @@
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
 						
 								<ul class="dropdown-menu">
-									<?=html::menu_li('url::/admin/users/get~index','/admin/users','Users') ?>
-									<?=html::menu_li('url::/admin/roles/get~index','/admin/roles/','Roles') ?>
-									<?=html::menu_li('url::/admin/permissions/get~index','/admin/permissions','Permissions') ?>
-									<?=html::menu_li('url::/admin/settings/get~index','/admin/settings','Settings') ?>
-									<?=html::menu_li('url::/admin/utilities/config_viewer/get~index','/admin/utilities/config-viewer','Config Viewer') ?>
+									<?=plugin::menu_li('url::/admin/users/get~index','/admin/users','Users') ?>
+									<?=plugin::menu_li('url::/admin/roles/get~index','/admin/roles/','Roles') ?>
+									<?=plugin::menu_li('url::/admin/permissions/get~index','/admin/permissions','Permissions') ?>
+									<?=plugin::menu_li('url::/admin/settings/get~index','/admin/settings','Settings') ?>
+									<?=plugin::menu_li('url::/admin/utilities/config_viewer/get~index','/admin/utilities/config-viewer','Config Viewer') ?>
 								</ul>
 						</li>
 						<? } ?>

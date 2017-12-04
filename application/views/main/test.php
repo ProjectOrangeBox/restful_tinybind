@@ -6,9 +6,9 @@
 	
 	open
 	
-	<? html::lowercase_open() ?>
+	<? plugin::lowercase_open() ?>
 	DON MYERS
-	<? html::lowercase_close() ?>
+	<? plugin::lowercase_close() ?>
 
 	close
 
