@@ -3,7 +3,7 @@
 class ThemeMiddleware extends Middleware_base {
 
 	public function run() {
-		$this->load->library(['plugin']);
+		$this->load->library(['pear']);
 	}
 
 } /* end class */

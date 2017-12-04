@@ -1,15 +1,15 @@
-<? page::extends('_templates/orange_default') ?>
-<? page::plugins('lowercase') ?>
+<? pear::extends('_templates/orange_default') ?>
+<? pear::plugins('lowercase') ?>
 
 
-<? page::section('section_container') ?>
+<? pear::section('section_container') ?>
 	
 	open
 	
-	<? plugin::lowercase_open() ?>
+	<? pear::lowercase_open() ?>
 	DON MYERS
-	<? plugin::lowercase_close() ?>
+	<? pear::lowercase_close() ?>
 
 	close
 
-<? page::end() ?>
+<? pear::end() ?>

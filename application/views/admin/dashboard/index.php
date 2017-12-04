@@ -1,9 +1,9 @@
-<? page::extends('_templates/orange_admin') ?>
+<? pear::extends('_templates/orange_admin') ?>
 
-<? page::section('section_container') ?>
+<? pear::section('section_container') ?>
 
 <div class="row">
-  <div class="col-md-6"><?=plugin::title('Dashboard','th') ?></div>
+  <div class="col-md-6"><?=pear::title('Dashboard','th') ?></div>
   <div class="col-md-6"></div>
 </div>
 
@@ -23,9 +23,9 @@
 
 </div>
 
-<?=page::end() ?>
+<?=pear::end() ?>
 
-<? page::section('page_css') ?>
-<? page::parent() ?>
+<? pear::section('page_css') ?>
+<? pear::parent() ?>
 <link href="/assets/backorder/backorder.min.css" rel="stylesheet" type="text/css" />
-<? page::end() ?>
+<? pear::end() ?>
