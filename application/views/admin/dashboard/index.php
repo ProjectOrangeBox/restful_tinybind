@@ -15,7 +15,7 @@
   </div>
   <?php } ?>
 
-  <?php if (user::can('url::/backorder_status/get~index')) { ?>
+  <?php if (user::can('url::/stock_status_check/get~index')) { ?>
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
 		<a href="/stock-status-check" class="dashboard-block"><div class="dashboard-block"><i class="fa fa-cogs fa-2x" aria-hidden="true"></i><br>Stock Status Check</div></a>
   </div>
