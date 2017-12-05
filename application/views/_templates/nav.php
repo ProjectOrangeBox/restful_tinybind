@@ -22,6 +22,13 @@
 							</li>
 						<? } ?>
 
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Misc <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/stock_status_check">Stock Status Check</a></li>
+							</ul>
+						</li>
+
 						<? if (user::has_one_permission_of(['url::/admin/users/get~index','url::/admin/roles/get~index','url::/admin/permissions/get~index','url::/admin/permissions/get~index'])) { ?>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>

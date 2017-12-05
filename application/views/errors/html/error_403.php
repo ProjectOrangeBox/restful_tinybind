@@ -1,4 +1,4 @@
-<?php o::delete_all_cookies() ?>
+<?php delete_all_cookies() ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
