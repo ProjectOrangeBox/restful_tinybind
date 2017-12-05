@@ -50,8 +50,8 @@ class ToolsController extends MY_Controller {
 	public function user_xyzAction() {
 		echo '<pre>';
 		
-		echo 'admin user id '.config('auth.admin user id', -1).chr(10);
-		echo 'admin role id '.config('auth.admin role id', -1).chr(10);
+		echo 'admin user id '.ADMIN_USER_ID.chr(10);
+		echo 'admin role id '.ADMIN_ROLE_ID.chr(10);
 		
 		var_dump(ci()->user);
 		var_dump(ci()->user->roles);
@@ -104,30 +104,26 @@ class ToolsController extends MY_Controller {
 	 */
 	public function _add_default_columns($tablename,$connection='default') {
 		/* ALTER TABLE `www_skynet_dev`.`orange_settings` ADD COLUMN `is_deleted` TINYINT(1) UNSIGNED NULL DEFAULT 0 AFTER `internal` */
-
-		$admin_role_id = config('auth.admin role id');
-		$nobody_role_id = config('auth.nobody role id');
-		
 		require ROOTPATH.'/application/config/database.php';
 
 		$config = $db[$connection];
 		
 		$mysqli = new mysqli($config['hostname'],$config['username'],$config['password'],$config['database']);
 		
-		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN read_role_id INT(11) UNSIGNED NULL DEFAULT '.$admin_role_id);
-		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN edit_role_id INT(11) UNSIGNED NULL DEFAULT '.$admin_role_id);
-		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN delete_role_id INT(11) UNSIGNED NULL DEFAULT '.$admin_role_id);
+		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN read_role_id INT(11) UNSIGNED NULL DEFAULT '.ADMIN_ROLE_ID);
+		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN edit_role_id INT(11) UNSIGNED NULL DEFAULT '.ADMIN_ROLE_ID);
+		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN delete_role_id INT(11) UNSIGNED NULL DEFAULT '.ADMIN_ROLE_ID);
 
 		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN created_at DATETIME NULL DEFAULT NULL');
-		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN created_by INT(11) UNSIGNED NULL DEFAULT '.$nobody_role_id);
+		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN created_by INT(11) UNSIGNED NULL DEFAULT '.NOBODY_ROLE_ID);
 		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN created_ip VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'0.0.0.0\'');
 
 		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN updated_on DATETIME NULL DEFAULT NULL');
-		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN updated_by INT(11) UNSIGNED NULL DEFAULT '.$nobody_role_id);
+		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN updated_by INT(11) UNSIGNED NULL DEFAULT '.NOBODY_ROLE_ID);
 		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN updated_ip VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'0.0.0.0\'');
 
 		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN deleted_on DATETIME NULL DEFAULT NULL');
-		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN deleted_by INT(11) UNSIGNED NULL DEFAULT '.$nobody_role_id);
+		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN deleted_by INT(11) UNSIGNED NULL DEFAULT '.NOBODY_ROLE_ID);
 		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN deleted_ip VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'0.0.0.0\'');
 
 		$mysqli->query('ALTER TABLE `'.$tablename.'` ADD COLUMN is_deleted TINYINT(1) UNSIGNED NULL DEFAULT 0');
