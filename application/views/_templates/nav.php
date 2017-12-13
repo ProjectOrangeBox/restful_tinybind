@@ -11,36 +11,36 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-						<? if (user::has_one_permission_of(['url::/backorder/get~index','url::/backorder_status/get~index'])) { ?>
+						<? if (user::has_one_permission_of(['url::/backorder::index~get','url::/backorder_status/index~get'])) { ?>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Backorder <span class="caret"></span></a>
 
 								<ul class="dropdown-menu">
-									<?=pear::menu_li('url::/backorder/get~index','/backorder','Backorder Mgr') ?>
-									<?=pear::menu_li('url::/backorder_status/get~index','/backorder_status','Backorder Mgr Status') ?>
+									<?=pear::menu_li('url::/backorder::index~get','/backorder','Backorder Mgr') ?>
+									<?=pear::menu_li('url::/backorder_status::index~get','/backorder_status','Backorder Mgr Status') ?>
 								</ul>
 							</li>
 						<? } ?>
 
-						<? if (user::has_one_permission_of(['url::/stock_status_check/get~index'])) { ?>
+						<? if (user::has_one_permission_of(['url::/stock_status_check::index~get'])) { ?>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Misc <span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<?=pear::menu_li('url::/stock_status_check/get~index','/stock_status_check','Stock Status Check') ?>
+								<?=pear::menu_li('url::/stock_status_check::index~get','/stock_status_check','Stock Status Check') ?>
 							</ul>
 						</li>
 						<? } ?>
 
-						<? if (user::has_one_permission_of(['url::/admin/users/get~index','url::/admin/roles/get~index','url::/admin/permissions/get~index','url::/admin/permissions/get~index'])) { ?>
+						<? if (user::has_one_permission_of(['url::/admin/users::index~get','url::/admin/roles::index~get','url::/admin/permissions::index~get','url::/admin/permissions::index~get'])) { ?>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
 						
 								<ul class="dropdown-menu">
-									<?=pear::menu_li('url::/admin/users/get~index','/admin/users','Users') ?>
-									<?=pear::menu_li('url::/admin/roles/get~index','/admin/roles/','Roles') ?>
-									<?=pear::menu_li('url::/admin/permissions/get~index','/admin/permissions','Permissions') ?>
-									<?=pear::menu_li('url::/admin/settings/get~index','/admin/settings','Settings') ?>
-									<?=pear::menu_li('url::/admin/utilities/config_viewer/get~index','/admin/utilities/config-viewer','Config Viewer') ?>
+									<?=pear::menu_li('url::/admin/users::index~get','/admin/users','Users') ?>
+									<?=pear::menu_li('url::/admin/roles::index~get','/admin/roles/','Roles') ?>
+									<?=pear::menu_li('url::/admin/permissions::index~get','/admin/permissions','Permissions') ?>
+									<?=pear::menu_li('url::/admin/settings::index~get','/admin/settings','Settings') ?>
+									<?=pear::menu_li('url::/admin/utilities/config_viewer::index~get','/admin/utilities/config-viewer','Config Viewer') ?>
 								</ul>
 						</li>
 						<? } ?>
@@ -68,11 +68,3 @@
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-
-
-
-
-
-
-
-

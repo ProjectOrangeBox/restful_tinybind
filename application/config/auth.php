@@ -8,17 +8,11 @@ $config['password copy'] = 'Password must be at least: 8 characters, 1 upper, 1 
 
 /* Database settings */
 
-/* logged in and should be super user */
-$config['admin user id'] = 1;
+/* anyone with this roll will have full access (all permissions) */
 $config['admin role id'] = 1;
 
-/* logged in but NOT super user */
-$config['user user id'] = 2;
-$config['user role id'] = 2;
-
-/* not logged in */
+/* anyone with this user id is not logged in */
 $config['nobody user id'] = 3;
-$config['nobody role id'] = 3;
 
 $config['empty fields error'] = 'Please enter your login credentials.';
 $config['general failure error'] = 'Incorrect Login and/or Password';

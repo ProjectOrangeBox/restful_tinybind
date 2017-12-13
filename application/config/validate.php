@@ -7,12 +7,4 @@ $config['is_a_list']      = 'trim|required|filter_except[1234567890,]|filter_len
 $config['is_a_mongoid']   = 'trim|required|is_a_primary|max_length[24]';
 $config['is_a_id']        = 'trim|required|integer|max_length[10]|less_than[4294967295]|filter_int[10]';
 
-$attach['testing'] = function(&$field, &$param, &$error_string, &$field_data, &$validate) {
-	/* current field, current field param, error_string, field data, validation object */
-	$error_string = 'Your foobar is not in the correct format.';
-
-	/* get parameters - ie. [foo,bar,5] */
-	list($a,$b,$c) = explode(',',$param,3);
-
-	return ($field == 'foobar');
-};
+/* $attach['testing'] = function(&$field, &$param, &$error_string, &$field_data, &$validate) { ... } */
