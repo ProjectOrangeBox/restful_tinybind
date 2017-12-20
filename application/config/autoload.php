@@ -50,6 +50,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/opcache',
 	ROOTPATH.'/packages/projectorangebox/config-viewer',
 	ROOTPATH.'/packages/projectorangebox/librarian',
+	ROOTPATH.'/packages/projectorangebox/migrations',
 );
 
 /*

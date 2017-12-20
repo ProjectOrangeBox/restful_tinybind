@@ -17,6 +17,7 @@
 
 								<ul class="dropdown-menu">
 									<?=pear::menu_li('url::/backorder::index~get','/backorder','Backorder Mgr') ?>
+									<?=pear::menu_li('url::/backorder_call_center::index~get','/backorder_call_center','Backorder Search') ?>
 									<?=pear::menu_li('url::/backorder_status::index~get','/backorder_status','Backorder Mgr Status') ?>
 								</ul>
 							</li>
