@@ -11,7 +11,7 @@
 
 	<? pear::include('/admin/dashboard/index_block',['url::/backorder::index~get','/backorder','Backorder Mgr']) ?>
 
-	<? pear::include('/admin/dashboard/index_block',['url::/backorder_call_center::index~get','/backorder_call_center','Backorder Search']) ?>
+	<? pear::include('/admin/dashboard/index_block',['url::/backorder_call_center::index~get','/backorder-call-center','Backorder Search']) ?>
 
 	<? pear::include('/admin/dashboard/index_block',['url::/stock_status_check::index~get','/stock-status-check','Stock Status Check']) ?>
 
