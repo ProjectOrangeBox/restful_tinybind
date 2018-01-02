@@ -1,6 +1,6 @@
 <?php
 
-class Plugin_lowercase {
+class Pear_lowercase {
 
 	public function __construct() {
 		pear::attach('lowercase_open',function() {

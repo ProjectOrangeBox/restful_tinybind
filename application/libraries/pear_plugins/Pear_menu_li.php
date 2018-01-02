@@ -1,6 +1,6 @@
 <?php
 
-class Plugin_menu_li {
+class Pear_menu_li {
 
 	public function __construct() {
 		pear::attach('menu_li',function($permission,$url,$text) {
