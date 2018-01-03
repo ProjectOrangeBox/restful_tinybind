@@ -116,5 +116,3 @@ $db['mbfoster'] = array(
 	'failover' => array(),
 	'save_queries' => (ENVIRONMENT !== 'production'),
 );
-
-

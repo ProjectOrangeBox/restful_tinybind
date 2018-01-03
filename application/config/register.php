@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $config['delete complete'] = false;
 $config['default role id'] = 3;

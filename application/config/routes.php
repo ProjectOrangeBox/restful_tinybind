@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 WARNING!
 This file is directly modified by the framework

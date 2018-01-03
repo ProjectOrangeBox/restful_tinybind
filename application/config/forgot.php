@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $config['login page url'] = '/forgot-password';
 $config['email sent url'] = '/forgot-password/sent';

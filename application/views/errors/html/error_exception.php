@@ -14,7 +14,7 @@
 		<p class="lead left">Message: <?=$message; ?></p>
 		<p class="lead left">Filename: <?=$exception->getFile() ?></p>
 		<p class="lead left">Line Number: <?=$exception->getLine() ?></p>
-	
+
 		<?php if (defined('SHOW_DEBUG_BACKTRACE') && SHOW_DEBUG_BACKTRACE === TRUE): ?>
 				<p class="lead left">Backtrace:</p>
 				<?php foreach ($exception->getTrace() as $error): ?>

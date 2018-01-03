@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /* 002_quad_backorder_mgr_history */
 
@@ -14,10 +14,10 @@ $sql = <<<EOF
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 EOF;
-	
+
 		$this->db->query($sql);
 	}
-	
+
 	public function down() {
 		$this->dbforge->drop_table('quad_backorder_mgr_history');
 	}

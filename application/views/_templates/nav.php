@@ -35,7 +35,7 @@
 						<? if (user::has_one_permission_of(['url::/admin/users::index~get','url::/admin/roles::index~get','url::/admin/permissions::index~get','url::/admin/permissions::index~get'])) { ?>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
-						
+
 								<ul class="dropdown-menu">
 									<?=pear::menu_li('url::/admin/users::index~get','/admin/users','Users') ?>
 									<?=pear::menu_li('url::/admin/roles::index~get','/admin/roles/','Roles') ?>

@@ -14,16 +14,57 @@
 
 	<hr>
 
-<? pear::include('scaffolding/integer',['name'=>'blog_id','type'=>'int','max_length'=>5,'default'=>NULL,'primary_key'=>1,'human'=>'Blog Id','gui'=>'integer']) ?>
 
-<? pear::include('scaffolding/integer',['name'=>'blog_title','type'=>'varchar','max_length'=>100,'default'=>NULL,'primary_key'=>0,'human'=>'Blog Title','gui'=>'integer']) ?>
+		<!-- integer input-->
+	<div class="form-group">
+		<?=pear::field_label('blogs_model','blog_id') ?>
+		<div class="col-md-2">
+			<?=pear::input('blog_id',$record->blog_id,['data-mask'=>'int','class'=>'form-control','autocomplete'=>'off']) ?>
+		</div>
+	</div>
 
-<? pear::include('scaffolding/textarea',['name'=>'blog_description','type'=>'text','max_length'=>NULL,'default'=>NULL,'primary_key'=>0,'human'=>'Blog Description','gui'=>'textarea']) ?>
+		<!-- text input-->
+	<div class="form-group">
+		<?=pear::field_label('blogs_model','blog_title') ?>
+		<div class="col-md-9">
+			<?=pear::input('blog_title',$record->blog_title,['class'=>'form-control','autocomplete'=>'off','maxlength'=>100]) ?>
+		</div>
+	</div>
 
-<? pear::include('scaffolding/integer',['name'=>'blog_sort_order','type'=>'int','max_length'=>10,'default'=>'0','primary_key'=>0,'human'=>'Blog Sort Order','gui'=>'integer']) ?>
+		<!-- Textarea input-->
+	<div class="form-group">
+		<?=pear::field_label('blogs_model','blog_description') ?>
+		<div class="col-md-9">
+			<?=pear::textarea('blog_description',$record->blog_description,['cols'=>'6','class'=>'form-control','autocomplete'=>'off']) ?>
+		</div>
+	</div>
 
-<? pear::include('scaffolding/float',['name'=>'blog_price','type'=>'decimal','max_length'=>10,'default'=>'0.00','primary_key'=>0,'human'=>'Blog Price','gui'=>'float']) ?>
+		<!-- float input-->
+	<div class="form-group">
+		<?=pear::field_label('blogs_model','blog_price') ?>
+		<div class="col-md-2">
+			<?=pear::input('blog_price',$record->blog_price,['data-mask'=>'float','class'=>'form-control','autocomplete'=>'off']) ?>
+		</div>
+	</div>
 
+		<!-- integer input-->
+	<div class="form-group">
+		<?=pear::field_label('blogs_model','blog_sort_order') ?>
+		<div class="col-md-2">
+			<?=pear::input('blog_sort_order',$record->blog_sort_order,['data-mask'=>'int','class'=>'form-control','autocomplete'=>'off']) ?>
+		</div>
+	</div>
+
+		<!-- Checkbox -->
+	<div class="form-group">
+		<div class="col-md-offset-3 col-md-4">
+			<div class="checkbox">
+				<label>
+					<?=pear::checkbox('checkers', 1,($record->checkers == 1),['class'=>'js-checker']) ?> <?=pear::field_human('blogs_model','checkers') ?>
+				</label>
+			</div>
+		</div>
+	</div>
 
 	<!-- Submit Button -->
 	<div class="form-group">
