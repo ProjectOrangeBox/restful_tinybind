@@ -54,7 +54,9 @@
 								<span class="username username-hide-on-mobile"> <?=user::username() ?></span> <span class="caret"></span>
 							</a>
 	            <ul class="dropdown-menu">
+								<? if (user::has_one_permission_of('menu::edit profile')) { ?>
 								<li><a href="/users/edit-profile/<?=user::id() ?>"><i class="fa fa-user"></i> My Profile</a></li>
+								<? } ?>
 								<!--
 								<li> <a href="app_calendar.html"> <i class="fa fa-calendar"></i> My Calendar </a> </li>
 								<li> <a href="app_inbox.html"> <i class="fa fa-envelope-o"></i> My Inbox <span class="badge badge-danger"> 3 </span> </a> </li>
