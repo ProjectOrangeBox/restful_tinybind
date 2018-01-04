@@ -11,7 +11,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-						<? if (user::has_one_permission_of(['url::/backorder::index~get','url::/backorder_status/index~get'])) { ?>
+						<? if (user::has_one_permission_of(['url::/backorder::index~get','url::/backorder_status/index~get','url::/backorder_call_center::index~get'])) { ?>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Backorder <span class="caret"></span></a>
 
