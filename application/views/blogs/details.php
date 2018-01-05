@@ -70,7 +70,7 @@
 	<div class="form-group">
 		<div class="col-md-12">
 			<div class="pull-right">
-				<?=pear::button(null,'Save',['class'=>'js-button-submit btn btn-primary']) ?>
+				<?=pear::button(null,'Save',['class'=>'js-button-submit keymaster-s btn btn-primary']) ?>
 			</div>
 		</div>
 	</div>
