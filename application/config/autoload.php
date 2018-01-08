@@ -52,6 +52,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/librarian',
 	ROOTPATH.'/packages/projectorangebox/migrations',
 	ROOTPATH.'/packages/projectorangebox/scaffolding',
+	ROOTPATH.'/packages/projectorangebox/cache-viewer',
 );
 
 /*
