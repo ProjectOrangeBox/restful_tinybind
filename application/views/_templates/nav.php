@@ -41,9 +41,10 @@
 									<?=pear::menu_li('url::/admin/roles::index~get','/admin/roles/','Roles') ?>
 									<?=pear::menu_li('url::/admin/permissions::index~get','/admin/permissions','Permissions') ?>
 									<?=pear::menu_li('url::/admin/settings::index~get','/admin/settings','Settings') ?>
-									<?=pear::menu_li('url::/admin/utilities/config_viewer::index~get','/admin/utilities/config-viewer','Config Viewer') ?>
-									<?=pear::menu_li('url::/admin/reports/opcache::index~get','/admin/reports/opcache','OPCache') ?>
+									<?=pear::menu_li('url::/admin/utilities/config_viewer::index~get','/admin/utilities/config-viewer','Tools') ?>
 									<?=pear::menu_li('url::/admin/utilities/cache_viewer::index~get','/admin/utilities/cache-viewer','Cache Viewer') ?>
+									<?=pear::menu_li('url::/admin/reports/logins_successful::index~get','/admin/reports/logins-successful','Successful Logins') ?>
+									<?=pear::menu_li('url::/admin/reports/opcache::index~get','/admin/reports/opcache','OPCache') ?>
 								</ul>
 						</li>
 						<? } ?>
