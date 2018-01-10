@@ -1,24 +1,30 @@
 <?php
-
-$config['delete complete'] = false;
-$config['default role id'] = 3;
-$config['auto activate'] = false;
-
-$config['email activation expire'] = 240;
-
-$config['complete url'] = '/user-registration/complete';
-$config['error url'] = '/user-registration/error';
-$config['activate url'] = '/user-registration/activate';
+$config['allow registration'] = true;
 
 $config['self validate email'] = true;
-$config['send welcome email'] = false;
+$config['send welcome email'] = true;
+
+$config['user defaults'] = [
+	'is_active' => 1,
+	'user_read_role_id'=>0,
+	'user_edit_role_id'=>0,
+	'user_delete_role_id'=>0,
+	'read_role_id'=>0,
+	'edit_role_id'=>0,
+	'delete_role_id'=>0,
+];
+
+$config['site name'] = 'SkyNet';
+$config['email activation expire'] = 240;
+$config['activate url'] = '/user-registration/activate';
 
 /* register */
 $config['email from register'] = 'admin@example.com';
 $config['email from human register'] = 'administrator';
-$config['email template register'] = 'register';
 
 /* welcome email settings */
 $config['email from welcome'] = 'admin@example.com';
 $config['email from human welcome'] = 'administrator';
-$config['email template welcome'] = 'welcome';
+
+$config['check username'] = true;
+$config['check email'] = true;

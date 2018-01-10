@@ -26,8 +26,6 @@ $config['fcpath'] = FCPATH;
 $config['sysdir'] = SYSDIR;
 $config['orangepath'] = ORANGEPATH;
 
-$config['login'] = 'login';
-
 /* redirects */
 $config['login'] = 'login';
 $config['logout'] = 'login/inverted';
