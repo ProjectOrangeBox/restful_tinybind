@@ -2,7 +2,6 @@
 
 $middleware = [
 	'/main/route404' => ['GuiMiddleware','ThemeMiddleware'],
-	'/cli/*' => [],
 	'/backorder/update_dates' => [],
 	'/backorder/update_records' => [],
 	'/admin*' => ['AdminMiddleware','GuiMiddleware','ThemeMiddleware'],
