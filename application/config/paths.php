@@ -3,10 +3,10 @@
 NOTE: NO trailing slashes on folders
 */
 
-$config['WWW Image'] = '/images';
-$config['WWW Themes'] = '/theme';
-$config['WWW Shared Plugins'] = '/plugins';
-$config['WWW Shared Assets'] = '/assets';
+$config['www image'] = '/images';
+$config['www themes'] = '/theme';
+$config['www shared plugins'] = '/plugins';
+$config['www shared assets'] = '/assets';
 
 $config['cache'] = '/var/cache';
 $config['logs'] = '/var/logs';

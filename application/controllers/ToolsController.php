@@ -2,24 +2,33 @@
 
 class ToolsController extends MY_Controller {
 
-	public function indexAction() {
-		$mysqli = new mysqli('172.16.62.199', 'backorder_www_user', 'wnx4snFEsuk5jUrb', 'ecometry_udalink_batch');
+	public function testPostAction() {
 
-		$b1 = date('U');
+		$x = ci('input')->input_stream();
 
-		$mysqli->query('select * from backorder_mgr');
-
-		$b2 = date('U');
-
-		echo ($b2-$b1).'<br>';
-
-		$mysqli->query('select * from backorder_mgr_open_pos');
-
-		$b3 = date('U');
-
-		echo ($b3-$b2).'<br>';
-
-		$mysqli->close();
+		var_dump($x);
 	}
+
+	public function testDeleteAction() {
+
+		$x = ci('input')->input_stream();
+
+		var_dump($x);
+	}
+
+	public function testAction() {
+
+		$x = ci('input')->input_stream();
+
+		var_dump($x);
+	}
+
+	public function testPutAction() {
+
+		$x = ci('input')->input_stream();
+
+		var_dump($x);
+	}
+
 
 } /* end class */

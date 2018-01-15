@@ -3,7 +3,7 @@
 class MainController extends MY_Controller {
 
 	public function indexAction() {
-		redirect('/login');
+		redirect('{login}');
 	}
 
 } /* end class */
