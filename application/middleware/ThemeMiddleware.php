@@ -2,7 +2,7 @@
 
 class ThemeMiddleware extends Middleware_base {
 
-	public function run() {
+	public function __construct() {
 		$this->load->library(['pear']);
 	}
 

@@ -2,7 +2,7 @@
 
 class RestMiddleware extends Middleware_base {
 
-	public function run() {
+	public function __construct() {
 	}
 
 } /* end class */
