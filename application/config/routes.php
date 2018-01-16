@@ -2,6 +2,9 @@
 $route = array (
   'default_controller' => 'main/index',
 
+  'backordercli(.*)' => function($url) {
+  	return 'backordercli'.$url;
+  },
   'backorder(.*)' => function($url) {
   	middleware('AdminMiddleware','PublicMiddleware','GuiMiddleware','TooltipMiddleware');
 
