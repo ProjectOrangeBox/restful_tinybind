@@ -20,11 +20,18 @@
 <? pear::end() ?>
 
 <? pear::section('page_style') ?>
-.r-dashboard a.btn.btn-lg.btn-block {
+.uri-dashboard a.btn.btn-lg.btn-block {
 	background-color: #0b6854;
 	color: white;
+	transition:all 0.3s ease;
+  opacity:0.9;
+  color: white;
 }
-.r-dashboard a.btn.btn-lg.btn-block:hover {
-	background-color: #1c8770;
+.uri-dashboard a.btn.btn-lg.btn-block:hover {
+  -webkit-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  transform: scale(1.02);
+  opacity:1;
+  color: #fcd05c;
 }
 <? pear::end() ?>
