@@ -2,8 +2,13 @@
 $route = array (
   'default_controller' => 'main/index',
 
+  'backorder(.*)' => function($url) {
+  	middleware('AdminMiddleware','PublicMiddleware','GuiMiddleware','TooltipMiddleware');
+
+  	return 'backorder'.$url;
+  },
   'admin/(.*)' => function($url) {
-  	middleware('AdminMiddleware','PublicMiddleware','GuiMiddleware');
+  	middleware('AdminMiddleware','PublicMiddleware','GuiMiddleware','TooltipMiddleware');
 
   	return 'admin/'.$url;
   },

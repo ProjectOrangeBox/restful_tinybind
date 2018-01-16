@@ -20,11 +20,11 @@
 <? pear::end() ?>
 
 <? pear::section('page_style') ?>
-.dashboard a.btn.btn-lg.btn-block {
+.r-dashboard a.btn.btn-lg.btn-block {
 	background-color: #0b6854;
 	color: white;
 }
-.dashboard a.btn.btn-lg.btn-block:hover {
+.r-dashboard a.btn.btn-lg.btn-block:hover {
 	background-color: #1c8770;
 }
 <? pear::end() ?>
