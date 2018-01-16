@@ -14,7 +14,7 @@ $config['css'] = '/assets/application/application.css';
 #$config['js'] = ['/path/file','/path/file];
 #$config['js'] = '/path/file';
 
-$config['js'] = '/application/application.js';
+#$config['js'] = '/application/application.js';
 
 #$config['script'] = 'console.log("example");';
 #$config['style'] = 'h1{ color: #23Ab99 }';
