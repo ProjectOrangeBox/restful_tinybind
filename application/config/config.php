@@ -223,7 +223,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = LOG_THRESHOLD;
+$config['log_threshold'] = $_ENV['LOG_THRESHOLD'];
 
 /*
 |--------------------------------------------------------------------------
@@ -248,7 +248,7 @@ $config['log_path'] = ROOTPATH.'/var/logs/';
 | Note: Leaving it blank will default to 'php'.
 |
 */
-$config['log_file_extension'] = '';
+$config['log_file_extension'] = 'log';
 
 /*
 |--------------------------------------------------------------------------
@@ -271,7 +271,7 @@ $config['log_file_permissions'] = 0644;
 | codes to set your own date formatting
 |
 */
-$config['log_date_format'] = 'Y-m-d H:i:s';
+$config['log_date_format'] = 'Y-m-d H:i:s.u';
 
 /*
 |--------------------------------------------------------------------------
@@ -297,6 +297,8 @@ $config['cache_path'] = ROOTPATH.'/var/cache/';
 
 $config['cache_default'] = $_ENV['config.cache_default'];
 $config['cache_backup'] = 'dummy';
+
+$config['cache_ttl'] = $_ENV['config.cache_ttl'];
 
 
 /*
@@ -328,7 +330,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '9a82aa8fe0846634a3927c782317b488';
+$config['encryption_key'] = $_ENV['encryption_key'];
 
 /*
 |--------------------------------------------------------------------------
