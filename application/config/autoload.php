@@ -41,9 +41,7 @@
 $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/backorder',
 	ROOTPATH.'/packages/quadratec/stock-status-check',
-	ROOTPATH.'/packages/projectorangebox/orange',
 	ROOTPATH.'/packages/projectorangebox/extra-validations',
-	ROOTPATH.'/packages/projectorangebox/theme-orange',
 	ROOTPATH.'/packages/projectorangebox/forgot',
 	ROOTPATH.'/packages/projectorangebox/remember',
 	ROOTPATH.'/packages/projectorangebox/register',
@@ -55,6 +53,8 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/cache-viewer',
 	ROOTPATH.'/packages/projectorangebox/login-success',
 	ROOTPATH.'/packages/projectorangebox/tooltips',
+	ROOTPATH.'/packages/projectorangebox/orange',
+	ROOTPATH.'/packages/projectorangebox/theme-orange',
 );
 
 /*

@@ -18,7 +18,7 @@
 								<ul class="dropdown-menu">
 									<?=pear::menu_li('url::/backorder::index~get','/backorder','Backorder Mgr') ?>
 									<?=pear::menu_li('url::/backorder_call_center::index~get','/backorder-call-center','Backorder Search') ?>
-									<?=pear::menu_li('url::/backorder_status::index~get','/backorder_status','Backorder Mgr Status') ?>
+									<?=pear::menu_li('url::/backorder_status::index~get','/backorder-status','Backorder Mgr Status') ?>
 								</ul>
 							</li>
 						<? } ?>
@@ -38,7 +38,7 @@
 
 								<ul class="dropdown-menu">
 									<?=pear::menu_li('url::/admin/users::index~get','/admin/users','Users') ?>
-									<?=pear::menu_li('url::/admin/roles::index~get','/admin/roles/','Roles') ?>
+									<?=pear::menu_li('url::/admin/roles::index~get','/admin/roles','Roles') ?>
 									<?=pear::menu_li('url::/admin/permissions::index~get','/admin/permissions','Permissions') ?>
 									<?=pear::menu_li('url::/admin/settings::index~get','/admin/settings','Settings') ?>
 									<?=pear::menu_li('url::/admin/utilities/config_viewer::index~get','/admin/utilities/config-viewer','Tools') ?>
