@@ -19,6 +19,7 @@
 									<?=pear::menu_li('url::/backorder::index~get','/backorder','Backorder Mgr') ?>
 									<?=pear::menu_li('url::/backorder_call_center::index~get','/backorder-call-center','Backorder Search') ?>
 									<?=pear::menu_li('url::/backorder_status::index~get','/backorder-status','Backorder Mgr Status') ?>
+									<?=pear::menu_li('url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder Buyer Groups') ?>
 								</ul>
 							</li>
 						<? } ?>

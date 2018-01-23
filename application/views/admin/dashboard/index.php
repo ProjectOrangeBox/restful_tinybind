@@ -9,11 +9,13 @@
 
 <div class="row">
 
-	<? pear::include('/admin/dashboard/index_block',['url::/backorder::index~get','/backorder','Backorder Mgr']) ?>
+	<? pear::include('/admin/dashboard/index_block',['url::/backorder::index~get','/backorder','Backorder<br>Manager']) ?>
 
-	<? pear::include('/admin/dashboard/index_block',['url::/backorder_call_center::index~get','/backorder-call-center','Backorder Search']) ?>
+	<? pear::include('/admin/dashboard/index_block',['url::/backorder_call_center::index~get','/backorder-call-center','Backorder<br>Search']) ?>
 
 	<? pear::include('/admin/dashboard/index_block',['url::/stock_status_check::index~get','/stock-status-check','Stock Status Check']) ?>
+
+	<? pear::include('/admin/dashboard/index_block',['url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder<br>Buyer Groups']) ?>
 
 </div>
 
