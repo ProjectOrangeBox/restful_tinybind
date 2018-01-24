@@ -85,8 +85,6 @@ if (!file_exists(ROOTPATH.'/_env')) {
 $_ENV = $_ENV + require ROOTPATH.'/_env';
 
 define('ENVIRONMENT',$_ENV['SERVER_ENVIRONMENT']);
-define('DEBUG',$_ENV['SERVER_DEBUG']);
-define('LOG_THRESHOLD',$_ENV['LOG_THRESHOLD']);
 
 /* absolute path to project orange box folder? */
 define('ORANGEPATH', ROOTPATH.'/packages/projectorangebox/orange');
@@ -102,7 +100,7 @@ define('WWW', dirname(__FILE__));
  * Different environments will require different levels of error reporting.
  * By default development will show errors but testing and live will hide them.
  */
-switch (DEBUG) {
+switch ($_ENV['SERVER_DEBUG']) {
 	case 'development':
 		error_reporting(E_ALL & ~E_NOTICE);
 		ini_set('display_errors', 1);

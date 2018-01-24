@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = $_ENV['DOMAIN'];
+$config['base_url'] = env('DOMAIN');
 
 /*
 |--------------------------------------------------------------------------
@@ -223,7 +223,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = $_ENV['LOG_THRESHOLD'];
+$config['log_threshold'] =  env('LOG_THRESHOLD',0);
 
 /*
 |--------------------------------------------------------------------------
@@ -295,10 +295,10 @@ $config['error_views_path'] = '';
 */
 $config['cache_path'] = ROOTPATH.'/var/cache/';
 
-$config['cache_default'] = $_ENV['config.cache_default'];
+$config['cache_default'] =  env('config.cache_default','dummy');
 $config['cache_backup'] = 'dummy';
 
-$config['cache_ttl'] = $_ENV['config.cache_ttl'];
+$config['cache_ttl'] =  env('config.cache_ttl',0);
 
 
 /*
@@ -330,7 +330,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = $_ENV['encryption_key'];
+$config['encryption_key'] =  env('encryption_key');
 
 /*
 |--------------------------------------------------------------------------
