@@ -295,10 +295,10 @@ $config['error_views_path'] = '';
 */
 $config['cache_path'] = ROOTPATH.'/var/cache/';
 
-$config['cache_default'] =  env('config.cache_default','dummy');
+$config['cache_default'] = env('config.cache_default');
 $config['cache_backup'] = 'dummy';
 
-$config['cache_ttl'] =  env('config.cache_ttl',0);
+$config['cache_ttl'] = env('config.cache_ttl');
 
 
 /*
