@@ -81,6 +81,7 @@ $autoload['libraries'] = array(
 	'event',
 	'validate',
 	'wallet',
+	'auth',
 );
 
 /*

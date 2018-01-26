@@ -29,4 +29,5 @@ $config['orangepath'] = ORANGEPATH;
 /* redirects */
 $config['login'] = 'login';
 $config['logout'] = 'login/inverted';
-$config['dashboard'] = 'admin/dashboard';
+$config['dashboard'] = '';
+$config['homepage'] = '';

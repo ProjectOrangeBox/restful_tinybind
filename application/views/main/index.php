@@ -1,9 +1,43 @@
-<? pear::extends('_templates/orange_default') ?>
+<? pear::extends('_templates/orange_admin') ?>
 
 <? pear::section('section_container') ?>
 
-<h1>Welcome <small><?=user::username() ?></small></h1>
+<div class="row">
+  <div class="col-md-6"><?=pear::title('Dashboard','th') ?></div>
+  <div class="col-md-6"></div>
+</div>
 
-<p><a href="<?=site_url('{login}') ?>">Login</a></p>
+<div class="row">
 
+	<? pear::include('/main/index_block',['url::/backorder::index~get','/backorder','Backorder<br>Manager']) ?>
+
+	<? pear::include('/main/index_block',['','/backorder-call-center','Backorder<br>Search']) ?>
+
+	<? pear::include('/main/index_block',['url::/stock_status_check::index~get','/stock-status-check','Stock Status Check']) ?>
+
+	<? pear::include('/main/index_block',['url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder<br>Buyer Groups']) ?>
+
+</div>
+
+<? pear::end() ?>
+
+<? pear::section('page_body_class') ?>
+<? pear::parent() ?> dashboard
+<? pear::end() ?>
+
+<? pear::section('page_style') ?>
+.dashboard a.btn.btn-lg.btn-block {
+	background-color: #0b6854;
+	color: white;
+	transition:all 0.3s ease;
+  opacity:0.9;
+  color: white;
+}
+.dashboard a.btn.btn-lg.btn-block:hover {
+  -webkit-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  transform: scale(1.02);
+  opacity:1;
+  color: #fcd05c;
+}
 <? pear::end() ?>
