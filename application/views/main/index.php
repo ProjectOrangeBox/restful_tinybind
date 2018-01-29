@@ -19,9 +19,7 @@
 
 <? pear::end() ?>
 
-<? pear::section('page_body_class') ?>
-<? pear::parent() ?> dashboard
-<? pear::end() ?>
+<? pear::section('page_body_class') ?><? pear::parent() ?> dashboard<? pear::end() ?>
 
 <? pear::section('page_style') ?>
 .dashboard a.btn.btn-lg.btn-block {

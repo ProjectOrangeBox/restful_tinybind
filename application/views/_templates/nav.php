@@ -54,7 +54,7 @@
 
 					<ul class="nav navbar-nav navbar-right">
             <li>
-								<? if (user::somebody()) { ?>
+								<? if (user::logged_in()) { ?>
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 										<img alt="" class="img-circle" src="https://www.gravatar.com/avatar/<?=md5(strtolower(trim(user::email()))) ?>?s=32" />
 										<span class="username username-hide-on-mobile"> <?=user::username() ?></span> <span class="caret"></span>

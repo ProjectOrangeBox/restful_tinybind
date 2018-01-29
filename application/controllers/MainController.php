@@ -20,13 +20,17 @@ class MainController extends MY_Controller {
 		}
 
 		/* check hmac */
-		if ($parts[2] !== md5($parts[0].chr(0).$parts[1].chr(0).ci()->config->item('encryption_key'))) {
+		if ($parts[2] !== md5($parts[0].chr(0).$parts[1].chr(0).ci('config')->item('encryption_key'))) {
 			ci('errors')->display(403);
 		}
 
 		ci('auth')->refresh_userdata((int)$parts[0]);
 
 		redirect('{dashboard}');
+	}
+
+	public function testAction() {
+		var_dump(user::roles(),user::permissions(),user::email(),user::id(),user::username(),user::logged_in(),user::is_admin());
 	}
 
 } /* end class */

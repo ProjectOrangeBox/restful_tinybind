@@ -262,10 +262,6 @@ return array (
     ),
     'models' => 
     array (
-      'blogs_model' => $baseDir.'/application/models/Blogs_model.php',
-      'orange_users_model' => $baseDir.'/application/models/Orange_users_model.php',
-      'quad_backorder_buyer_groups_model' => $baseDir.'/application/models/Quad_backorder_buyer_groups_model.php',
-      'orange_scaffolding_model' => $baseDir.'/application/models/Orange_scaffolding_model.php',
       'backorder_mgr_history_model' => $baseDir.'/packages/quadratec/backorder/models/Backorder_mgr_history_model.php',
       'item_mast_model' => $baseDir.'/packages/quadratec/backorder/models/Item_mast_model.php',
       'mbfoster_po_header_model' => $baseDir.'/packages/quadratec/backorder/models/Mbfoster_po_header_model.php',
@@ -1147,10 +1143,6 @@ return array (
   ),
   'models' => 
   array (
-    'blogs_model' => $baseDir.'/application/models/Blogs_model.php',
-    'orange_users_model' => $baseDir.'/application/models/Orange_users_model.php',
-    'quad_backorder_buyer_groups_model' => $baseDir.'/application/models/Quad_backorder_buyer_groups_model.php',
-    'orange_scaffolding_model' => $baseDir.'/application/models/Orange_scaffolding_model.php',
     'backorder_mgr_history_model' => $baseDir.'/packages/quadratec/backorder/models/Backorder_mgr_history_model.php',
     'item_mast_model' => $baseDir.'/packages/quadratec/backorder/models/Item_mast_model.php',
     'mbfoster_po_header_model' => $baseDir.'/packages/quadratec/backorder/models/Mbfoster_po_header_model.php',
