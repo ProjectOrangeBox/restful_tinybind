@@ -1,12 +1,12 @@
-<?php  function lcr5a71164f18b65encq($cx, $var) {
+<?php  function lcr5a72244884bb2encq($cx, $var) {
   if ($var instanceof LS) {
    return (string)$var;
   }
 
-  return str_replace(array('=', '`', '&#039;'), array('&#x3D;', '&#x60;', '&#x27;'), htmlspecialchars(lcr5a71164f18b65raw($cx, $var), ENT_QUOTES, 'UTF-8'));
+  return str_replace(array('=', '`', '&#039;'), array('&#x3D;', '&#x60;', '&#x27;'), htmlspecialchars(lcr5a72244884bb2raw($cx, $var), ENT_QUOTES, 'UTF-8'));
  }
 
- function lcr5a71164f18b65hbch($cx, $ch, $vars, $op, &$_this) {
+ function lcr5a72244884bb2hbch($cx, $ch, $vars, $op, &$_this) {
   if (isset($cx['blparam'][0][$ch])) {
    return $cx['blparam'][0][$ch];
   }
@@ -23,10 +23,10 @@
    $options['data'] = $cx['sp_vars'];
   }
 
-  return lcr5a71164f18b65exch($cx, $ch, $vars, $options);
+  return lcr5a72244884bb2exch($cx, $ch, $vars, $options);
  }
 
- function lcr5a71164f18b65sec($cx, $v, $bp, $in, $each, $cb, $else = null) {
+ function lcr5a72244884bb2sec($cx, $v, $bp, $in, $each, $cb, $else = null) {
   $push = ($in !== $v) || $each;
 
   $isAry = is_array($v) || ($v instanceof \ArrayObject);
@@ -79,10 +79,10 @@
      $i++;
     }
     if (isset($bp[0])) {
-     $raw = lcr5a71164f18b65m($cx, $raw, array($bp[0] => $raw));
+     $raw = lcr5a72244884bb2m($cx, $raw, array($bp[0] => $raw));
     }
     if (isset($bp[1])) {
-     $raw = lcr5a71164f18b65m($cx, $raw, array($bp[1] => $cx['sp_vars']['index']));
+     $raw = lcr5a72244884bb2m($cx, $raw, array($bp[1] => $cx['sp_vars']['index']));
     }
     $ret[] = $cb($cx, $raw);
    }
@@ -139,7 +139,7 @@
   return '';
  }
 
- function lcr5a71164f18b65hbbch($cx, $ch, $vars, &$_this, $inverted, $cb, $else = null) {
+ function lcr5a72244884bb2hbbch($cx, $ch, $vars, &$_this, $inverted, $cb, $else = null) {
   $options = array(
    'name' => $ch,
    'hash' => $vars[1],
@@ -179,10 +179,10 @@
     $ex = $cx['blparam'][0];
    }
    if (($context === '_NO_INPUT_HERE_') || ($context === $_this)) {
-    $ret = $cb($cx, is_array($ex) ? lcr5a71164f18b65m($cx, $_this, $ex) : $_this);
+    $ret = $cb($cx, is_array($ex) ? lcr5a72244884bb2m($cx, $_this, $ex) : $_this);
    } else {
     $cx['scopes'][] = $_this;
-    $ret = $cb($cx, is_array($ex) ? lcr5a71164f18b65m($cx, $context, $ex) : $context);
+    $ret = $cb($cx, is_array($ex) ? lcr5a72244884bb2m($cx, $context, $ex) : $context);
     array_pop($cx['scopes']);
    }
    if (isset($data['data'])) {
@@ -211,14 +211,14 @@
    };
   }
 
-  return lcr5a71164f18b65exch($cx, $ch, $vars, $options);
+  return lcr5a72244884bb2exch($cx, $ch, $vars, $options);
  }
 
- function lcr5a71164f18b65ifvar($cx, $v, $zero) {
+ function lcr5a72244884bb2ifvar($cx, $v, $zero) {
   return ($v !== null) && ($v !== false) && ($zero || ($v !== 0) && ($v !== 0.0)) && ($v !== '') && (is_array($v) ? (count($v) > 0) : true);
  }
 
- function lcr5a71164f18b65raw($cx, $v, $ex = 0) {
+ function lcr5a72244884bb2raw($cx, $v, $ex = 0) {
   if ($ex) {
    return $v;
   }
@@ -242,7 +242,7 @@
     } else {
      $ret = array();
      foreach ($v as $k => $vv) {
-      $ret[] = lcr5a71164f18b65raw($cx, $vv);
+      $ret[] = lcr5a72244884bb2raw($cx, $vv);
      }
      return join(',', $ret);
     }
@@ -254,7 +254,7 @@
   return "$v";
  }
 
- function lcr5a71164f18b65exch($cx, $ch, $vars, &$options) {
+ function lcr5a72244884bb2exch($cx, $ch, $vars, &$options) {
   $args = $vars[0];
   $args[] = $options;
   $e = null;
@@ -267,13 +267,13 @@
   }
 
   if($e !== null) {
-   lcr5a71164f18b65err($cx, $e);
+   lcr5a72244884bb2err($cx, $e);
   }
 
   return $r;
  }
 
- function lcr5a71164f18b65m($cx, $a, $b) {
+ function lcr5a72244884bb2m($cx, $a, $b) {
   if (is_array($b)) {
    if ($a === null) {
     return $b;
@@ -288,7 +288,7 @@
   return $a;
  }
 
- function lcr5a71164f18b65err($cx, $err) {
+ function lcr5a72244884bb2err($cx, $err) {
   if ($cx['flags']['debug'] & $cx['constants']['DEBUG_ERROR_LOG']) {
    error_log($err);
    return;
@@ -301,7 +301,7 @@
 if (!class_exists("LS")) {
 class LS {
  public static $jsContext = array (
-  'flags' =>
+  'flags' => 
   array (
     'jstrue' => 1,
     'jsobj' => 1,
@@ -546,7 +546,7 @@ return function ($in = null, $options = null) {
         'partialid' => 0,
         'runtime' => '\LightnCandy\Runtime',
     );
-    /* parse-string-9df83ae720545ffdd80f79722659290b compiled @ 2018-01-30 08:05:19 America/New_York */
+    /* parse-string-9df83ae720545ffdd80f79722659290b compiled @ 2018-01-31 03:17:12 America/New_York */
     $inary=is_array($in);
     ob_start();echo '','<!DOCTYPE html>
 <html lang="en">
@@ -557,70 +557,70 @@ return function ($in = null, $options = null) {
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">		
 		<link href="/assets/site.css" rel="stylesheet">
 	</head>
 	<body>
       <div class="container">
-				<h4>In Header page_title = ',lcr5a71164f18b65encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
+				<h4>In Header page_title = ',lcr5a72244884bb2encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
 ','
-<h4>page_title = ',lcr5a71164f18b65encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
+<h4>page_title = ',lcr5a72244884bb2encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
 
-',lcr5a71164f18b65encq($cx, lcr5a71164f18b65hbch($cx, 'q:cache_demo', array(array(),array('cache'=>'5')), 'encq', $in)),'
+',lcr5a72244884bb2encq($cx, lcr5a72244884bb2hbch($cx, 'q:cache_demo', array(array(),array('cache'=>'5')), 'encq', $in)),'
 
-',lcr5a71164f18b65encq($cx, lcr5a71164f18b65hbch($cx, 'set', array(array(),array('name'=>'age','value'=>(($inary && isset($in['page_title'])) ? $in['page_title'] : null))), 'encq', $in)),'
-',lcr5a71164f18b65encq($cx, lcr5a71164f18b65hbch($cx, 'set', array(array(),array('name'=>'foo','value'=>'bar')), 'encq', $in)),'
+',lcr5a72244884bb2encq($cx, lcr5a72244884bb2hbch($cx, 'set', array(array(),array('name'=>'age','value'=>(($inary && isset($in['page_title'])) ? $in['page_title'] : null))), 'encq', $in)),'
+',lcr5a72244884bb2encq($cx, lcr5a72244884bb2hbch($cx, 'set', array(array(),array('name'=>'foo','value'=>'bar')), 'encq', $in)),'
 
-',lcr5a71164f18b65sec($cx, (($inary && isset($in['projects'])) ? $in['projects'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '	<h3>',lcr5a71164f18b65encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),'</h3>
+',lcr5a72244884bb2sec($cx, (($inary && isset($in['projects'])) ? $in['projects'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '	<h3>',lcr5a72244884bb2encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),'</h3>
 	<h4>Assignees</h4>
 	<ul>
-',lcr5a71164f18b65sec($cx, (($inary && isset($in['assignees'])) ? $in['assignees'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '		<li>',lcr5a71164f18b65encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),' ',lcr5a71164f18b65encq($cx, (($inary && isset($in['age'])) ? $in['age'] : null)),'</li>
+',lcr5a72244884bb2sec($cx, (($inary && isset($in['assignees'])) ? $in['assignees'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '		<li>',lcr5a72244884bb2encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),' ',lcr5a72244884bb2encq($cx, (($inary && isset($in['age'])) ? $in['age'] : null)),'</li>
 ';}),'	</ul>
 ';}),'
-',lcr5a71164f18b65hbbch($cx, 'iif', array(array((($inary && isset($in['page_title'])) ? $in['page_title'] : null),'=','Current Projects'),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	True Do This
+',lcr5a72244884bb2hbbch($cx, 'iif', array(array((($inary && isset($in['page_title'])) ? $in['page_title'] : null),'=','Current Projects'),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	True Do This
 ';}, function($cx, $in) {$inary=is_array($in);echo '	False Do This
 ';}),'
 <p>
-',lcr5a71164f18b65hbbch($cx, 'iif', array(array(1,'=',1),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	1 equals 1 with else
+',lcr5a72244884bb2hbbch($cx, 'iif', array(array(1,'=',1),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	1 equals 1 with else
 ';}, function($cx, $in) {$inary=is_array($in);echo '	else 1 equals 1
 ';}),'</p>
 
 <p>
-',lcr5a71164f18b65hbbch($cx, 'iif', array(array(1,'=',2),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	1 equals 1
+',lcr5a72244884bb2hbbch($cx, 'iif', array(array(1,'=',2),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	1 equals 1
 ';}, function($cx, $in) {$inary=is_array($in);echo '	else 1 equals 1
 ';}),'</p>
 
 <p>
-',lcr5a71164f18b65hbbch($cx, 'iif', array(array(1,'=',1),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	single 1 equals 1
+',lcr5a72244884bb2hbbch($cx, 'iif', array(array(1,'=',1),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	single 1 equals 1
 ';}),'</p>
 
 <p>
-',lcr5a71164f18b65hbbch($cx, 'iif', array(array(1,'!=',2),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	1 does not equal 1
+',lcr5a72244884bb2hbbch($cx, 'iif', array(array(1,'!=',2),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	1 does not equal 1
 ';}),'</p>
 
 <p>
-',lcr5a71164f18b65hbbch($cx, 'is_even', array(array(2),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	<b>I\'m even!</b>
+',lcr5a72244884bb2hbbch($cx, 'is_even', array(array(2),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	<b>I\'m even!</b>
 ';}),'<p>
 
 <p>
-',lcr5a71164f18b65hbbch($cx, 'is_odd', array(array(1),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	<b>I\'m a Odd Ball!</b>
+',lcr5a72244884bb2hbbch($cx, 'is_odd', array(array(1),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	<b>I\'m a Odd Ball!</b>
 ';}),'<p>
 
 <p>
-',lcr5a71164f18b65hbbch($cx, 'is_odd', array(array(2),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	<b>I\'m a Odd Ball!</b>
+',lcr5a72244884bb2hbbch($cx, 'is_odd', array(array(2),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '	<b>I\'m a Odd Ball!</b>
 ';}, function($cx, $in) {$inary=is_array($in);echo '	<i>I\'m Even Steven!</i>
 ';}),'<p>
 
 <p>
-',lcr5a71164f18b65hbbch($cx, 'exp:channel:entries', array(array(),array('channel'=>'news','limit'=>'15','category'=>'2','entry_id'=>'147')), $in, false, function($cx, $in) {$inary=is_array($in);echo '
-<h3>The title is "',lcr5a71164f18b65encq($cx, (($inary && isset($in['title'])) ? $in['title'] : null)),'"</h3>
+',lcr5a72244884bb2hbbch($cx, 'exp:channel:entries', array(array(),array('channel'=>'news','limit'=>'15','category'=>'2','entry_id'=>'147')), $in, false, function($cx, $in) {$inary=is_array($in);echo '
+<h3>The title is "',lcr5a72244884bb2encq($cx, (($inary && isset($in['title'])) ? $in['title'] : null)),'"</h3>
 
-<p>The body is "',lcr5a71164f18b65encq($cx, (($inary && isset($in['body'])) ? $in['body'] : null)),'"</p>
+<p>The body is "',lcr5a72244884bb2encq($cx, (($inary && isset($in['body'])) ? $in['body'] : null)),'"</p>
 
-<p><strong>get name="age" ',lcr5a71164f18b65encq($cx, lcr5a71164f18b65hbch($cx, 'get', array(array(),array('name'=>'age')), 'encq', $in)),'</strong></p>
-<p><strong>get name="foo" ',lcr5a71164f18b65encq($cx, lcr5a71164f18b65hbch($cx, 'get', array(array(),array('name'=>'foo')), 'encq', $in)),'</strong></p>
+<p><strong>get name="age" ',lcr5a72244884bb2encq($cx, lcr5a72244884bb2hbch($cx, 'get', array(array(),array('name'=>'age')), 'encq', $in)),'</strong></p>
+<p><strong>get name="foo" ',lcr5a72244884bb2encq($cx, lcr5a72244884bb2hbch($cx, 'get', array(array(),array('name'=>'foo')), 'encq', $in)),'</strong></p>
 
-<div class="date">Posted on ',lcr5a71164f18b65encq($cx, lcr5a71164f18b65hbch($cx, 'format:date', array(array((($inary && isset($in['entry_date'])) ? $in['entry_date'] : null)),array('format'=>'Y-m-d H:i:s')), 'encq', $in)),'</div>
+<div class="date">Posted on ',lcr5a72244884bb2encq($cx, lcr5a72244884bb2hbch($cx, 'format:date', array(array((($inary && isset($in['entry_date'])) ? $in['entry_date'] : null)),array('format'=>'Y-m-d H:i:s')), 'encq', $in)),'</div>
 
 ';}),'</p>
 
@@ -636,22 +636,22 @@ return function ($in = null, $options = null) {
 			<th>Last</th>
 			<th>Action</th>
 		</tr>
-',lcr5a71164f18b65hbbch($cx, 'exp:query', array(array(),array('sql'=>'select * from orange_settings')), $in, false, function($cx, $in) {$inary=is_array($in);echo '		<tr class="';if (lcr5a71164f18b65ifvar($cx, (($inary && isset($in['query_odd'])) ? $in['query_odd'] : null), false)){echo 'oddman';}else{echo 'evenman';}echo '">
-			<td>',lcr5a71164f18b65encq($cx, (($inary && isset($in['query_index_row'])) ? $in['query_index_row'] : null)),'</td>
-			<td>',lcr5a71164f18b65encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),'</td>
-			<td>',lcr5a71164f18b65encq($cx, (($inary && isset($in['variable'])) ? $in['variable'] : null)),'</td>
-			<td>',lcr5a71164f18b65encq($cx, (($inary && isset($in['value'])) ? $in['value'] : null)),'</td>
-			<td>',lcr5a71164f18b65hbbch($cx, 'exp:uppercase', array(array(),array('cache'=>'60')), $in, false, function($cx, $in) {$inary=is_array($in);echo '';if (lcr5a71164f18b65ifvar($cx, (($inary && isset($in['query_odd'])) ? $in['query_odd'] : null), false)){echo 'odd';}else{echo 'even';}echo '';}),'</td>
-			<td>',lcr5a71164f18b65encq($cx, (($inary && isset($in['query_first_row'])) ? $in['query_first_row'] : null)),'</td>
-			<td>',lcr5a71164f18b65encq($cx, (($inary && isset($in['query_last_row'])) ? $in['query_last_row'] : null)),'</td>
-			<td><a href="/admin/content/snippets/edit/',lcr5a71164f18b65encq($cx, (($inary && isset($in['id'])) ? $in['id'] : null)),'">Edit</a></td>
+',lcr5a72244884bb2hbbch($cx, 'exp:query', array(array(),array('sql'=>'select * from orange_settings')), $in, false, function($cx, $in) {$inary=is_array($in);echo '		<tr class="';if (lcr5a72244884bb2ifvar($cx, (($inary && isset($in['query_odd'])) ? $in['query_odd'] : null), false)){echo 'oddman';}else{echo 'evenman';}echo '">
+			<td>',lcr5a72244884bb2encq($cx, (($inary && isset($in['query_index_row'])) ? $in['query_index_row'] : null)),'</td>
+			<td>',lcr5a72244884bb2encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),'</td>
+			<td>',lcr5a72244884bb2encq($cx, (($inary && isset($in['variable'])) ? $in['variable'] : null)),'</td>
+			<td>',lcr5a72244884bb2encq($cx, (($inary && isset($in['value'])) ? $in['value'] : null)),'</td>
+			<td>',lcr5a72244884bb2hbbch($cx, 'exp:uppercase', array(array(),array('cache'=>'60')), $in, false, function($cx, $in) {$inary=is_array($in);echo '';if (lcr5a72244884bb2ifvar($cx, (($inary && isset($in['query_odd'])) ? $in['query_odd'] : null), false)){echo 'odd';}else{echo 'even';}echo '';}),'</td>
+			<td>',lcr5a72244884bb2encq($cx, (($inary && isset($in['query_first_row'])) ? $in['query_first_row'] : null)),'</td>
+			<td>',lcr5a72244884bb2encq($cx, (($inary && isset($in['query_last_row'])) ? $in['query_last_row'] : null)),'</td>
+			<td><a href="/admin/content/snippets/edit/',lcr5a72244884bb2encq($cx, (($inary && isset($in['id'])) ? $in['id'] : null)),'">Edit</a></td>
 		</tr>
 ';}),'	</table>
 </p>
 
-<p>',lcr5a71164f18b65hbbch($cx, 'exp:lowercase', array(array(),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo 'UPPERCASE <- NOT! ';}),'</p>
+<p>',lcr5a72244884bb2hbbch($cx, 'exp:lowercase', array(array(),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo 'UPPERCASE <- NOT! ';}),'</p>
 
-<p>',lcr5a71164f18b65hbbch($cx, 'exp:uppercase', array(array(),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '',lcr5a71164f18b65encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'';}),'</p>
+<p>',lcr5a72244884bb2hbbch($cx, 'exp:uppercase', array(array(),array()), $in, false, function($cx, $in) {$inary=is_array($in);echo '',lcr5a72244884bb2encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'';}),'</p>
 
 ','','<!DOCTYPE html>
 <html lang="en">
@@ -662,29 +662,29 @@ return function ($in = null, $options = null) {
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">		
 		<link href="/assets/site.css" rel="stylesheet">
 	</head>
 	<body>
       <div class="container">
-				<h4>In Header page_title = ',lcr5a71164f18b65encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
+				<h4>In Header page_title = ',lcr5a72244884bb2encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
 ','
 <h2>tester template file</h2>
 
-',lcr5a71164f18b65sec($cx, (($inary && isset($in['projects'])) ? $in['projects'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '	<h3>',lcr5a71164f18b65encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),'</h3>
+',lcr5a72244884bb2sec($cx, (($inary && isset($in['projects'])) ? $in['projects'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '	<h3>',lcr5a72244884bb2encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),'</h3>
 	<h4>Assignees</h4>
 	<ul>
-',lcr5a71164f18b65sec($cx, (($inary && isset($in['assignees'])) ? $in['assignees'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '		<li>',lcr5a71164f18b65encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),' ',lcr5a71164f18b65encq($cx, (($inary && isset($in['age'])) ? $in['age'] : null)),'</li>
+',lcr5a72244884bb2sec($cx, (($inary && isset($in['assignees'])) ? $in['assignees'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '		<li>',lcr5a72244884bb2encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),' ',lcr5a72244884bb2encq($cx, (($inary && isset($in['age'])) ? $in['age'] : null)),'</li>
 ';}),'	</ul>
 ';}),'
-','			<h4>In Footer page_title = ',lcr5a71164f18b65encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
+','			<h4>In Footer page_title = ',lcr5a72244884bb2encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 		<script src="/assets/site.js"></script>
 	</body>
 </html>','','
-','			<h4>In Footer page_title = ',lcr5a71164f18b65encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
+','			<h4>In Footer page_title = ',lcr5a72244884bb2encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>

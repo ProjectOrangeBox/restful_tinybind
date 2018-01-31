@@ -1,12 +1,12 @@
-<?php  function lcr5a71162389774encq($cx, $var) {
+<?php  function lcr5a72244533d1dencq($cx, $var) {
   if ($var instanceof LS) {
    return (string)$var;
   }
 
-  return str_replace(array('=', '`', '&#039;'), array('&#x3D;', '&#x60;', '&#x27;'), htmlspecialchars(lcr5a71162389774raw($cx, $var), ENT_QUOTES, 'UTF-8'));
+  return str_replace(array('=', '`', '&#039;'), array('&#x3D;', '&#x60;', '&#x27;'), htmlspecialchars(lcr5a72244533d1draw($cx, $var), ENT_QUOTES, 'UTF-8'));
  }
 
- function lcr5a71162389774sec($cx, $v, $bp, $in, $each, $cb, $else = null) {
+ function lcr5a72244533d1dsec($cx, $v, $bp, $in, $each, $cb, $else = null) {
   $push = ($in !== $v) || $each;
 
   $isAry = is_array($v) || ($v instanceof \ArrayObject);
@@ -59,10 +59,10 @@
      $i++;
     }
     if (isset($bp[0])) {
-     $raw = lcr5a71162389774m($cx, $raw, array($bp[0] => $raw));
+     $raw = lcr5a72244533d1dm($cx, $raw, array($bp[0] => $raw));
     }
     if (isset($bp[1])) {
-     $raw = lcr5a71162389774m($cx, $raw, array($bp[1] => $cx['sp_vars']['index']));
+     $raw = lcr5a72244533d1dm($cx, $raw, array($bp[1] => $cx['sp_vars']['index']));
     }
     $ret[] = $cb($cx, $raw);
    }
@@ -119,7 +119,7 @@
   return '';
  }
 
- function lcr5a71162389774raw($cx, $v, $ex = 0) {
+ function lcr5a72244533d1draw($cx, $v, $ex = 0) {
   if ($ex) {
    return $v;
   }
@@ -143,7 +143,7 @@
     } else {
      $ret = array();
      foreach ($v as $k => $vv) {
-      $ret[] = lcr5a71162389774raw($cx, $vv);
+      $ret[] = lcr5a72244533d1draw($cx, $vv);
      }
      return join(',', $ret);
     }
@@ -155,7 +155,7 @@
   return "$v";
  }
 
- function lcr5a71162389774m($cx, $a, $b) {
+ function lcr5a72244533d1dm($cx, $a, $b) {
   if (is_array($b)) {
    if ($a === null) {
     return $b;
@@ -173,7 +173,7 @@
 if (!class_exists("LS")) {
 class LS {
  public static $jsContext = array (
-  'flags' =>
+  'flags' => 
   array (
     'jstrue' => 1,
     'jsobj' => 1,
@@ -269,7 +269,7 @@ return function ($in = null, $options = null) {
         'partialid' => 0,
         'runtime' => '\LightnCandy\Runtime',
     );
-    /* template_handlebars-demo-tester.hdl compiled @ 2018-01-30 08:04:35 America/New_York */
+    /* parse-string-d1c4358b5b3a473fc1e5245f7676d57a compiled @ 2018-01-31 03:17:09 America/New_York */
     $inary=is_array($in);
     ob_start();echo '','<!DOCTYPE html>
 <html lang="en">
@@ -280,22 +280,22 @@ return function ($in = null, $options = null) {
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">		
 		<link href="/assets/site.css" rel="stylesheet">
 	</head>
 	<body>
       <div class="container">
-				<h4>In Header page_title = ',lcr5a71162389774encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
+				<h4>In Header page_title = ',lcr5a72244533d1dencq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
 ','
 <h2>tester template file</h2>
 
-',lcr5a71162389774sec($cx, (($inary && isset($in['projects'])) ? $in['projects'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '	<h3>',lcr5a71162389774encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),'</h3>
+',lcr5a72244533d1dsec($cx, (($inary && isset($in['projects'])) ? $in['projects'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '	<h3>',lcr5a72244533d1dencq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),'</h3>
 	<h4>Assignees</h4>
 	<ul>
-',lcr5a71162389774sec($cx, (($inary && isset($in['assignees'])) ? $in['assignees'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '		<li>',lcr5a71162389774encq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),' ',lcr5a71162389774encq($cx, (($inary && isset($in['age'])) ? $in['age'] : null)),'</li>
+',lcr5a72244533d1dsec($cx, (($inary && isset($in['assignees'])) ? $in['assignees'] : null), null, $in, true, function($cx, $in) {$inary=is_array($in);echo '		<li>',lcr5a72244533d1dencq($cx, (($inary && isset($in['name'])) ? $in['name'] : null)),' ',lcr5a72244533d1dencq($cx, (($inary && isset($in['age'])) ? $in['age'] : null)),'</li>
 ';}),'	</ul>
 ';}),'
-','			<h4>In Footer page_title = ',lcr5a71162389774encq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
+','			<h4>In Footer page_title = ',lcr5a72244533d1dencq($cx, (($inary && isset($in['page_title'])) ? $in['page_title'] : null)),'</h4>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>

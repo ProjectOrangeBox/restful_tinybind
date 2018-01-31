@@ -30,7 +30,8 @@
 		    	"/var/emails": "777",
 		    	"/var/logs": "777",
 		    	"/var/sessions": "777",
-		    	"/support": "777"
+		    	"/support": "777",
+		    	"/support/permanent_cache": "777"
 		    }]
     }
 }
