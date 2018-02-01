@@ -16,22 +16,22 @@
         "menubar": "",
         "setting": "",
 		    "symlink": [{
-		    	"# /public/... ": "# /vendor/... ",
-		    	"/public/theme/orange": "/packages/projectorangebox/theme-orange/public/theme/orange",
-		    	"/public/assets/backorder": "/packages/quadratec/backorder/public/assets/backorder",
-		    	"/public/assets/stock-status-check": "/packages/quadratec/stock-status-check/public/assets/stock-status-check"
+			    	"# /public/... ": "# /vendor/... ",
+			    	"/public/theme/orange": "/packages/projectorangebox/theme-orange/public/theme/orange",
+			    	"/public/assets/backorder": "/packages/quadratec/backorder/public/assets/backorder",
+			    	"/public/assets/stock-status-check": "/packages/quadratec/stock-status-check/public/assets/stock-status-check"
 		    }],
 		    "permission": [{
-		    	"# folder ": "mode",
-		    	"/var": "777",
-		    	"/var/cache": "777",
-		    	"/var/uploads": "777",
-		    	"/var/downloads": "777",
-		    	"/var/emails": "777",
-		    	"/var/logs": "777",
-		    	"/var/sessions": "777",
-		    	"/support": "777",
-		    	"/application/config/compiled": "777"
+			    	"# folder ": "mode",
+			    	"/var": "777",
+			    	"/var/cache": "777",
+			    	"/var/uploads": "777",
+			    	"/var/downloads": "777",
+			    	"/var/emails": "777",
+			    	"/var/logs": "777",
+			    	"/var/sessions": "777",
+			    	"/support": "777",
+			    	"/application/config/compiled": "777"
 		    }]
     }
 }
