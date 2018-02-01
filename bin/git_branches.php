@@ -3,61 +3,39 @@
 
 define('ROOTPATH', realpath(__DIR__.'/../'));
 
-echo git_status();
+/* search all the folder under root for .git/HEAD */
+exec('find "'.ROOTPATH.'" -name HEAD',$output);
 
-function git_status($output_as='none',$table_template=null) {
-	/* search all the folder under root for .git/HEAD */
-	exec('find "'.ROOTPATH.'" -name HEAD',$output);
+row('Package','Branch','Hash');
 
-	$array = false;
+foreach ($output as $o) {
+	$dirname = dirname($o);
 
-	foreach ($output as $o) {
-		$dirname = dirname($o);
+	if (strpos($o,'/.git/HEAD') !== false) {
+		$stringfromfile = file($o);
 
-		echo $dirname.chr(10);
+		$firstLine = $stringfromfile[0]; //get the string from the array
 
-		if (strpos($o,'/.git/HEAD') !== false) {
-			$stringfromfile = file($o);
+		$explodedstring = explode("/", $firstLine, 3); //separate out by the "/" in the string
 
-			$firstLine = $stringfromfile[0]; //get the string from the array
+		$branchname = $explodedstring[2]; //get the one that is always the branch name
 
-			$explodedstring = explode("/", $firstLine, 3); //separate out by the "/" in the string
+		$key = str_replace('/.git/HEAD','',$o);
 
-			$branchname = $explodedstring[2]; //get the one that is always the branch name
+		$sections = explode('/',$key);
 
-			$key = str_replace('/.git/HEAD','',$o);
+		$key = end($sections);
 
-			$sections = explode('/',$key);
+		$lines = file($dirname.'/FETCH_HEAD');
 
-			$key = end($sections);
+		$firstline = $lines[0];
 
-			$lines = file($dirname.'/FETCH_HEAD');
+		$segs  = explode(' ',str_replace([' ',chr(9)],' ',$firstline));
 
-			$firstline = $lines[0];
-
-			$segs  = explode(' ',str_replace([' ',chr(9)],' ',$firstline));
-
-			$array[$key] = ['branch'=>$branchname,'commit'=>$segs[0]];
-		}
+		row(trim($key),trim($branchname),trim($segs[0]));
 	}
+}
 
-	$table = [];
-
-	if ($array) {
-		$table[] = ['Package','Branch','Hash'];
-
-		foreach ($array as $key=>$val) {
-			$table[] = [$key,$val['branch'],$val['commit']];
-		}
-
-		$responds = '';
-
-		foreach ($table as $row) {
-			$responds .= trim(str_pad($row[0],32,' ',STR_PAD_RIGHT).str_pad($row[1],16,' ',STR_PAD_RIGHT),str_pad($row[2],36,' ',STR_PAD_RIGHT)).chr(10);
-		}
-	} else {
-		$responds = 'No GIT directory\'s found';
-	}
-
-	return $responds;
+function row($package,$branch,$hash) {
+	echo str_pad($package,32,' ',STR_PAD_RIGHT).str_pad($branch,16,' ',STR_PAD_RIGHT),str_pad($hash,36,' ',STR_PAD_RIGHT).chr(10);
 }

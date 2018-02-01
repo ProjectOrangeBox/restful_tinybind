@@ -50,6 +50,9 @@ function fix_file_permissions($composer_obj) {
 			}
 		}
 	}
+	
+	echo chr(10).'Set Bin folder scripts to executables'.chr(10);
+	@system('chmod 755 "'.ROOTPATH.'/bin/*"');
 
 }
 
