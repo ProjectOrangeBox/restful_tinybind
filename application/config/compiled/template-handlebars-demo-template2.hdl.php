@@ -222,7 +222,7 @@
 if (!class_exists("LS")) {
 class LS {
  public static $jsContext = array (
-  'flags' => 
+  'flags' =>
   array (
     'jstrue' => 1,
     'jsobj' => 1,

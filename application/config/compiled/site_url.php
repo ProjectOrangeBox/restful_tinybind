@@ -1,5 +1,5 @@
 <?php return array (
-  'keys' => 
+  'keys' =>
   array (
     0 => '{www image}',
     1 => '{www themes}',
@@ -26,7 +26,7 @@
     22 => '{dashboard}',
     23 => '{homepage}',
   ),
-  'values' => 
+  'values' =>
   array (
     0 => '/images',
     1 => '/theme',

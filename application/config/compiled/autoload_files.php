@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 $baseDir = dirname(dirname(dirname(dirname(__FILE__))));
 
 return array (
-  'orange' => 
+  'orange' =>
   array (
     'CI_Benchmark' => $baseDir.'/vendor/codeigniter/framework/system/core/Benchmark.php',
     'CI_CodeIgniter' => $baseDir.'/vendor/codeigniter/framework/system/core/CodeIgniter.php',
@@ -266,7 +266,7 @@ return array (
     'my_log' => $baseDir.'/packages/projectorangebox/orange/core/MY_Log.php',
     'my_input' => $baseDir.'/packages/projectorangebox/orange/core/MY_Input.php',
   ),
-  'models' => 
+  'models' =>
   array (
     'backorder_mgr_history_model' => $baseDir.'/packages/quadratec/backorder/models/Backorder_mgr_history_model.php',
     'item_mast_model' => $baseDir.'/packages/quadratec/backorder/models/Item_mast_model.php',
@@ -288,7 +288,7 @@ return array (
     'database_model' => $baseDir.'/packages/projectorangebox/orange/models/Database_model.php',
     'o_setting_model' => $baseDir.'/packages/projectorangebox/orange/models/O_setting_model.php',
   ),
-  'libraries' => 
+  'libraries' =>
   array (
     'backorder_lib' => $baseDir.'/packages/quadratec/backorder/libraries/Backorder_lib.php',
     'data_uri' => $baseDir.'/packages/projectorangebox/extra-validations/libraries/Data_uri.php',
@@ -330,7 +330,7 @@ return array (
     'wallet' => $baseDir.'/packages/projectorangebox/orange/libraries/Wallet.php',
     'validate_base' => $baseDir.'/packages/projectorangebox/orange/libraries/Validate_base.php',
   ),
-  'views' => 
+  'views' =>
   array (
     'admin/settings/details' => $baseDir.'/packages/projectorangebox/theme-orange/views/admin/settings/details.php',
     'admin/settings/editor' => $baseDir.'/packages/projectorangebox/theme-orange/views/admin/settings/editor.php',
@@ -435,198 +435,198 @@ return array (
     'main/index_block' => $baseDir.'/application/views/main/index_block.php',
     'main/index' => $baseDir.'/application/views/main/index.php',
   ),
-  'controllers' => 
+  'controllers' =>
   array (
-    'admin/reports/logins_successful(.*)' => 
+    'admin/reports/logins_successful(.*)' =>
     array (
       'package' => 'packages/projectorangebox/login-success/',
       'directory' => '../../packages/projectorangebox/login-success/controllers/admin/reports/',
       'controller' => '/var/www/www/app/packages/projectorangebox/login-success/controllers/admin/reports/Logins_successfulController.php',
       'clean_controller' => 'Logins_successful',
     ),
-    'admin/utilities/config_viewer(.*)' => 
+    'admin/utilities/config_viewer(.*)' =>
     array (
       'package' => 'packages/projectorangebox/config-viewer/',
       'directory' => '../../packages/projectorangebox/config-viewer/controllers/admin/utilities/',
       'controller' => '/var/www/www/app/packages/projectorangebox/config-viewer/controllers/admin/utilities/Config_viewerController.php',
       'clean_controller' => 'Config_viewer',
     ),
-    'admin/utilities/cache_viewer(.*)' => 
+    'admin/utilities/cache_viewer(.*)' =>
     array (
       'package' => 'packages/projectorangebox/cache-viewer/',
       'directory' => '../../packages/projectorangebox/cache-viewer/controllers/admin/utilities/',
       'controller' => '/var/www/www/app/packages/projectorangebox/cache-viewer/controllers/admin/utilities/Cache_viewerController.php',
       'clean_controller' => 'Cache_viewer',
     ),
-    'admin/utilities/registration(.*)' => 
+    'admin/utilities/registration(.*)' =>
     array (
       'package' => 'packages/projectorangebox/register/',
       'directory' => '../../packages/projectorangebox/register/controllers/admin/utilities/',
       'controller' => '/var/www/www/app/packages/projectorangebox/register/controllers/admin/utilities/RegistrationController.php',
       'clean_controller' => 'Registration',
     ),
-    'admin/configure/tooltips(.*)' => 
+    'admin/configure/tooltips(.*)' =>
     array (
       'package' => 'packages/projectorangebox/tooltips/',
       'directory' => '../../packages/projectorangebox/tooltips/controllers/admin/configure/',
       'controller' => '/var/www/www/app/packages/projectorangebox/tooltips/controllers/admin/configure/TooltipsController.php',
       'clean_controller' => 'Tooltips',
     ),
-    'cli/auto_add_permissions(.*)' => 
+    'cli/auto_add_permissions(.*)' =>
     array (
       'package' => 'packages/projectorangebox/migrations/',
       'directory' => '../../packages/projectorangebox/migrations/controllers/cli/',
       'controller' => '/var/www/www/app/packages/projectorangebox/migrations/controllers/cli/Auto_add_permissionsController.php',
       'clean_controller' => 'Auto_add_permissions',
     ),
-    'admin/backorder_status(.*)' => 
+    'admin/backorder_status(.*)' =>
     array (
       'package' => 'packages/quadratec/backorder/',
       'directory' => '../../packages/quadratec/backorder/controllers/admin/',
       'controller' => '/var/www/www/app/packages/quadratec/backorder/controllers/admin/Backorder_statusController.php',
       'clean_controller' => 'Backorder_status',
     ),
-    'admin/reports/opcache(.*)' => 
+    'admin/reports/opcache(.*)' =>
     array (
       'package' => 'packages/projectorangebox/opcache/',
       'directory' => '../../packages/projectorangebox/opcache/controllers/admin/reports/',
       'controller' => '/var/www/www/app/packages/projectorangebox/opcache/controllers/admin/reports/OpcacheController.php',
       'clean_controller' => 'Opcache',
     ),
-    'backorder_call_center(.*)' => 
+    'backorder_call_center(.*)' =>
     array (
       'package' => 'packages/quadratec/backorder/',
       'directory' => '../../packages/quadratec/backorder/controllers/',
       'controller' => '/var/www/www/app/packages/quadratec/backorder/controllers/Backorder_call_centerController.php',
       'clean_controller' => 'Backorder_call_center',
     ),
-    'admin/backorder_buyer(.*)' => 
+    'admin/backorder_buyer(.*)' =>
     array (
       'package' => 'packages/quadratec/backorder/',
       'directory' => '../../packages/quadratec/backorder/controllers/admin/',
       'controller' => '/var/www/www/app/packages/quadratec/backorder/controllers/admin/Backorder_buyerController.php',
       'clean_controller' => 'Backorder_buyer',
     ),
-    'stock_status_check(.*)' => 
+    'stock_status_check(.*)' =>
     array (
       'package' => 'packages/quadratec/stock-status-check/',
       'directory' => '../../packages/quadratec/stock-status-check/controllers/',
       'controller' => '/var/www/www/app/packages/quadratec/stock-status-check/controllers/Stock_status_checkController.php',
       'clean_controller' => 'Stock_status_check',
     ),
-    'admin/permissions(.*)' => 
+    'admin/permissions(.*)' =>
     array (
       'package' => 'packages/projectorangebox/theme-orange/',
       'directory' => '../../packages/projectorangebox/theme-orange/controllers/admin/',
       'controller' => '/var/www/www/app/packages/projectorangebox/theme-orange/controllers/admin/PermissionsController.php',
       'clean_controller' => 'Permissions',
     ),
-    'user_registration(.*)' => 
+    'user_registration(.*)' =>
     array (
       'package' => 'packages/projectorangebox/register/',
       'directory' => '../../packages/projectorangebox/register/controllers/',
       'controller' => '/var/www/www/app/packages/projectorangebox/register/controllers/User_registrationController.php',
       'clean_controller' => 'User_registration',
     ),
-    'tooltips_handler(.*)' => 
+    'tooltips_handler(.*)' =>
     array (
       'package' => 'packages/projectorangebox/tooltips/',
       'directory' => '../../packages/projectorangebox/tooltips/controllers/',
       'controller' => '/var/www/www/app/packages/projectorangebox/tooltips/controllers/Tooltips_handlerController.php',
       'clean_controller' => 'Tooltips_handler',
     ),
-    'handlebars/demo(.*)' => 
+    'handlebars/demo(.*)' =>
     array (
       'package' => 'packages/projectorangebox/handlebars/',
       'directory' => '../../packages/projectorangebox/handlebars/controllers/handlebars/',
       'controller' => '/var/www/www/app/packages/projectorangebox/handlebars/controllers/handlebars/DemoController.php',
       'clean_controller' => 'Demo',
     ),
-    'cli/scaffolding(.*)' => 
+    'cli/scaffolding(.*)' =>
     array (
       'package' => 'packages/projectorangebox/scaffolding/',
       'directory' => '../../packages/projectorangebox/scaffolding/controllers/cli/',
       'controller' => '/var/www/www/app/packages/projectorangebox/scaffolding/controllers/cli/ScaffoldingController.php',
       'clean_controller' => 'Scaffolding',
     ),
-    'admin/dashboard(.*)' => 
+    'admin/dashboard(.*)' =>
     array (
       'package' => 'packages/projectorangebox/theme-orange/',
       'directory' => '../../packages/projectorangebox/theme-orange/controllers/admin/',
       'controller' => '/var/www/www/app/packages/projectorangebox/theme-orange/controllers/admin/DashboardController.php',
       'clean_controller' => 'Dashboard',
     ),
-    'forgot_password(.*)' => 
+    'forgot_password(.*)' =>
     array (
       'package' => 'packages/projectorangebox/forgot/',
       'directory' => '../../packages/projectorangebox/forgot/controllers/',
       'controller' => '/var/www/www/app/packages/projectorangebox/forgot/controllers/Forgot_passwordController.php',
       'clean_controller' => 'Forgot_password',
     ),
-    'admin/backorder(.*)' => 
+    'admin/backorder(.*)' =>
     array (
       'package' => 'packages/quadratec/backorder/',
       'directory' => '../../packages/quadratec/backorder/controllers/admin/',
       'controller' => '/var/www/www/app/packages/quadratec/backorder/controllers/admin/BackorderController.php',
       'clean_controller' => 'Backorder',
     ),
-    'admin/settings(.*)' => 
+    'admin/settings(.*)' =>
     array (
       'package' => 'packages/projectorangebox/theme-orange/',
       'directory' => '../../packages/projectorangebox/theme-orange/controllers/admin/',
       'controller' => '/var/www/www/app/packages/projectorangebox/theme-orange/controllers/admin/SettingsController.php',
       'clean_controller' => 'Settings',
     ),
-    'cli/backorder(.*)' => 
+    'cli/backorder(.*)' =>
     array (
       'package' => 'packages/quadratec/backorder/',
       'directory' => '../../packages/quadratec/backorder/controllers/cli/',
       'controller' => '/var/www/www/app/packages/quadratec/backorder/controllers/cli/BackorderController.php',
       'clean_controller' => 'Backorder',
     ),
-    'admin/users(.*)' => 
+    'admin/users(.*)' =>
     array (
       'package' => 'packages/projectorangebox/theme-orange/',
       'directory' => '../../packages/projectorangebox/theme-orange/controllers/admin/',
       'controller' => '/var/www/www/app/packages/projectorangebox/theme-orange/controllers/admin/UsersController.php',
       'clean_controller' => 'Users',
     ),
-    'admin/roles(.*)' => 
+    'admin/roles(.*)' =>
     array (
       'package' => 'packages/projectorangebox/theme-orange/',
       'directory' => '../../packages/projectorangebox/theme-orange/controllers/admin/',
       'controller' => '/var/www/www/app/packages/projectorangebox/theme-orange/controllers/admin/RolesController.php',
       'clean_controller' => 'Roles',
     ),
-    'cli/migrate(.*)' => 
+    'cli/migrate(.*)' =>
     array (
       'package' => 'packages/projectorangebox/migrations/',
       'directory' => '../../packages/projectorangebox/migrations/controllers/cli/',
       'controller' => '/var/www/www/app/packages/projectorangebox/migrations/controllers/cli/MigrateController.php',
       'clean_controller' => 'Migrate',
     ),
-    'handlebars(.*)' => 
+    'handlebars(.*)' =>
     array (
       'package' => 'packages/projectorangebox/handlebars/',
       'directory' => '../../packages/projectorangebox/handlebars/controllers/',
       'controller' => '/var/www/www/app/packages/projectorangebox/handlebars/controllers/HandlebarsController.php',
       'clean_controller' => 'Handlebars',
     ),
-    'login(.*)' => 
+    'login(.*)' =>
     array (
       'package' => 'packages/projectorangebox/theme-orange/',
       'directory' => '../../packages/projectorangebox/theme-orange/controllers/',
       'controller' => '/var/www/www/app/packages/projectorangebox/theme-orange/controllers/LoginController.php',
       'clean_controller' => 'Login',
     ),
-    'users(.*)' => 
+    'users(.*)' =>
     array (
       'package' => 'packages/projectorangebox/theme-orange/',
       'directory' => '../../packages/projectorangebox/theme-orange/controllers/',
       'controller' => '/var/www/www/app/packages/projectorangebox/theme-orange/controllers/UsersController.php',
       'clean_controller' => 'Users',
     ),
-    'main(.*)' => 
+    'main(.*)' =>
     array (
       'package' => 'application/',
       'directory' => '../../application/controllers/',

@@ -173,7 +173,7 @@
 if (!class_exists("LS")) {
 class LS {
  public static $jsContext = array (
-  'flags' => 
+  'flags' =>
   array (
     'jstrue' => 1,
     'jsobj' => 1,
@@ -280,7 +280,7 @@ return function ($in = null, $options = null) {
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">		
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 		<link href="/assets/site.css" rel="stylesheet">
 	</head>
 	<body>
