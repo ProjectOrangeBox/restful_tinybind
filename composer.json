@@ -31,7 +31,7 @@
 			    	"/var/logs": "777",
 			    	"/var/sessions": "777",
 			    	"/support": "777",
-			    	"/application/config/compiled": "777"
+			    	"/compiled": "777"
 		    }]
     }
 }

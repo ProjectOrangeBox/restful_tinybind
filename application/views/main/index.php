@@ -15,6 +15,11 @@
 
 	<? pear::include('/main/index_block',['url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder<br>Buyer Groups','user-circle-o']) ?>
 
+	<? pear::include('/main/index_block',['','/admin/backorder_buyer','Backorder<br>Buyer Groups','user-circle-o']) ?>
+
+	<? pear::include('/main/index_block',['url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder<br>Buyer Groups','user-circle-o']) ?>
+
+
 </div>
 
 <? pear::end() ?>
