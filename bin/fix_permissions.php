@@ -39,7 +39,7 @@ if (isset($composer_obj->orange->permission)) {
 			$filename = trim($filename,'/');
 
 			if (substr($filename,0,1) !== '#') {
-				echo '/'.$filename.' >> '.$filemode.chr(10);
+				echo ROOTPATH.'/'.$filename.' >> '.$filemode.chr(10);
 
 				/* does this folder exist? */
 				if (!file_exists(ROOTPATH.'/'.$filename)) {
