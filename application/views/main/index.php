@@ -19,6 +19,9 @@
 
 	<? pear::include('/main/index_block',['url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder<br>Buyer Groups','user-circle-o']) ?>
 
+	<? pear::include('/main/index_block',['','/dropships','Drop<br>Ships','user-circle-o']) ?>
+
+	<? pear::include('/main/index_block',['url::/admin/dropships::index~get','/admin/dropships','Drop Ship<br>MGR','user-circle-o']) ?>
 
 </div>
 

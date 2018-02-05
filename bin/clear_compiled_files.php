@@ -5,9 +5,9 @@ passthru('sudo echo');
 
 define('ROOTPATH', realpath(__DIR__.'/../'));
 
-echo 'Cleaning Cache Folder'.chr(10);
+echo 'Cleaning Compile Folder'.chr(10);
 
-delete_files(ROOTPATH.'/var/cache');
+delete_files(ROOTPATH.'/compiled');
 
 function delete_files($searchDirectory) {
 	foreach (glob(escapeshellcmd($searchDirectory).'/*') as $folderitem) {
