@@ -11,15 +11,18 @@
 
 	<? pear::include('/main/index_block',['','/backorder-call-center','Backorder<br>Search']) ?>
 
+	<? pear::include('/main/index_block',['','/dropships','Dropship<br>Search']) ?>
+
+</div>
+<div class="row admin-row">
+
+	<? pear::include('/main/index_block',['url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder<br>Buyer Groups','user-circle-o']) ?>
+
 	<? pear::include('/main/index_block',['url::/admin/backorder::index~get','/admin/backorder','Backorder<br>Manager','user-circle-o']) ?>
 
 	<? pear::include('/main/index_block',['url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder<br>Buyer Groups','user-circle-o']) ?>
 
-	<? pear::include('/main/index_block',['','/admin/backorder_buyer','Backorder<br>Buyer Groups','user-circle-o']) ?>
-
 	<? pear::include('/main/index_block',['url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder<br>Buyer Groups','user-circle-o']) ?>
-
-	<? pear::include('/main/index_block',['','/dropships','Drop<br>Ships','user-circle-o']) ?>
 
 	<? pear::include('/main/index_block',['url::/admin/dropships::index~get','/admin/dropships','Drop Ship<br>MGR','user-circle-o']) ?>
 
@@ -32,6 +35,13 @@
 <? pear::section('page_style') ?>
 .dashboard a.btn.btn-lg.btn-block {
 	background-color: #0b6854;
+	color: white;
+	transition:all 0.3s ease;
+  opacity:0.9;
+  color: white;
+}
+.dashboard .admin-row a.btn.btn-lg.btn-block {
+	background-color: #265476;
 	color: white;
 	transition:all 0.3s ease;
   opacity:0.9;
