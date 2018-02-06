@@ -15,7 +15,6 @@
 </div>
 
 <div class="row">
-	<div class="col-md-12"><h4><i class="fa fa-user-circle-o"></i> Admin</h4></div>
 
 	<? pear::include('/main/index_block',['url::/admin/backorder::index~get','/admin/backorder','Backorder<br>MGR','industry','265476']) ?>
 
