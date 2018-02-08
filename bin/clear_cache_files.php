@@ -3,7 +3,7 @@
 
 passthru('sudo echo');
 
-define('ROOTPATH', realpath(__DIR__.'/../'));
+define('ROOTPATH', str_replace(' ','\\ ',realpath(__DIR__.'/../')));
 
 echo 'Cleaning Cache Folder'.chr(10);
 

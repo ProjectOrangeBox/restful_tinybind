@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-define('ROOTPATH', realpath(__DIR__.'/../'));
+define('ROOTPATH', str_replace(' ','\\ ',realpath(__DIR__.'/../')));
 
 /* search all the folder under root for .git/HEAD */
 exec('find "'.ROOTPATH.'" -name FETCH_HEAD',$output);
