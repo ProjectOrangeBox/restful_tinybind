@@ -56,6 +56,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/tooltips',
 	ROOTPATH.'/packages/projectorangebox/handlebars',
 	ROOTPATH.'/packages/projectorangebox/general_addons',
+	ROOTPATH.'/packages/projectorangebox/tasks',
 	ROOTPATH.'/packages/projectorangebox/orange',
 	ROOTPATH.'/packages/projectorangebox/theme-orange',
 );

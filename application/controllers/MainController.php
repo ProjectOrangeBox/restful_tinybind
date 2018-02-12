@@ -29,8 +29,4 @@ class MainController extends MY_Controller {
 		redirect('{dashboard}');
 	}
 
-	public function testAction() {
-		var_dump(user::roles(),user::permissions(),user::email(),user::id(),user::username(),user::logged_in(),user::is_admin());
-	}
-
 } /* end class */

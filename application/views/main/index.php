@@ -22,6 +22,8 @@
 
 	<? pear::include('/main/index_block',['url::/admin/dropships::index~get','/admin/dropships','Drop Ship<br>MGR','industry','487626']) ?>
 
+	<? pear::include('/main/index_block',['url::/admin/tasks::index~get','/admin/tasks','Issues<br>&nbsp;','bug','cc2f0c']) ?>
+
 </div>
 
 <? pear::end() ?>
