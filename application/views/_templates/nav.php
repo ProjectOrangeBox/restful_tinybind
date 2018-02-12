@@ -47,6 +47,7 @@
 									<?=pear::menu_li('url::/admin/reports/logins_successful::index~get','/admin/reports/logins-successful','Successful Logins') ?>
 									<?=pear::menu_li('url::/admin/reports/opcache::index~get','/admin/reports/opcache','OPCache') ?>
 									<?=pear::menu_li('url::/admin/configure/tooltips::index~get','/admin/configure/tooltips','Tooltips') ?>
+									<?=pear::menu_li('url::/admin/tasks::index~get','/admin/tasks','Requests') ?>
 								</ul>
 						</li>
 						<? } ?>

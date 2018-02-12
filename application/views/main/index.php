@@ -15,6 +15,11 @@
 </div>
 
 <div class="row">
+	<?php if (user::logged_in()) { ?>
+		<div class="alert alert-danger" role="alert">
+			If you have any problems, changes, ideas, etc... please submit them with the "<i class="fa fa-bug"></i> New Request" button below.
+		</div>
+	<?php } ?>
 
 	<? pear::include('/main/index_block',['url::/admin/backorder::index~get','/admin/backorder','Backorder<br>MGR','industry','265476']) ?>
 
@@ -22,7 +27,7 @@
 
 	<? pear::include('/main/index_block',['url::/admin/dropships::index~get','/admin/dropships','Drop Ship<br>MGR','industry','487626']) ?>
 
-	<? pear::include('/main/index_block',['url::/admin/tasks::index~get','/admin/tasks','Issues<br>&nbsp;','bug','cc2f0c']) ?>
+	<? pear::include('/main/index_block',['url::/admin/tasks::index~get','/admin/tasks/details','New<br>Request','bug','cc2f0c']) ?>
 
 </div>
 
