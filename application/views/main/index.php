@@ -11,6 +11,7 @@
 
 	<? pear::include('/main/index_block',['','/backorder-call-center','Backorder<br>Search']) ?>
 	<? pear::include('/main/index_block',['','/dropships','Dropship<br>Search']) ?>
+	<? pear::include('/main/index_block',['','/backorder_k1','Backorder<br>K1s']) ?>
 
 </div>
 
