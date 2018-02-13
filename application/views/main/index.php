@@ -15,7 +15,7 @@
 </div>
 
 <div class="row">
-	<?php if (user::logged_in()) { ?>
+	<?php if (user::can('url::/admin/tasks::index~get')) { ?>
 		<div class="alert alert-danger" role="alert">
 			If you have any problems, changes, ideas, etc... please submit them with the "<i class="fa fa-bug"></i> New Request" button below.
 		</div>
