@@ -39,7 +39,7 @@ if (isset($composer_obj->orange->permission)) {
 			$filename = trim($filename,'/');
 
 			if (substr($filename,0,1) !== '#') {
-				echo '/'.$filename.' >> '.$filemode.chr(10);
+				echo $filemode.' '.ROOTPATH.'/'.$filename.chr(10);
 
 				/* does this folder exist? */
 				if (!file_exists(ROOTPATH.'/'.$filename)) {
@@ -54,14 +54,14 @@ if (isset($composer_obj->orange->permission)) {
 	}
 }
 
-passthru('sudo chmod 775 '.s(ROOTPATH).'/bin/*');
-
 function globr($searchDirectory,$filemode) {
 	foreach (glob(escapeshellcmd($searchDirectory).'/*') as $folderitem) {
 		if (is_dir($folderitem)) {
 			globr($folderitem,$filemode);
 		} else {
-			passthru('sudo chmod '.$filemode." '".$folderitem."'");
+			echo $filemode.' '.$folderitem.chr(10);
+			
+			passthru('sudo chmod '.$filemode.' '.s($folderitem));
 		}
 	}
 }

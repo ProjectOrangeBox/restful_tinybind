@@ -24,6 +24,8 @@
 
 	<? pear::include('/main/index_block',['url::/admin/backorder::index~get','/admin/backorder','Backorder<br>MGR','industry','265476']) ?>
 
+	<? pear::include('/main/index_block',['url::/admin/backorderimport::index~get','/admin/backorderimport','Backorder<br>Import','upload','265476']) ?>
+
 	<? pear::include('/main/index_block',['url::/admin/backorder_buyer::index~get','/admin/backorder_buyer','Backorder<br>Buyer Groups','list','265476']) ?>
 
 	<? pear::include('/main/index_block',['url::/admin/dropships::index~get','/admin/dropships','Drop Ship<br>MGR','industry','487626']) ?>

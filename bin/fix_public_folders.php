@@ -19,10 +19,16 @@ if (file_exists($filename)) {
 	die('can not locate composer.json as "'.$filename.'"'.chr(10));
 }
 
-$reverse = (@$_SERVER['argv'][1] == '-r') ? true : false;
+$options = implode('|',$_SERVER['argv']);
 
-echo chr(10).'Copy Package Public Folders'.chr(10);
+$reverse = (strpos($options,'-r') !== false);
+$copy = (strpos($options,'-c') !== false);
 
+if ($copy) {
+	echo 'Copying Folders'.chr(10);
+} else {
+	echo 'Symlink Folders'.chr(10);
+}
 
 if (!$reverse) {
 	echo 'From Package to Public'.chr(10);
@@ -40,13 +46,38 @@ if (isset($composer_obj->orange->symlink)) {
 				if ($reverse) {
     			list($public,$private) = array($private,$public);
 				}
-				
-				echo ROOTPATH.$private.' >> '.ROOTPATH.$public.chr(10);
 
-				passthru('sudo cp -R '.s(ROOTPATH.$private).' '.s(ROOTPATH.$public));
+				echo ROOTPATH.$private.' >> '.ROOTPATH.$public.chr(10);
+				
+				if ($copy) {
+					passthru('sudo cp -R '.s(ROOTPATH.$private).' '.s(ROOTPATH.$public));
+				} else {
+					relative_symlink($private, $public);
+				}
 			}
 		}
 	}
+}
+
+/* figure out relative path */
+function relative_symlink($target, $link) {
+	/* remove the link that might be there */
+
+	/* let's make sure the rootpath is NOT there since we add it */
+	if (substr($link, 0, strlen(ROOTPATH)) == ROOTPATH) {
+		$link = substr($link, strlen(ROOTPATH));
+	}
+
+	if (substr($target, 0, strlen(ROOTPATH)) == ROOTPATH) {
+		$target = substr($target, strlen(ROOTPATH));
+	}
+
+	/* remove it if it's already there */
+	//@unlink(ROOTPATH . $link);
+	passthru('sudo rm -fdr '.s(ROOTPATH.$link));
+
+	/* create it */
+	passthru('sudo ln -s '.s(ROOTPATH.$target).' '.s(ROOTPATH.$link));
 }
 
 function s($input) {
