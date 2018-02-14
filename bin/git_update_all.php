@@ -18,12 +18,10 @@ exec('find '.s(ROOTPATH).' -name .git',$repros);
 foreach ($repros as $repro) {
 	$repro = dirname($repro);
 
-	chdir($repro);
-
 	echo $repro.chr(10);
 
-	passthru('git fetch --all');
-	passthru('git reset --hard origin/'.$_ENV['GITBRANCH']);
+	passthru('cd '.s($repro).';git fetch --all');
+	passthru('cd '.s($repro).';git reset --hard origin/'.$_ENV['GITBRANCH']);
 }
 
 function s($input) {
