@@ -14,9 +14,8 @@ function delete_files($searchDirectory) {
 		if (is_dir($folderitem)) {
 			delete_files($folderitem);
 		} else {
-			passthru('sudo rm -f '.s($folderitem));
-
 			echo $folderitem.chr(10);
+			passthru('sudo rm -f '.s($folderitem));
 		}
 	}
 }

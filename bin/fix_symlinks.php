@@ -51,7 +51,7 @@ function relative_symlink($target, $link) {
 
 	/* remove it if it's already there */
 	//@unlink(ROOTPATH . $link);
-	passthru('sudo rm -f '.s(ROOTPATH.$link));
+	passthru('sudo rm -fdr '.s(ROOTPATH.$link));
 
 	/* create it */
 	passthru('sudo ln -s '.s(ROOTPATH.$target).' '.s(ROOTPATH.$link));
