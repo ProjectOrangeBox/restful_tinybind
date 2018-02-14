@@ -4,3 +4,5 @@
 _env
 d2r.log
 .vscode
+public/theme/*
+public/assets/*

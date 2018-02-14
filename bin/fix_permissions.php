@@ -3,7 +3,7 @@
 
 passthru('sudo echo');
 
-define('ROOTPATH', str_replace(' ','\\ ',realpath(__DIR__.'/../')));
+define('ROOTPATH',realpath(__DIR__.'/../'));
 
 $filename = ROOTPATH.'/composer.json';
 
@@ -22,10 +22,10 @@ if (file_exists($filename)) {
 echo chr(10).'Setting the Default Permissions'.chr(10);
 
 /* files */
-passthru('sudo find '.ROOTPATH.' -type f | sudo xargs chmod 664');
+passthru('sudo find '.s(ROOTPATH).' -type f | sudo xargs chmod 664');
 
 /* directories */
-passthru('sudo find '.ROOTPATH.' -type d | sudo xargs chmod 775');
+passthru('sudo find '.s(ROOTPATH).' -type d | sudo xargs chmod 775');
 
 /* change the others back */
 echo chr(10).'Set Permissions Based on Composer Config'.chr(10);
@@ -43,10 +43,10 @@ if (isset($composer_obj->orange->permission)) {
 
 				/* does this folder exist? */
 				if (!file_exists(ROOTPATH.'/'.$filename)) {
-					passthru('sudo mkdir -p '.$filemode.' '.ROOTPATH.'/'.$filename);
+					passthru('sudo mkdir -p '.$filemode.' '.s(ROOTPATH).'/'.$filename);
 				}
 
-				passthru('sudo chmod '.$filemode.' '.ROOTPATH.'/'.$filename);
+				passthru('sudo chmod '.$filemode.' '.s(ROOTPATH).'/'.$filename);
 
 				globr(ROOTPATH.'/'.$filename,$filemode);
 			}
@@ -54,7 +54,7 @@ if (isset($composer_obj->orange->permission)) {
 	}
 }
 
-passthru('sudo chmod 775 '.ROOTPATH.'/bin/*');
+passthru('sudo chmod 775 '.s(ROOTPATH).'/bin/*');
 
 function globr($searchDirectory,$filemode) {
 	foreach (glob(escapeshellcmd($searchDirectory).'/*') as $folderitem) {
@@ -64,4 +64,8 @@ function globr($searchDirectory,$filemode) {
 			passthru('sudo chmod '.$filemode." '".$folderitem."'");
 		}
 	}
+}
+
+function s($input) {
+	return str_replace(' ','\ ',$input);
 }

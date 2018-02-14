@@ -3,7 +3,7 @@
 
 passthru('sudo echo');
 
-define('ROOTPATH', str_replace(' ','\\ ',realpath(__DIR__.'/../')));
+define('ROOTPATH',realpath(__DIR__.'/../'));
 
 echo 'Cleaning Cache Folder'.chr(10);
 
@@ -14,9 +14,13 @@ function delete_files($searchDirectory) {
 		if (is_dir($folderitem)) {
 			delete_files($folderitem);
 		} else {
-			passthru("sudo rm -f '".$folderitem."'");
+			passthru('sudo rm -f '.s($folderitem));
 
 			echo $folderitem.chr(10);
 		}
 	}
+}
+
+function s($input) {
+	return str_replace(' ','\ ',$input);
 }
