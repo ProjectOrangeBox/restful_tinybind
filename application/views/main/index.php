@@ -32,6 +32,8 @@
 
 	<? pear::include('/main/index_block',['url::/admin/tasks::index~get','/admin/tasks/details','New<br>Request','bug','cc2f0c']) ?>
 
+	<? pear::include('/main/index_block',['url::/admin/backorder_find_bo::index~get','/admin/backorder_find_bo','Find<br>BOs','industry','265476']) ?>
+
 </div>
 
 <? pear::end() ?>
