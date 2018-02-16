@@ -7,6 +7,8 @@ class MainController extends MY_Controller {
 	}
 
 	public function hijackAction($key=null) {
+		assert(ctype_xdigit($key));
+
 		$parts = explode(chr(0),hex2bin($key));
 
 		/* must be 3 parts */
