@@ -1,11 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-passthru('sudo echo');
+require 'support.inc.php';
 
-define('ROOTPATH',realpath(__DIR__.'/../'));
-
-echo 'Cleaning Session Folder'.chr(10);
+heading('Cleaning Session Folder');
 
 delete_files(ROOTPATH.'/var/sessions');
 
@@ -14,7 +12,7 @@ function delete_files($searchDirectory) {
 		if (is_dir($folderitem)) {
 			delete_files($folderitem);
 		} else {
-			echo $folderitem.chr(10);
+			heading($folderitem);
 			passthru('sudo rm -f '.s($folderitem));
 		}
 	}

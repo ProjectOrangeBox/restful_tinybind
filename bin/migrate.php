@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-define('ROOTPATH',realpath(__DIR__.'/../'));
+require 'support.inc.php';
 
-passthru('cd '.str_replace(' ','\ ',ROOTPATH).'/public;php index.php cli/migrate/latest');
+$dir = (isset($_SERVER['argv'][1])) ? $_SERVER['argv'][1] : 'latest';
+
+shell('cd '.ESCROOTPATH.'/public;php index.php cli/migrate/'.$dir);

@@ -1,12 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-define('ROOTPATH',realpath(__DIR__.'/../'));
+require 'support.inc.php';
+
+columns_widths(32,16,36);
 
 /* search all the folder under root for .git/HEAD */
 exec('find '.s(ROOTPATH).' -name FETCH_HEAD',$output);
 
-row('Package','Branch','Hash');
+columns('Package','Branch','Hash');
 
 foreach ($output as $o) {
 	$dirname = dirname(dirname($o));
@@ -17,13 +19,5 @@ foreach ($output as $o) {
 	$sections = explode('/',$dirname);
 	$package = end($sections);
 
-	row($package,$branch,$hash);
-}
-
-function row($package,$branch,$hash) {
-	echo str_pad($package,32,' ',STR_PAD_RIGHT).str_pad($branch,16,' ',STR_PAD_RIGHT),str_pad($hash,36,' ',STR_PAD_RIGHT).chr(10);
-}
-
-function s($input) {
-	return str_replace(' ','\ ',$input);
+	columns($package,$branch,$hash);
 }

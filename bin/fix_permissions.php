@@ -1,25 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-passthru('sudo echo');
+require 'support.inc.php';
 
-define('ROOTPATH',realpath(__DIR__.'/../'));
-
-$filename = ROOTPATH.'/composer.json';
-
-echo 'Using Composer File '.$filename.chr(10);
-
-if (file_exists($filename)) {
-	$composer_obj = json_decode(file_get_contents($filename));
-
-	if ($composer_obj === null) {
-		die('composer.json malformed'.chr(10));
-	}
-} else {
-	die('can not locate composer.json as "'.$filename.'"'.chr(10));
-}
-
-echo chr(10).'Setting the Default Permissions'.chr(10);
+heading('Setting the Default Permissions');
 
 /* files */
 passthru('sudo find '.s(ROOTPATH).' -type f | sudo xargs chmod 664');
@@ -28,7 +12,7 @@ passthru('sudo find '.s(ROOTPATH).' -type f | sudo xargs chmod 664');
 passthru('sudo find '.s(ROOTPATH).' -type d | sudo xargs chmod 775');
 
 /* change the others back */
-echo chr(10).'Set Permissions Based on Composer Config'.chr(10);
+heading('Set Permissions Based on Composer Config');
 
 if (isset($composer_obj->orange->permission)) {
 
@@ -39,7 +23,7 @@ if (isset($composer_obj->orange->permission)) {
 			$filename = trim($filename,'/');
 
 			if (substr($filename,0,1) !== '#') {
-				echo $filemode.' '.ROOTPATH.'/'.$filename.chr(10);
+				heading($filemode.' '.ROOTPATH.'/'.$filename);
 
 				/* does this folder exist? */
 				if (!file_exists(ROOTPATH.'/'.$filename)) {
@@ -59,13 +43,9 @@ function globr($searchDirectory,$filemode) {
 		if (is_dir($folderitem)) {
 			globr($folderitem,$filemode);
 		} else {
-			echo $filemode.' '.$folderitem.chr(10);
+			heading($filemode.' '.$folderitem);
 			
 			passthru('sudo chmod '.$filemode.' '.s($folderitem));
 		}
 	}
-}
-
-function s($input) {
-	return str_replace(' ','\ ',$input);
 }

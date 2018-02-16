@@ -1,11 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-passthru('sudo echo');
+require 'support.inc.php';
 
-define('ROOTPATH',realpath(__DIR__.'/../'));
-
-echo 'Cleaning Cache Folder'.chr(10);
+heading('Cleaning Cache Folder');
 
 delete_files(ROOTPATH.'/var/cache');
 delete_files(ROOTPATH.'/var/uploads');
@@ -16,12 +14,8 @@ function delete_files($searchDirectory) {
 		if (is_dir($folderitem)) {
 			delete_files($folderitem);
 		} else {
-			echo $folderitem.chr(10);
+			heading($folderitem);
 			passthru('sudo rm -f '.s($folderitem));
 		}
 	}
-}
-
-function s($input) {
-	return str_replace(' ','\ ',$input);
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-define('ROOTPATH',realpath(__DIR__.'/../'));
+require 'support.inc.php';
 
-passthru('cd '.str_replace(' ','\ ',ROOTPATH).'/public;php index.php cli/auto_add_permissions');
+passthru('cd '.ESCROOTPATH.'/public;php index.php cli/auto_add_permissions');
