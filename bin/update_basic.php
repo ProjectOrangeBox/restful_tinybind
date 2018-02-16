@@ -11,6 +11,7 @@ $commands = [
 	$dir.'/bin/repair.php',
 	$dir.'/bin/clean.php caches',
 	$dir.'/bin/link.php',
+	$dir.'/bin/git.php',
 ];
 
 foreach ($commands as $cli) {

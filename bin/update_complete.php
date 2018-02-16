@@ -13,6 +13,7 @@ $commands = [
 	$dir.'/bin/clean.php caches',
 	$dir.'/bin/link.php',
 	$dir.'/bin/take_site.php up',
+	$dir.'/bin/git.php',
 ];
 
 foreach ($commands as $cli) {
