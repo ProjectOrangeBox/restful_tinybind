@@ -36,13 +36,6 @@ if (file_exists($build_filename)) {
 	error('Can not locate build.json as "'.$build_filename.'"');
 }
 
-if ($build_ary['~sudo'] === true) {
-	passthru('sudo echo');
-	define('SUDO','sudo ');
-} else {
-	define('SUDO','');
-}
-
 /* get option */
 $args = $_SERVER['argv'];
 array_shift($args);
@@ -70,6 +63,13 @@ if (!in_array($option,$options)) {
 	
 	e(implode(', ',$html));
 	exit();
+}
+
+if ($build_ary['~sudo'] === true) {
+	passthru('sudo echo');
+	define('SUDO','sudo ');
+} else {
+	define('SUDO','');
 }
 
 run($build_ary[$option]);
