@@ -1,0 +1,116 @@
+{
+  "~sudo": true,
+	"relink": [
+		"rm -f {erootpath}/public/theme/orange",
+		"rm -f {erootpath}/public/assets/backorder",
+		"rm -f {erootpath}/public/assets/stock-status-check",
+    "ln -s {erootpath}/packages/projectorangebox/theme-orange/public/theme/orange {erootpath}/public/theme/orange",
+    "ln -s {erootpath}/packages/quadratec/backorder/public/assets/backorder {erootpath}/public/assets/backorder",
+    "ln -s {erootpath}/packages/quadratec/stock-status-check/public/assets/stock-status-check {erootpath}/public/assets/stock-status-check"
+  ],
+  "clear sessions": [
+    "rm -fdr {erootpath}/var/sessions/*"
+  ],
+  "clear caches": [
+    "rm -fdr {erootpath}/var/cache/*",
+    "rm -fdr {erootpath}/var/uploads/*",
+    "rm -fdr {erootpath}/var/downloads/*"
+  ],
+	"add access": [
+		"cd {erootpath}/public;php index.php cli/auto_add_permissions"
+	],
+  "repair": [
+    "mkdir -p {erootpath}/bin",
+    "mkdir -p {erootpath}/support",
+    "mkdir -p {erootpath}/support/migrations",
+    "mkdir -p {erootpath}/support/backups",
+    "mkdir -p {erootpath}/public/assets",
+    "mkdir -p {erootpath}/public/theme",
+    "mkdir -p {erootpath}/var",
+    "mkdir -p {erootpath}/var/cache",
+    "mkdir -p {erootpath}/var/uploads",
+    "mkdir -p {erootpath}/var/downloads",
+    "mkdir -p {erootpath}/var/emails",
+    "mkdir -p {erootpath}/var/logs",
+    "mkdir -p {erootpath}/var/sessions",
+    "find {erootpath} -type f | sudo xargs chmod 664",
+    "find {erootpath} -type d | sudo xargs chmod 775",
+    "chmod -Rf 777 {erootpath}/var",
+    "chmod -Rf 777 {erootpath}/var/cache/*",
+    "chmod -Rf 777 {erootpath}/var/uploads/*",
+    "chmod -Rf 777 {erootpath}/var/downloads/*",
+    "chmod -Rf 777 {erootpath}/var/emails/*",
+    "chmod -Rf 777 {erootpath}/var/logs/*",
+    "chmod -Rf 777 {erootpath}/var/sessions/*",
+    "chmod -Rf 777 {erootpath}/bin/*",
+    "chmod -Rf 777 {erootpath}/support/backups"
+  ],
+	"git update": [
+		"#git_update {erootpath}",
+		"#git_update {erootpath}/packages/projectorangebox/cache-viewer",
+		"#git_update {erootpath}/packages/projectorangebox/config-viewer",
+		"#git_update {erootpath}/packages/projectorangebox/extra-validation",
+		"#git_update {erootpath}/packages/projectorangebox/forget",
+		"#git_update {erootpath}/packages/projectorangebox/general_addons",
+		"#git_update {erootpath}/packages/projectorangebox/handlebars",
+		"#git_update {erootpath}/packages/projectorangebox/librarian",
+		"#git_update {erootpath}/packages/projectorangebox/login-success",
+		"#git_update {erootpath}/packages/projectorangebox/migrations",
+		"#git_update {erootpath}/packages/projectorangebox/opcache",
+		"#git_update {erootpath}/packages/projectorangebox/orange",
+		"#git_update {erootpath}/packages/projectorangebox/register",
+		"#git_update {erootpath}/packages/projectorangebox/remember",
+		"#git_update {erootpath}/packages/projectorangebox/scaffolding",
+		"#git_update {erootpath}/packages/projectorangebox/tasks",
+		"#git_update {erootpath}/packages/projectorangebox/theme-orange",
+		"#git_update {erootpath}/packages/projectorangebox/tooltips",
+		"#git_update {erootpath}/packages/quadratec/backorder",
+		"#git_update {erootpath}/packages/quadratec/drop-ship",
+		"#git_update {erootpath}/packages/quadratec/stock-status-check"
+	],
+	"git status": [
+		"#git_status {erootpath}"
+	],
+	"complete database backup": [
+		"mkdir -p {erootpath}/support/backups",
+		"chmod -f 777 {erootpath}/support/backups",
+		"mysqldump --extended-insert=FALSE --add-drop-table --add-drop-trigger --create-options --password={dbbackuppassword} --events --routines --single-transaction --triggers --user={dbbackupuser} --databases {dbbackupdatabase} | gzip -9 > {erootpath}/support/backups/{filename_date}.{dbbackupdatabase}.sql.gz"
+	],
+	"backup database data": [
+		"mkdir -p {erootpath}/support/backups",
+		"chmod -f 777 {erootpath}/support/backups",
+		"mysqldump --extended-insert=FALSE --add-drop-table --password={dbbackuppassword} --user={dbbackupuser} --databases {dbbackupdatabase} | gzip -9 > {erootpath}/support/backups/{filename_date}.data.{dbbackupdatabase}.sql.gz"
+	],
+	"migrate": [
+		"cd {erootpath}/public;php index.php cli/migrate/latest"
+	],
+	"site up": [
+		"chmod -f 777 {erootpath}/public",
+		"rm {erootpath}/public/index.html",
+		"chmod -f 775 {erootpath}/public"
+	],
+	"site down": [
+		"chmod -f 777 {erootpath}/public",
+		"cp {erootpath}/support/site_down.html {erootpath}/public/index.html",
+		"chmod -f 775 {erootpath}/public"
+	],
+  "complete": [
+    "*complete database backup",
+    "*site down",
+    "*git update",
+    "*repair",
+    "*clear caches",
+    "*clear sessions",
+    "*relink",
+    "*site up",
+    "*git status"
+  ],
+  "basic": [
+    "*backup database data",
+    "*git update",
+    "*repair",
+    "*clear caches",
+    "*relink",
+    "*git status"
+  ]
+}
