@@ -25,8 +25,6 @@ if (file_exists($filename)) {
 	error('can not locate composer.json as "'.$filename.'"');
 }
 
-$config = require ROOTPATH.'/bin/config.php';
-
 /* functions */
 
 function get_arg1($error='Please provide an option.') {
@@ -151,10 +149,4 @@ function columns() {
 	}
 
 	echo chr(10);
-}
-
-function config($name,$default=null) {
-	global $config;
-
-	return (isset($config[$name])) ? $config[$name] : $default;
 }
