@@ -67,6 +67,7 @@
         "{ESCROOTPATH}/bin/git.php update",
         "{ESCROOTPATH}/bin/repair.php",
         "{ESCROOTPATH}/bin/clean.php caches",
+        "{ESCROOTPATH}/bin/clean.php sessions",
         "{ESCROOTPATH}/bin/link.php",
         "{ESCROOTPATH}/bin/take_site.php up",
         "{ESCROOTPATH}/bin/git.php"
