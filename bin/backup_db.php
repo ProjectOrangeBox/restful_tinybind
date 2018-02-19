@@ -6,7 +6,7 @@ require 'support.inc.php';
 $dir = rtrim(get_arg1('Please provide folder to save backups to.'),'/');
 
 if (!file_exists($dir)) {
-	error('can not locate "'.$dir.'"');
+	error('can not locate folder "'.$dir.'"');
 }
 
 env_required(['DBBACKUPDATABASE','DBBACKUPUSER','DBBACKUPPASSWORD']);
@@ -18,4 +18,6 @@ $mysqldump = '/usr/bin/mysqldump --extended-insert=FALSE --add-drop-table --add-
 $mysqldump = str_replace(['%user%','%password%','%database%'],[$_ENV['DBBACKUPUSER'],$_ENV['DBBACKUPPASSWORD'],$_ENV['DBBACKUPDATABASE']],$mysqldump);
 
 shell($mysqldump.' | gzip -9 > '.str_replace(' ','\ ',$file));
+
+/* remove older than 7 days */
 shell('sudo find '.ESCROOTPATH.'/backups -mtime +7 -type f -delete');

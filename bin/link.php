@@ -9,15 +9,15 @@ $reverse = (strpos($options,'-r') !== false);
 $copy = (strpos($options,'-c') !== false);
 
 if ($copy) {
-	echo 'Copying Folders'.chr(10);
+	e('Copying Folders');
 } else {
-	echo 'Symlink Folders'.chr(10);
+	e('Symlink Folders');
 }
 
 if (!$reverse) {
-	echo 'From Package to Public'.chr(10);
+	e('From Package to Public');
 } else {
-	echo 'From Public to Package'.chr(10);
+	e('From Public to Package');
 }
 
 if (isset($composer_obj->orange->symlink)) {
@@ -31,7 +31,7 @@ if (isset($composer_obj->orange->symlink)) {
     			list($public,$private) = array($private,$public);
 				}
 
-				echo ROOTPATH.$private.' >> '.ROOTPATH.$public.chr(10);
+				e(ROOTPATH.$private.' >> '.ROOTPATH.$public);
 				
 				if ($copy) {
 					passthru('sudo cp -R '.s(ROOTPATH.$private).' '.s(ROOTPATH.$public));

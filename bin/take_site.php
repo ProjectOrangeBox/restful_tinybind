@@ -19,5 +19,5 @@ switch (get_arg1(false)) {
 		exec('sudo chmod 775 '.ESCROOTPATH.'/public');
 	break;
 	default:
-		die('please provide up or down'.chr(10));
+		error('please provide up or down');
 }
