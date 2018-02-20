@@ -387,8 +387,8 @@ $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'session_id';
 $config['sess_expiration'] = 86400;
 $config['sess_save_path'] = ROOTPATH.'/var/sessions/';
-$config['sess_match_ip'] = FALSE;
-$config['sess_time_to_update'] = 3600;
+$config['sess_match_ip'] = false;
+$config['sess_time_to_update'] = 86400;
 $config['sess_regenerate_destroy'] = true;
 
 /*

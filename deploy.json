@@ -14,7 +14,7 @@
     "cp -R {erootpath}/packages/quadratec/stock-status-check/public/assets/stock-status-check {erootpath}/public/assets/stock-status-check"
   ],
   "clear sessions": [
-    "rm -fdr {erootpath}/var/sessions/*"
+    "rm -f {erootpath}/var/sessions/*"
   ],
   "clear caches": [
     "rm -fdr {erootpath}/var/cache/*",
