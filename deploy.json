@@ -65,7 +65,6 @@
 		"#git_update {erootpath}/packages/projectorangebox/orange",
 		"#git_update {erootpath}/packages/projectorangebox/register",
 		"#git_update {erootpath}/packages/projectorangebox/remember",
-		"#git_update {erootpath}/packages/projectorangebox/scaffolding",
 		"#git_update {erootpath}/packages/projectorangebox/tasks",
 		"#git_update {erootpath}/packages/projectorangebox/theme-orange",
 		"#git_update {erootpath}/packages/projectorangebox/tooltips",
