@@ -77,12 +77,12 @@
 define('ROOTPATH', realpath(__DIR__.'/../'));
 
 /* .env file */
-if (!file_exists(ROOTPATH.'/_env')) {
-	die('_env file missing');
+if (!file_exists(ROOTPATH.'/.env')) {
+	die('.env file missing');
 }
 
 /* bring in the system _env files */
-$_ENV = $_ENV + require ROOTPATH.'/_env';
+$_ENV = $_ENV + require ROOTPATH.'/.env';
 
 define('ENVIRONMENT',$_ENV['SERVER_ENVIRONMENT']);
 
