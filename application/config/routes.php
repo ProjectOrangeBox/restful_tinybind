@@ -12,6 +12,12 @@ $route = array (
   	return 'admin/'.$url;
   },
 
+  'login(.*)' => function($url) {
+  	middleware('LoginMiddleware','PublicMiddleware','GuiMiddleware');
+
+  	return 'login'.$url;
+  },
+
   '(.*)' => function($url) {
   	middleware('PublicMiddleware','GuiMiddleware');
 
