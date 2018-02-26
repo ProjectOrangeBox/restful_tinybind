@@ -158,6 +158,7 @@
     "*repair",
     "*clear caches",
     "*relink",
+    "*site up",
     "*git status"
   ]
 }
