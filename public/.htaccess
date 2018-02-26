@@ -1,5 +1,3 @@
-SetEnv MODE TEST
-
 Options +FollowSymLinks
 
 RewriteEngine On
