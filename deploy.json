@@ -17,12 +17,12 @@
     "cp -R {erootpath}/packages/quadratec/stock-status-check/public/assets/stock-status-check {erootpath}/public/assets/stock-status-check"
   ],
   "clear sessions": [
-		"% delete all files in the session folder.",
+		"% Delete all files in the session folder.",
 		"#sudo on",
     "rm -f {erootpath}/var/sessions/*"
   ],
   "clear caches": [
-		"% delete all files in the cache, uploads, downloads folders.",
+		"% Delete all files in the cache, uploads, downloads folders.",
 		"#sudo on",
     "rm -fdr {erootpath}/var/cache/*",
     "rm -fdr {erootpath}/var/uploads/*",
@@ -139,7 +139,6 @@
 	],
   "complete": [
 		"% Run Complete Site Update.",
-		"#sudo on",
     "*complete database backup",
     "*site down",
     "*git update",
@@ -152,13 +151,11 @@
   ],
   "basic": [
 		"% Run Basic Site Update.",
-		"#sudo on",
     "*backup database data",
     "*git basic update",
     "*repair",
     "*clear caches",
     "*relink",
-    "*site up",
     "*git status"
   ]
 }
