@@ -34,6 +34,8 @@
 
 	<? pear::include('/main/index_block',['url::/admin/backorder_find_bo::index~get','/admin/backorder_find_bo','Find<br>BOs','industry','265476']) ?>
 
+	<? pear::include('/main/index_block',['url::/admin/backorder_item_lookup::index~get','/admin/backorder_item_lookup','Backorder<br>Item Lookup','industry','265476']) ?>
+
 </div>
 
 <? pear::end() ?>
