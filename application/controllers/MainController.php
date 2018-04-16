@@ -31,4 +31,14 @@ class MainController extends MY_Controller {
 		redirect('{dashboard}');
 	}
 
+	public function testAction() {
+		echo '<nav class="navbar navbar-inverse navbar-fixed-top">';
+		echo '<div class="container">';
+
+		echo ci('nav_library')->generateTree(1)->html();
+		
+		echo '</div>';
+		echo '</nav>';
+	}
+
 } /* end class */

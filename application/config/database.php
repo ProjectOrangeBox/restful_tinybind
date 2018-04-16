@@ -138,3 +138,25 @@ $db['tapemacs'] = [
 	'failover' => array(),
 	'save_queries' => env('database.debug',false),
 ];
+
+$db['payment_gateway'] = [
+	'dsn'	=> '',
+	'hostname' => env('database.payment_gateway.hostname'),
+	'username' => env('database.payment_gateway.username'),
+	'password' => env('database.payment_gateway.password'),
+	'database' => env('database.payment_gateway.database'),
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => env('database.debug',false),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => env('database.debug',false),
+];

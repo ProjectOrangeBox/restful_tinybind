@@ -1,7 +1,9 @@
 <?php
 
-pear::attach('menu_li',function($permission,$url,$text) {
-	if (user::can($permission)) {
-		echo '<li><a href="'.site_url($url).'">'.$text.'</a></li>';
+class Pear_menu_li extends Pear_plugin {
+	public function render($permission=null,$url=null,$text=null) {
+		if (user::can($permission)) {
+			echo '<li><a href="'.site_url($url).'">'.$text.'</a></li>';
+		}
 	}
-});
+}

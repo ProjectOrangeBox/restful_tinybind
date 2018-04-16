@@ -42,7 +42,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/backorder',
 	ROOTPATH.'/packages/quadratec/stock-status-check',
 	ROOTPATH.'/packages/quadratec/drop-ships',
-	ROOTPATH.'/packages/quadratec/dtab',
+	ROOTPATH.'/packages/quadratec/affirm',
 	ROOTPATH.'/packages/projectorangebox/extra-validations',
 	ROOTPATH.'/packages/projectorangebox/forgot',
 	ROOTPATH.'/packages/projectorangebox/remember',

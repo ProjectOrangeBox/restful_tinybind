@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $config['upload_path'] = ROOTPATH.'/var/uploads/';
 $config['allowed_types'] = 'gif|jpg|png';
