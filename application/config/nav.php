@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $config['navigation_open'] = '<ul class="nav navbar-nav">';
 $config['navigation_close'] = '</ul>';

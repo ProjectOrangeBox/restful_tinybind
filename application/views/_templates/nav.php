@@ -29,7 +29,9 @@
 					<? if (user::has_one_permission_of('menu::edit profile')) { ?>
 						<li><a href="/users/edit-profile/<?=user::id() ?>"><i class="fa fa-user"></i> My Profile</a></li>
 					<? } ?>
-					<li><a href="<?=site_url('{logout}') ?>"><i class="fa fa-key"></i> Log Out</a></li>
+					<? if (user::logged_in()) { ?>
+						<li><a href="<?=site_url('{logout}') ?>"><i class="fa fa-key"></i> Log Out</a></li>
+					<? } ?>
 				</ul>
 				</li>
 				</ul>

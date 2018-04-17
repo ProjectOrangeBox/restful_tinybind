@@ -37,11 +37,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		var icon = $(this).data('icon');
 		var color = $(this).data('color');
 		var text = $(this).text();
-	
+
 		icon = (icon) ? icon : 'link';
 		color = (color) ? color : 'E36B2A';
 		target = (target) ? ' target="'+target+'" ' : '';
-	
+
 		if (href != '#' && href != '') {
 			$('div.metro').append('<div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-margin-tb"><a href="'+href+'" '+target+' class="btn btn-lg btn-block" style="background-color: #'+color+'"><i class="fa fa-'+icon+' fa-2x" aria-hidden="true"></i><br>'+parent_text+'<br>'+text+'</a></div>');
 		}

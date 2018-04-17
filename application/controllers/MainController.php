@@ -36,7 +36,7 @@ class MainController extends MY_Controller {
 		echo '<div class="container">';
 
 		echo ci('nav_library')->generateTree(1)->html();
-		
+
 		echo '</div>';
 		echo '</nav>';
 	}
