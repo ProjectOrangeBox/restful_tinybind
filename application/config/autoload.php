@@ -30,6 +30,15 @@
 */
 
 /*
+$autoload['autoloader'] = array(
+'models'=>[
+	'foobar_model'=>ROOTPATH.'/application/some/folder/Foobar_model.php'
+]);
+*/
+
+$autoload['autoloader'] = array();
+
+/*
 | -------------------------------------------------------------------
 |  Auto-load Packages
 | -------------------------------------------------------------------

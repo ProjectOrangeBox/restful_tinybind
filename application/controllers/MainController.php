@@ -31,14 +31,65 @@ class MainController extends MY_Controller {
 		redirect('{dashboard}');
 	}
 
-	public function testAction() {
-		echo '<nav class="navbar navbar-inverse navbar-fixed-top">';
-		echo '<div class="container">';
+	public function test1Action() {
+		$request = [
+			'foobar.name'=>'Don Myers',
+			'foobar.age'=>23,
+			'candy.flavor'=>'cherry',
+			'candy.color'=>'red',
+			'firstname'=>'Don',
+			'lastname'=>'Myers',
+			'id'=>178,
 
-		echo ci('nav_library')->generateTree(1)->html();
+		];
 
-		echo '</div>';
-		echo '</nav>';
+		$remap = [
+			'foobar.age'=>'foobar.parent_id',
+		];
+
+		$copy = [
+			'id'=>'foobar.parent_id',
+			'id'=>'candy.parent_id',
+		];
+
+
+		$x = ci('input')->request_grouping($request,$remap,$copy,'people_model','candy');
+
+		echo '<pre>';
+		var_dump($x);
 	}
+	
+	public function test2Action() {
+		$request = [
+			'foobar.name'=>[
+				'Don',
+				'Donna',
+				'Dwayne',
+				'Dan',
+				'Doug',
+				'David',
+			],
+			'foobar.age'=>[
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+			],
+			'candy.flavor'=>'cherry',
+			'candy.color'=>'red',
+			'firstname'=>'Don',
+			'lastname'=>'Myers',
+			'id'=>178,
+
+		];
+		
+		$x = ci('input')->request_dot_notation($request);
+
+		echo '<pre>';
+		var_dump($x);
+	}
+
 
 } /* end class */

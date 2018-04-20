@@ -5,6 +5,7 @@ NOTE: NO trailing slashes on folders
 
 $config['www image'] = '/images';
 $config['www themes'] = '/theme';
+$config['www theme'] = '/theme';
 $config['www shared plugins'] = '/plugins';
 $config['www shared assets'] = '/assets';
 

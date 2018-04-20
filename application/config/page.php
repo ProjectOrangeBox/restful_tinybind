@@ -23,5 +23,3 @@ $config['css'] = '/assets/application/application.css';
 #$config['js_variables'] = ['name'=>'example'];
 
 #$config['icon'] = '/path/image';
-
-define('PAGE_MIN',(env('SERVER_DEBUG') == 'development' ? '' : '.min'));
