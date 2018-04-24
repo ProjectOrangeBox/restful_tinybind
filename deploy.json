@@ -85,6 +85,7 @@
 		"#git_update {erootpath}/packages/projectorangebox/tasks",
 		"#git_update {erootpath}/packages/projectorangebox/theme-orange",
 		"#git_update {erootpath}/packages/projectorangebox/tooltips",
+		"#git_update {erootpath}/packages/quadratec/affirm",
 		"#git_update {erootpath}/packages/quadratec/backorder",
 		"#git_update {erootpath}/packages/quadratec/drop-ships",
 		"#git_update {erootpath}/packages/quadratec/stock-status-check"
