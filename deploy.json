@@ -96,8 +96,10 @@
 		"#git_update {erootpath}",
 		"#git_update {erootpath}/packages/projectorangebox/orange",
 		"#git_update {erootpath}/packages/projectorangebox/theme-orange",
+		"#git_update {erootpath}/packages/quadratec/affirm",
 		"#git_update {erootpath}/packages/quadratec/backorder",
-		"#git_update {erootpath}/packages/quadratec/drop-ships"
+		"#git_update {erootpath}/packages/quadratec/drop-ships",
+		"#git_update {erootpath}/packages/quadratec/stock-status-check"
 	],
 	"git status": [
 		"% Show the GIT branches of the projects git folders.",
