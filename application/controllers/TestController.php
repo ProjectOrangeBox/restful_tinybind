@@ -13,7 +13,7 @@ class TestController extends MY_Controller {
 		
 		//$input = '10';
 
-		$output = valid('integer',$input);
+		$output = filter('human|visible|filename',$input);
 		
 		var_dump($output);
 	}

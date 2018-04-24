@@ -1,8 +1,8 @@
 <? pear::extends('_templates/orange_default') ?>
 
 <? pear::section('section_container') ?>
-<?=pear::form_open_multipart('/login',['method'=>'post','class'=>'form-signin']) ?>
-  <h2 class="form-signin-heading">Please sign in</h2>
+<?=pear::open_multipart('/login',['method'=>'post','class'=>'form-signin']) ?>
+  <h2 class="form-signin-heading">Please Sign In</h2>
   <label for="inputEmail" class="sr-only">Email address</label>
   <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" autofocus>
   <label for="inputPassword" class="sr-only">Password</label>
@@ -13,7 +13,7 @@
 	  <br>
 	  <a href="/forgot-password">Forgot Password</a>
 	</p>
-<?=pear::form_close() ?>
+<?=pear::close() ?>
 <? pear::end() ?>
 
 <? pear::section('page_style') ?>
