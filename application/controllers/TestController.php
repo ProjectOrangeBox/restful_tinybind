@@ -8,13 +8,13 @@ class TestController extends MY_Controller {
 
 	public function foobarAction() {
 		echo '<pre>';
-		
+
 		$input = '$%^ &*(IJHJ'.chr(10).'KL I*(ODon Myers.png';
-		
+
 		//$input = '10';
 
 		$output = filter('human|visible|filename',$input);
-		
+
 		var_dump($output);
 	}
 
@@ -117,15 +117,15 @@ class TestController extends MY_Controller {
 		$copy = [
 			'candys.parent_id[]'=>'id',
 		];
-		
+
 		$move = [
 			'primary_id'=>'id',
 		];
-		
+
 		$remove = [
 			'color',
 		];
-	
+
 		$x = ci('input')->request_remap($copy,$move,$remove,'example_data',null,'.','_data',false);
 
 		var_dump($x);

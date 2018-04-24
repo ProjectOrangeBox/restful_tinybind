@@ -3,7 +3,7 @@
 <? pear::section('section_container') ?>
 
 <?=pear::open_multipart('/main/test3',['class'=>'form-horizontal','method'=>'post','data-success'=>'Record Saved|blue']) ?>
-	
+
 	<? tf_test('id',123) ?>
 	<? tf_test('firstname') ?>
 	<? tf_test('lastname') ?>
