@@ -14,9 +14,11 @@
 				<?=ci('nav_library')->build(config('nav.left')) ?>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
+				<? if (user::has_permission('url::/orange_user_msgs::index~get')) { ?>
 				<li>
 					<a href="/admin/msgs"><i class="fa fa-envelope"></i> <span class="badge"><?=pear::user_messages(user::id()) ?></span></a>
 				</li>
+				<? } ?>
 				<li>
 				<? if (user::logged_in()) { ?>
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -35,10 +37,10 @@
 					<? if (user::logged_in()) { ?>
 						<li><a href="<?=site_url('{logout}') ?>"><i class="fa fa-key"></i> Log Out</a></li>
 					<? } ?>
-					<!--
+					<? /*
 					<li role="separator" class="divider"></li>
 					<?=ci('nav_library')->li(config('nav.right')) ?>
-					-->
+					*/ ?>
 				</ul>
 				</li>
 				</ul>
