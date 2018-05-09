@@ -12,3 +12,4 @@ $config['dropdown_open'] = '<ul class="dropdown-menu" role="menu">';
 $config['dropdown_close'] = '</ul>';
 
 $config['left'] = 2;
+$config['right'] = 3;

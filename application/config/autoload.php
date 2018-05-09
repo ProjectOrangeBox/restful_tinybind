@@ -69,6 +69,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/tasks',
 	ROOTPATH.'/packages/projectorangebox/orange',
 	ROOTPATH.'/packages/projectorangebox/theme-orange',
+	ROOTPATH.'/packages/projectorangebox/user_msgs',
 );
 
 /*
