@@ -2,7 +2,9 @@
 
 <? pear::section('section_container') ?>
 
-<?=pear::open_multipart('',['class'=>'form-horizontal','method'=>'post','data-success'=>'Record Saved|blue'],['id'=>$record['id']]) ?>
+<?=pear::repeatable() ?>
+
+<?=pear::open_multipart('',['class'=>'form-horizontal','method'=>'post','data-success'=>'Record Saved|blue'],['id'=>$id]) ?>
 
 	<div class="row">
 		<div class="col-md-6"><h3><i class="fa fa-cog"></i> <?=$ci_title_prefix ?> <?=$controller_title ?></h3></div>
@@ -11,34 +13,20 @@
 
 	<hr>
 
-	<?=pear::repeatable('name-here') ?>
-
-	<div class="repeatable name-here">
-		<? foreach ($record['repeatable'] as $rec) { ?>
-			<div class="repeat-grouping">
-
-			<!-- Text input-->
-			<div class="form-group">
-				<label class="col-md-3 control-label" for="textinput">First Name</label>
-				<div class="col-md-9">
-					<?=pear::input('firstname['.$rec['id'].']',$rec['firstname'],['class'=>'form-control input-md']) ?>
-				</div>
-			</div>
-
-			<!-- Text input-->
-			<div class="form-group">
-				<label class="col-md-3 control-label" for="textinput">Last Name</label>
-				<div class="col-md-9">
-					<?=pear::input('lastname['.$rec['id'].']',$rec['lastname'],['class'=>'form-control input-md']) ?>
-				</div>
-			</div>
-			<div class="form-group text-right"><div class="col-md-12"><a class="btn btn-default js-repeatable-remove-button btn-xs" href="#"><i class="fa fa-minus-square" aria-hidden="true"></i> '+remove_text+'</a></div></div>
-		</div>
-
+	<p>
+		<?=pear::repeatable_add_button('repeatable-add-button','repeatable-template') ?>
+	</p>
+	
+	<?=pear::sortable('sortable') ?>
+	<div id="sortable" class="list-group">
+	<? foreach ($repeatable as $record) { ?>
+		<?=pear::include('test/repeatable',['parent_id'=>$id,'id'=>$record['id'],'firstname'=>$record['firstname'],'lastname'=>$record['lastname'],'checkers'=>$record['checkers']]) ?>
 	<? } ?>
-
 	</div>
-
+	
+	<?=pear::repeatable_start_template('repeatable-template','.repeatable-add-button','.repeatable-remove-button','.repeatable-group',8,1,'#sortable') ?>
+		<?=pear::include('test/repeatable',['parent_id'=>$id]) ?>
+	<?=pear::repeatable_end_template('repeatable-append') ?>
 
 	<!-- Submit Button -->
 	<div class="form-group">
@@ -51,5 +39,5 @@
 
 <?=pear::close() ?>
 
-
 <? pear::end() ?>
+
