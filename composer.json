@@ -1,7 +1,9 @@
 {
-  "require": {
-    "codeigniter/framework": "^3.1",
-    "mmucklo/krumo": "*",
-    "zordius/lightncandy": "dev-master"
-  }
+	"minimum-stability": "dev",
+	"require": {
+		"codeigniter/framework": "^3.1",
+		"mmucklo/krumo": "*",
+		"zordius/lightncandy": "dev-master",
+		"adldap/adldap": "5.0.*"
+	}
 }
