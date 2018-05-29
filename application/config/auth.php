@@ -12,7 +12,9 @@ $config['password copy'] = 'Password must be at least: 8 characters, 1 upper, 1 
 $config['admin role id'] = 1;
 
 /* anyone with this user id is not logged in */
-$config['nobody user id'] = 3;
+$config['nobody user id'] = '#nobody#';
+
+$config['nobody role id'] = 'nobody';
 
 $config['empty fields error'] = 'Please enter your login credentials.';
 $config['general failure error'] = 'Incorrect Login and/or Password';
