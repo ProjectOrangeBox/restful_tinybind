@@ -16,14 +16,14 @@
 	<p>
 		<?=pear::repeatable_add_button('repeatable-add-button','repeatable-template') ?>
 	</p>
-	
+
 	<?=pear::sortable('sortable') ?>
 	<div id="sortable" class="list-group">
 	<? foreach ($repeatable as $record) { ?>
 		<?=pear::include('test/repeatable',['parent_id'=>$id,'id'=>$record['id'],'firstname'=>$record['firstname'],'lastname'=>$record['lastname'],'checkers'=>$record['checkers']]) ?>
 	<? } ?>
 	</div>
-	
+
 	<?=pear::repeatable_start_template('repeatable-template','.repeatable-add-button','.repeatable-remove-button','.repeatable-group',8,1,'#sortable') ?>
 		<?=pear::include('test/repeatable',['parent_id'=>$id]) ?>
 	<?=pear::repeatable_end_template('repeatable-append') ?>

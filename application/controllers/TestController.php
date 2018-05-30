@@ -6,7 +6,20 @@ class TestController extends MY_Controller {
 	public function indexAction() {
 		echo '<pre>';
 
-		var_dump(ci('orange_ldap')->get_all_users());
+		$vd = ci('orange_ldap')->get_all_users();
+
+/*
+		$roles = [];
+
+		foreach ($vd as $name=>$d) {
+			foreach ($d['roles'] as $i=>$r) {
+				$roles[$r] = $r;
+			}
+		}
+
+		print_r($roles);
+*/
+		var_dump($vd);
 
 		echo 'end';
 	}

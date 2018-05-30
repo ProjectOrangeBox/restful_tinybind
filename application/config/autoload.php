@@ -29,14 +29,10 @@
 |
 */
 
-/*
-$autoload['autoloader'] = array(
-'models'=>[
-	'foobar_model'=>ROOTPATH.'/application/some/folder/Foobar_model.php'
-]);
-*/
-
-$autoload['autoloader'] = array();
+/* if you try to load the array key instead load the array value */
+$autoload['remap'] = [
+	'auth'=>'ldap_auth',
+];
 
 /*
 | -------------------------------------------------------------------

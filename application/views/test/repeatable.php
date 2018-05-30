@@ -17,7 +17,7 @@
 			<input type="text" class="form-control" name="repeatable|lastname][]" value="<?=$lastname ?>">
 		</div>
 	</div>
-	
+
 	<!-- Checkbox -->
 	<div class="form-group">
 		<div class="col-md-offset-3 col-md-4">
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 
 	<div class="form-group text-right">
 		<div class="col-md-12">

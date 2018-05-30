@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $config['account_suffix'] = '@quadratec.local';
 $config['domain_controllers'] = ['quad-dc2.quadratec.local','quad-dc1.quadratec.local'];
