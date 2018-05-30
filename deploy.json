@@ -89,7 +89,8 @@
 		"#git_update {erootpath}/packages/quadratec/affirm",
 		"#git_update {erootpath}/packages/quadratec/backorder",
 		"#git_update {erootpath}/packages/quadratec/drop-ships",
-		"#git_update {erootpath}/packages/quadratec/stock-status-check"
+		"#git_update {erootpath}/packages/quadratec/stock-status-check",
+		"#git_update {erootpath}/packages/quadratec/quad_ldap"
 	],
 	"git basic update": [
 		"% Fetch and Reset the basic git Modules.",
@@ -100,7 +101,8 @@
 		"#git_update {erootpath}/packages/quadratec/affirm",
 		"#git_update {erootpath}/packages/quadratec/backorder",
 		"#git_update {erootpath}/packages/quadratec/drop-ships",
-		"#git_update {erootpath}/packages/quadratec/stock-status-check"
+		"#git_update {erootpath}/packages/quadratec/stock-status-check",
+		"#git_update {erootpath}/packages/quadratec/quad_ldap"
 	],
 	"git status": [
 		"% Show the GIT branches of the projects git folders.",
