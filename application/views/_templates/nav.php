@@ -37,11 +37,11 @@
 					<? foreach (user::roles() as $role) { ?>
 						<li class="disabled"><a tabindex="-1" href="#"><i class="fa fa-users"></i> <?=$role ?></a></li>
 					<? } ?>
+					<li role="separator" class="divider"></li>
 					<? if (user::logged_in()) { ?>
 						<li><a href="<?=site_url('{logout}') ?>"><i class="fa fa-key"></i> Log Out</a></li>
 					<? } ?>
 					<? /*
-					<li role="separator" class="divider"></li>
 					<?=ci('nav_library')->li(config('nav.right')) ?>
 					*/ ?>
 				</ul>
