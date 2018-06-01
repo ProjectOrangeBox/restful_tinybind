@@ -4,7 +4,7 @@ $config['Site Open'] = true;
 
 $config['Is Open Cookie'] = '';
 
-$config['human date'] = 'F jS, Y, g:i a';
+$config['human date'] = 'F jS, Y, g:ia';
 
 $config['Site Down Title'] = 'Site Down';
 
