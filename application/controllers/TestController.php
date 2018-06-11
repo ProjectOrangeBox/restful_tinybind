@@ -4,6 +4,25 @@ class TestController extends MY_Controller {
 	use admin_controller_trait;
 
 	public function indexAction() {
+		var_dump(user::email());
+	}
+
+	public function loaded_classesAction() {
+		echo '<pre>';
+
+		var_dump(get_declared_classes());
+		var_dump($this->formatBytes(memory_get_peak_usage(true)));
+		var_dump($this->formatBytes(memory_get_usage(true)));
+	}
+
+	protected function formatBytes($size, $precision = 2) {
+		$base = log($size, 1024);
+		$suffixes = array('', 'K', 'M', 'G', 'T');
+
+		return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+	}
+
+	public function xindexAction() {
 		echo '<pre>';
 
 		$vd = ci('orange_ldap')->get_all_users();
@@ -40,6 +59,14 @@ class TestController extends MY_Controller {
 
 
 		var_dump(ci('input')->request());
+	}
+
+	public function importAction() {
+		$users = ci('orange_ldap')->get_all_users();
+		
+		foreach ($users as $u) {
+			k($u);
+		}
 	}
 
 	/*
@@ -97,6 +124,10 @@ class TestController extends MY_Controller {
 
 		//$all = ci('orange_ldap')->all();
 		//var_dump($all);
+	}
+
+	public function jsonAction() {
+		echo ci('test_model')->create_json_select('json','id,name,group,value,enabled','orange_settings');
 	}
 
 } /* end class */

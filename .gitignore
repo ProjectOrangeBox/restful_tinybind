@@ -6,3 +6,4 @@ d2r.log
 .vscode
 public/theme/*
 .DS_Store
+/composer.lock
