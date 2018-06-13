@@ -7,3 +7,5 @@ d2r.log
 public/theme/*
 .DS_Store
 /composer.lock
+support/backups
+._

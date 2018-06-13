@@ -63,7 +63,7 @@ class TestController extends MY_Controller {
 
 	public function importAction() {
 		$users = ci('orange_ldap')->get_all_users();
-		
+
 		foreach ($users as $u) {
 			k($u);
 		}

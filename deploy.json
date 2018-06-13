@@ -129,18 +129,20 @@
 		"@sudo on",
 		"capture PWD pwd",
 		"import array {PWD}/.env",
+		"capture FILE_DATE 'date +%F_%T'",
 		"mkdir -p {PWD}/support/backups",
 		"chmod -f 777 {PWD}/support/backups",
-		"mysqldump --extended-insert=FALSE --add-drop-table --add-drop-trigger --create-options --password={dbbackuppassword} --events --routines --single-transaction --triggers --user={dbbackupuser} --databases {dbbackupdatabase} | gzip -9 > {PWD}/support/backups/{filename_date}.{dbbackupdatabase}.sql.gz"
+		"mysqldump --extended-insert=FALSE --add-drop-table --add-drop-trigger --create-options --password={DBBACKUPPASSWORD} --events --routines --single-transaction --triggers --user={DBBACKUPUSER} --databases {DBBACKUPDATABASE} | gzip -9 > {PWD}/support/backups/{FILE_DATE}.{DBBACKUPDATABASE}.sql.gz"
 	],
 	"backup database data": [
 		"// % Backup only the database data.",
 		"@sudo on",
 		"capture PWD pwd",
 		"import array {PWD}/.env",
+		"capture FILE_DATE 'date +%F_%T'",
 		"mkdir -p {PWD}/support/backups",
 		"chmod -f 777 {PWD}/support/backups",
-		"mysqldump --extended-insert=FALSE --add-drop-table --password={dbbackuppassword} --user={dbbackupuser} --databases {dbbackupdatabase} | gzip -9 > {PWD}/support/backups/{filename_date}.data.{dbbackupdatabase}.sql.gz"
+		"mysqldump --extended-insert=FALSE --add-drop-table --password={DBBACKUPPASSWORD} --user={DBBACKUPUSER} --databases {DBBACKUPDATABASE} | gzip -9 > {PWD}/support/backups/{FILE_DATE}.data.{DBBACKUPDATABASE}.sql.gz"
 	],
 	"migrate": [
 		"// % Run migration Up.",
