@@ -31,8 +31,10 @@
 
 /* if you try to load the array key instead load the array value */
 $autoload['remap'] = [
+	/*
 	'auth'=>'ldap_auth',
 	'o_user_entity'=>'O_ldap_user_entity',
+	*/
 ];
 
 /*
@@ -49,7 +51,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/stock-status-check',
 	ROOTPATH.'/packages/quadratec/drop-ships',
 	ROOTPATH.'/packages/quadratec/affirm',
-	ROOTPATH.'/packages/quadratec/quad_ldap',
+	/*ROOTPATH.'/packages/quadratec/quad_ldap',*/
 	ROOTPATH.'/packages/projectorangebox/extra-validations',
 	ROOTPATH.'/packages/projectorangebox/forgot',
 	ROOTPATH.'/packages/projectorangebox/remember',

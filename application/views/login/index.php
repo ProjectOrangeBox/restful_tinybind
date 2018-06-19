@@ -3,7 +3,7 @@
 
 <? pear::section('section_container') ?>
 <?=pear::open_multipart('/login',['method'=>'post','class'=>'form-signin']) ?>
-  <h2>Please Sign in using your windows login</h2>
+  <h2><?=config('auth.login h2') ?></h2>
   <input type="text" name="email" id="inputEmail" class="form-control" placeholder="Login" autofocus>
   <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password">
   <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>

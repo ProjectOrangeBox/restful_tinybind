@@ -12,9 +12,13 @@ $config['password copy'] = 'Password must be at least: 8 characters, 1 upper, 1 
 $config['admin role id'] = 1;
 
 /* anyone with this user id is not logged in */
-$config['nobody user id'] = '#nobody#';
+$config['nobody user id'] = 3; // #nobody# or 3
 
-$config['nobody role id'] = 'nobody';
+$config['nobody role id'] = 3; // nobody or 3
+
+//$config['login h2'] = 'Please Sign in<br>using your<br>Windows Login';
+$config['login h2'] = 'Please Sign in';
+
 
 $config['empty fields error'] = 'Please enter your login credentials.';
 $config['general failure error'] = 'Incorrect Login and/or Password';
