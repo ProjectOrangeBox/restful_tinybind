@@ -144,6 +144,24 @@
 		"chmod -f 777 {PWD}/support/backups",
 		"mysqldump --extended-insert=FALSE --add-drop-table --password={DBBACKUPPASSWORD} --user={DBBACKUPUSER} --databases {DBBACKUPDATABASE} | gzip -9 > {PWD}/support/backups/{FILE_DATE}.data.{DBBACKUPDATABASE}.sql.gz"
 	],
+	"import gz database dump": [
+		"// % Import a GZIP database Dump.",
+		"@sudo on",
+		"capture PWD pwd",
+		"import array {PWD}/.env",
+		"readline FILENAME 'Enter Filename: '",
+		"e 'Using: {PWD}/support/backups/{FILENAME}'",
+		"zcat {PWD}/support/backups/{FILENAME} | mysql --user={DBBACKUPUSER} --password={DBBACKUPPASSWORD} {DBBACKUPDATABASE}"
+	],
+	"import database dump": [
+		"// % Import a Non GZIP database Dump.",
+		"@sudo on",
+		"capture PWD pwd",
+		"import array {PWD}/.env",
+		"readline FILENAME 'Enter Filename: '",
+		"e 'Using: {PWD}/support/backups/{FILENAME}'",
+		"cat {PWD}/support/backups/{FILENAME} | mysql --user={DBBACKUPUSER} --password={DBBACKUPPASSWORD} {DBBACKUPDATABASE}"
+	],
 	"migrate": [
 		"// % Run migration Up.",
 		"@sudo on",
