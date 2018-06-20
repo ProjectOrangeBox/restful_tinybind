@@ -3,7 +3,7 @@
 class TestController extends MY_Controller {
 	use admin_controller_trait;
 
-	public function indexAction() {
+	public function zindexAction() {
 		var_dump(user::email());
 	}
 
@@ -41,24 +41,6 @@ class TestController extends MY_Controller {
 		var_dump($vd);
 
 		echo 'end';
-	}
-
-	public function sindexAction() {
-		$data['id'] = 89;
-		$data['repeatable'] = [
-			['id'=>'45','firstname'=>'Johnny','lastname'=>'Appleseed','checkers'=>0],
-			['id'=>'78','firstname'=>'Don','lastname'=>'Jones','checkers'=>1],
-		];
-
-		ci('page')->render(null,$data);
-	}
-
-	public function indexPostAction() {
-		ci('input')->request_remap([],[],[],'root',null,'|',true,true);
-
-
-
-		var_dump(ci('input')->request());
 	}
 
 	public function importAction() {

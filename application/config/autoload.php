@@ -70,6 +70,8 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/orange',
 	ROOTPATH.'/packages/projectorangebox/theme-orange',
 	ROOTPATH.'/packages/projectorangebox/user_msgs',
+	ROOTPATH.'/packages/projectorangebox/example_file_upload',
+	ROOTPATH.'/packages/projectorangebox/example_repeatable',
 );
 
 /*
