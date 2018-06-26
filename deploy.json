@@ -98,7 +98,8 @@
 		"gitx update {PWD}/packages/quadratec/backorder {GITBRANCH}",
 		"gitx update {PWD}/packages/quadratec/drop-ships {GITBRANCH}",
 		"gitx update {PWD}/packages/quadratec/stock-status-check {GITBRANCH}",
-		"gitx update {PWD}/packages/quadratec/quad_ldap {GITBRANCH}"
+		"gitx update {PWD}/packages/quadratec/quad_ldap {GITBRANCH}",
+		"gitx update {PWD}/packages/quadratec/status-board {GITBRANCH}"
 	],
 	"git basic update": [
 		"// % Fetch and Reset the basic git Modules.",
