@@ -31,10 +31,8 @@
 
 /* if you try to load the array key instead load the array value */
 $autoload['remap'] = [
-	/*
-	'auth'=>'ldap_auth',
-	'o_user_entity'=>'O_ldap_user_entity',
-	*/
+	#'auth'=>'ldap_auth',
+	#'o_user_entity'=>'O_ldap_user_entity',
 ];
 
 /*
@@ -51,7 +49,10 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/stock-status-check',
 	ROOTPATH.'/packages/quadratec/drop-ships',
 	ROOTPATH.'/packages/quadratec/affirm',
-	/*ROOTPATH.'/packages/quadratec/quad_ldap',*/
+	ROOTPATH.'/packages/quadratec/status-board',
+	#ROOTPATH.'/packages/quadratec/quad_ldap',
+	ROOTPATH.'/packages/kristine_rabbits',
+	ROOTPATH.'/packages/quadratec/gift-certificate',
 	ROOTPATH.'/packages/projectorangebox/extra-validations',
 	ROOTPATH.'/packages/projectorangebox/forgot',
 	ROOTPATH.'/packages/projectorangebox/remember',
@@ -60,7 +61,6 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/config-viewer',
 	ROOTPATH.'/packages/projectorangebox/librarian',
 	ROOTPATH.'/packages/projectorangebox/migrations',
-	ROOTPATH.'/packages/projectorangebox/scaffolding',
 	ROOTPATH.'/packages/projectorangebox/cache-viewer',
 	ROOTPATH.'/packages/projectorangebox/login-success',
 	ROOTPATH.'/packages/projectorangebox/tooltips',
@@ -70,8 +70,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/orange',
 	ROOTPATH.'/packages/projectorangebox/theme-orange',
 	ROOTPATH.'/packages/projectorangebox/user_msgs',
-	ROOTPATH.'/packages/projectorangebox/example_file_upload',
-	ROOTPATH.'/packages/projectorangebox/example_repeatable',
+	ROOTPATH.'/packages/projectorangebox/scaffolding',
 );
 
 /*
