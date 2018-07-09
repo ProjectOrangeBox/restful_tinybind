@@ -50,7 +50,6 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/drop-ships',
 	ROOTPATH.'/packages/quadratec/affirm',
 	ROOTPATH.'/packages/quadratec/status-board',
-	#ROOTPATH.'/packages/quadratec/quad_ldap',
 	ROOTPATH.'/packages/quadratec/gift-certificate',
 	ROOTPATH.'/packages/projectorangebox/extra-validations',
 	ROOTPATH.'/packages/misc/forgot',
