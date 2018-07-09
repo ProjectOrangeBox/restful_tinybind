@@ -1,9 +1,6 @@
 <?php
 
 class MainController extends MY_Controller {
-
-	public function indexAction() {
-		ci('page')->render();
-	}
+	use admin_index_render_controller_trait;
 
 } /* end class */

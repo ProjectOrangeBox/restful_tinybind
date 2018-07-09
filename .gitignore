@@ -9,3 +9,4 @@ public/theme/*
 /composer.lock
 support/backups
 ._
+config.codekit3
