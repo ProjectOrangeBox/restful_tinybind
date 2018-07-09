@@ -31,8 +31,6 @@
 
 /* if you try to load the array key instead load the array value */
 $autoload['remap'] = [
-	#'auth'=>'ldap_auth',
-	#'o_user_entity'=>'O_ldap_user_entity',
 ];
 
 /*
