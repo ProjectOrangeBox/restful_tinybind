@@ -49,26 +49,19 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/affirm',
 	ROOTPATH.'/packages/quadratec/status-board',
 	ROOTPATH.'/packages/quadratec/gift-certificate',
-	ROOTPATH.'/packages/projectorangebox/extra-validations',
-	ROOTPATH.'/packages/misc/forgot',
-	ROOTPATH.'/packages/misc/remember',
-	ROOTPATH.'/packages/misc/register',
+
 	ROOTPATH.'/packages/misc/opcache',
 	ROOTPATH.'/packages/misc/config-viewer',
 	ROOTPATH.'/packages/misc/librarian',
-	ROOTPATH.'/packages/projectorangebox/migrations',
 	ROOTPATH.'/packages/misc/cache-viewer',
 	ROOTPATH.'/packages/misc/login-success',
-	ROOTPATH.'/packages/misc/tooltips',
-	ROOTPATH.'/packages/misc/handlebars',
 	ROOTPATH.'/packages/misc/general_addons',
 	ROOTPATH.'/packages/misc/scaffolding',
-	ROOTPATH.'/packages/misc/tasks',
+
+	ROOTPATH.'/packages/projectorangebox/extra-validations',
+	ROOTPATH.'/packages/projectorangebox/migrations',
 	ROOTPATH.'/packages/projectorangebox/orange',
 	ROOTPATH.'/packages/projectorangebox/theme-orange',
-	ROOTPATH.'/packages/misc/user_msgs',
-	ROOTPATH.'/packages/kristine_rabbits',
-	ROOTPATH.'/packages/rabbit_owners',
 );
 
 /*

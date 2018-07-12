@@ -7,7 +7,7 @@ $route = array (
   },
 
   'admin/(.*)' => function($url) {
-  	middleware('AdminMiddleware','PublicMiddleware','GuiMiddleware','TooltipMiddleware');
+  	middleware('AdminMiddleware','PublicMiddleware','GuiMiddleware');
 
   	return 'admin/'.$url;
   },

@@ -11,5 +11,16 @@ $config['anchor_dropdown'] = '<a href="{url}" class="{class} dropdown-toggle" da
 $config['dropdown_open'] = '<ul class="dropdown-menu" role="menu">';
 $config['dropdown_close'] = '</ul>';
 
-$config['left'] = 2;
-$config['right'] = 3;
+$config['left'] = 1;
+$config['right'] = 2;
+
+$config['gui_navigation_open'] = '<ol class="dd-list">';
+$config['gui_navigation_close'] = '</ol>';
+
+$config['gui_item_open'] = '<li class="panel-default dd-item dd3-item" data-id="{id}">';
+$config['gui_item_close'] = '</li>';
+
+$config['gui_drag_handle'] = '<div class="btn-primary dd-handle dd3-handle">Drag</div>';
+$config['gui_disabled_class'] = 'text-muted';
+$config['gui_content'] = '<div class="btn btn-default dd3-content"><span class="{disable_class}">{text}<small>{url}</small></span></div>';
+
