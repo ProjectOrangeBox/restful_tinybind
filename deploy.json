@@ -37,6 +37,7 @@
 		"@sudo on",
 		"capture PWD pwd",
 		"import array {PWD}/.env",
+		"mkdir -p {PWD}/packages",
 		"mkdir -p {PWD}/bin",
 		"mkdir -p {PWD}/support",
 		"mkdir -p {PWD}/support/migrations",
