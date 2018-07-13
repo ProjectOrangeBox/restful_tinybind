@@ -24,3 +24,7 @@ $config['gui_drag_handle'] = '<div class="btn-primary dd-handle dd3-handle">Drag
 $config['gui_disabled_class'] = 'text-muted';
 $config['gui_content'] = '<div class="btn btn-default dd3-content"><span class="{disable_class}">{text}<small>{url}</small></span></div>';
 
+$config['styles']['protected'] = ['icon'=>'user-secret','color'=>'00007F'];
+$config['styles']['public'] = ['icon'=>'user','color'=>'7F0002'];
+$config['styles']['main-menu'] = ['icon'=>'window-close','color'=>'000000'];
+$config['styles']['orange'] = ['icon'=>'lemon-o','color'=>'DB643A'];
