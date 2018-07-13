@@ -81,8 +81,12 @@ if (!file_exists(ROOTPATH.'/.env')) {
 	die('.env file missing');
 }
 
+/* leave this until all .env files are converted to true ini format */
+$env_content = file_get_contents(ROOTPATH.'/.env');
+$env = (substr($env_content,0,5) == '<?php') ? require ROOTPATH.'/.env' : parse_ini_string($env_content,true,INI_SCANNER_TYPED);
+
 /* bring in the system _env files */
-$_ENV = $_ENV + require ROOTPATH.'/.env';
+$_ENV = $_ENV + $env;
 
 define('ENVIRONMENT',$_ENV['SERVER_ENVIRONMENT']);
 
