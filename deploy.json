@@ -84,7 +84,6 @@
 		"gitx update {PWD}/packages/misc/cache-viewer {GITBRANCH}",
 		"gitx update {PWD}/packages/misc/login-success {GITBRANCH}",
 		"gitx update {PWD}/packages/misc/general_addons {GITBRANCH}",
-		"gitx update {PWD}/packages/misc/scaffolding {GITBRANCH}",
 		"gitx update {PWD}/packages/projectorangebox/extra-validations {GITBRANCH}",
 		"gitx update {PWD}/packages/projectorangebox/migrations {GITBRANCH}",
 		"gitx update {PWD}/packages/projectorangebox/orange {GITBRANCH}",
