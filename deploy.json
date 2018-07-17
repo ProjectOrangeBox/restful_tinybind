@@ -78,6 +78,7 @@
 		"gitx update {PWD}/packages/quadratec/affirm {GITBRANCH}",
 		"gitx update {PWD}/packages/quadratec/status-board {GITBRANCH}",
 		"gitx update {PWD}/packages/quadratec/gift-certificate {GITBRANCH}",
+		"gitx update {PWD}/packages/misc/masquerade {GITBRANCH}",
 		"gitx update {PWD}/packages/misc/opcache {GITBRANCH}",
 		"gitx update {PWD}/packages/misc/config-viewer {GITBRANCH}",
 		"gitx update {PWD}/packages/misc/librarian {GITBRANCH}",
@@ -171,7 +172,7 @@
 	"basic": [
 		"// % Run Basic Site Update.",
 		"task 'backup database data'",
-		"task 'git basic update'",
+		"task 'git update'",
 		"task repair",
 		"task 'clear caches'",
 		"task relink",
