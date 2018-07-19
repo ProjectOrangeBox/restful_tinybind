@@ -10,3 +10,4 @@ public/theme/*
 support/backups
 ._
 config.codekit3
+/application/controllers/DonmyersController.php
