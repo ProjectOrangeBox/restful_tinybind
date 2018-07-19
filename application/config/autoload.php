@@ -49,6 +49,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/affirm',
 	ROOTPATH.'/packages/quadratec/status-board',
 	ROOTPATH.'/packages/quadratec/gift-certificate',
+	ROOTPATH.'/packages/quadratec/category_mgrs',
 
 	ROOTPATH.'/packages/misc/masquerade',
 	ROOTPATH.'/packages/misc/opcache',

@@ -78,6 +78,7 @@
 		"gitx update {PWD}/packages/quadratec/affirm {GITBRANCH}",
 		"gitx update {PWD}/packages/quadratec/status-board {GITBRANCH}",
 		"gitx update {PWD}/packages/quadratec/gift-certificate {GITBRANCH}",
+		"gitx update {PWD}/packages/quadratec/category_mgrs {GITBRANCH}",
 		"gitx update {PWD}/packages/misc/masquerade {GITBRANCH}",
 		"gitx update {PWD}/packages/misc/opcache {GITBRANCH}",
 		"gitx update {PWD}/packages/misc/config-viewer {GITBRANCH}",
