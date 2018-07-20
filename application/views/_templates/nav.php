@@ -10,9 +10,7 @@
 			<a class="navbar-brand" href="/">Q</a>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-				<?=ci('nav_library')->build(config('nav.left')) ?>
-			</ul>
+			<?=ci('nav_library')->build_bootstrap_nav(config('nav.left'),config('nav.bootstrap nav')) ?>
 			<ul class="nav navbar-nav navbar-right">
 				<? if (user::has_permission('url::/orange_user_msgs::index~get')) { ?>
 				<li>
@@ -41,9 +39,6 @@
 					<? if (user::logged_in()) { ?>
 						<li><a href="<?=site_url('{logout}') ?>"><i class="fa fa-key"></i> Log Out</a></li>
 					<? } ?>
-					<? /*
-					<?=ci('nav_library')->li(config('nav.right')) ?>
-					*/ ?>
 				</ul>
 				</li>
 				</ul>
