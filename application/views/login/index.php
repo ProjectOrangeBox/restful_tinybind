@@ -1,5 +1,5 @@
 <? pear::extends('_templates/orange_default') ?>
-<? pear::plugins('flash_msg,form_tools') ?>
+<? pear::plugins('flash_msg,form_helpers') ?>
 
 <? pear::section('section_container') ?>
 <?=pear::open_multipart('/login',['method'=>'post','class'=>'form-signin']) ?>
