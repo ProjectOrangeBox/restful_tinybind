@@ -88,6 +88,11 @@ $env = (substr($env_content,0,5) == '<?php') ? require ROOTPATH.'/.env' : parse_
 /* bring in the system _env files */
 $_ENV = $_ENV + $env;
 
+/* if phpunit then setup empty argument as empty array so main/index loads */
+if ($_ENV['phpunit']) {
+	$_SERVER['argv'] = [];
+}
+
 define('ENVIRONMENT',$_ENV['SERVER_ENVIRONMENT']);
 
 /* absolute path to project orange box folder? */
@@ -340,6 +345,9 @@ switch ($_ENV['SERVER_DEBUG']) {
 
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
 
+/* orange methods */
+require_once ORANGEPATH.'/core/Orange.php';
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
@@ -347,4 +355,4 @@ switch ($_ENV['SERVER_DEBUG']) {
  *
  * And away we go...
  */
-require_once ORANGEPATH.'/core/Orange.php';
+require_once ORANGEPATH.'/core/Bootstrap.php';
