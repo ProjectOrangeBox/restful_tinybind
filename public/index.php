@@ -89,7 +89,7 @@ $env = (substr($env_content,0,5) == '<?php') ? require ROOTPATH.'/.env' : parse_
 $_ENV = $_ENV + $env;
 
 /* if phpunit then setup empty argument as empty array so main/index loads */
-if ($_ENV['phpunit']) {
+if (isset($_ENV['phpunit'])) {
 	$_SERVER['argv'] = [];
 }
 
