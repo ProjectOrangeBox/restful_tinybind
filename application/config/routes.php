@@ -2,8 +2,6 @@
 /* NOTE: this uses the FIRST match and stops */
 
 $route = array (
-  'default_controller' => 'main/index',
-
   'cli/(.*)' => function($url) {
   	return 'cli/'.$url;
   },
@@ -11,7 +9,7 @@ $route = array (
   'admin/(.*)' => function($url) {
   	orange_middleware::on_request('AdminMiddleware','PublicMiddleware','GuiMiddleware');
 
-  	orange_middleware::on_responds('AdminMiddleware');
+  	orange_middleware::on_responds('NavbarMiddleware');
 
   	return 'admin/'.$url;
   },
@@ -19,15 +17,19 @@ $route = array (
   'login(.*)' => function($url) {
   	orange_middleware::on_request('LoginMiddleware','PublicMiddleware','GuiMiddleware');
 
+  	orange_middleware::on_responds('NavbarMiddleware');
+
   	return 'login'.$url;
   },
 
   '(.*)' => function($url) {
   	orange_middleware::on_request('PublicMiddleware','GuiMiddleware');
 
+  	orange_middleware::on_responds('NavbarMiddleware');
+
   	return $url;
   },
 
+  'default_controller' => 'main/index',
   '404_override' => 'main/route404',
-  'translate_uri_dashes' => false,
 );
