@@ -19,6 +19,7 @@ $config['admin user id'] = 1;
 $config['nobody user id'] = 2;
 
 $config['login h2'] = 'Please Sign in';
+$config['username field'] = 'Email Address';
 
 $config['empty fields error'] = 'Please enter your login credentials.';
 $config['general failure error'] = 'Incorrect Login and/or Password';
