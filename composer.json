@@ -4,6 +4,7 @@
 		"codeigniter/framework": "^3.1",
 		"mmucklo/krumo": "*",
 		"zordius/lightncandy": "dev-master",
-		"adldap/adldap": "5.0.*"
+		"adldap/adldap": "5.0.*",
+		"filp/whoops": "^2.2@dev"
 	}
 }

@@ -9,21 +9,19 @@ $route = array (
   },
 
   'admin/(.*)' => function($url) {
-  	orange_middleware::on_request('AdminMiddleware','PublicMiddleware','GuiMiddleware');
-
-  	orange_middleware::on_responds('AdminMiddleware');
+  	orange_middleware::on_request('AdminMiddleware','PublicMiddleware','GuiMiddleware','WhoopsMiddleware');
 
   	return 'admin/'.$url;
   },
 
   'login(.*)' => function($url) {
-  	orange_middleware::on_request('LoginMiddleware','PublicMiddleware','GuiMiddleware');
+  	orange_middleware::on_request('LoginMiddleware','PublicMiddleware','GuiMiddleware','WhoopsMiddleware');
 
   	return 'login'.$url;
   },
 
   '(.*)' => function($url) {
-  	orange_middleware::on_request('PublicMiddleware','GuiMiddleware');
+  	orange_middleware::on_request('PublicMiddleware','GuiMiddleware','WhoopsMiddleware');
 
   	return $url;
   },
