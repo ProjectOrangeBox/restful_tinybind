@@ -12,3 +12,4 @@ support/backups
 config.codekit3
 /application/controllers/DonmyersController.php
 /tests
+/dashboard.txt
