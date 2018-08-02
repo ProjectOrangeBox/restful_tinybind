@@ -9,11 +9,7 @@
 
 <div class="row metro"></div>
 
-<p>
-<small>
-	<?=@file_get_contents(ROOTPATH.'/dashboard.txt') ?>
-</small>
-</p>
+<p><small><?=pear::snippet('Dashboard Update News') ?></small></p>
 <? pear::end() ?>
 
 <? pear::section('page_body_class') ?>dashboard<? pear::parent() ?><? pear::end() ?>

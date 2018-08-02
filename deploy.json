@@ -156,6 +156,7 @@
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/login-success",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/general_addons",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/scaffolding",
+		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/orange_snippets",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/projectorangebox/extra-validations",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/projectorangebox/migrations",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/projectorangebox/orange",
