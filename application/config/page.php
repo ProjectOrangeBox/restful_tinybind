@@ -2,24 +2,28 @@
 
 $config['title'] = 'SkyNet';
 
-#$config['body_class'] = 'example';
+$config['css'] = '/theme/orange/assets/css/application.css';
+$config['js'] = '/theme/orange/assets/js/application.js';
 
-#$config['data'] = ['name'=>'example'];
+/* examples */
+/*
+$config['body_class'] = 'example';
 
-#$config['css'] = ['/path/file','/path/file'];
-#$config['css'] = '/path/file';
+$config['data'] = ['name'=>'example'];
 
-$config['css'] = '/assets/application/application.css';
+$config['css'] = ['/path/file','/path/file'];
+$config['css'] = '/path/file';
 
-#$config['js'] = ['/path/file','/path/file];
-#$config['js'] = '/path/file';
+$config['js'] = ['/path/file','/path/file];
+$config['js'] = '/path/file';
 
-#$config['js'] = '/application/application.js';
+$config['js'] = '/application/application.js';
 
-#$config['script'] = 'console.log("example");';
-#$config['style'] = 'h1{ color: #23Ab99 }';
+$config['script'] = 'console.log("example");';
+$config['style'] = 'h1{ color: #23Ab99 }';
 
-#$config['domready'] = 'console.log("dom ready");';
-#$config['js_variables'] = ['name'=>'example'];
+$config['domready'] = 'console.log("dom ready");';
+$config['js_variables'] = ['name'=>'example'];
 
-#$config['icon'] = '/path/image';
+$config['icon'] = '/path/image';
+*/
