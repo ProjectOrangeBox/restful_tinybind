@@ -5,6 +5,7 @@
 		"mmucklo/krumo": "*",
 		"zordius/lightncandy": "dev-master",
 		"adldap/adldap": "5.0.*",
-		"filp/whoops": "^2.2@dev"
+		"filp/whoops": "^2.2@dev",
+		"league/climate": "dev-master"
 	}
 }

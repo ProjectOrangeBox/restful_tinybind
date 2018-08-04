@@ -1,29 +1,17 @@
 <?php
 
-$config['title'] = 'SkyNet';
+$config['script_attributes'] = ['src' => '', 'type' => 'text/javascript', 'charset' => 'utf-8'];
 
-$config['css'] = '/theme/orange/assets/css/application.css';
-$config['js'] = '/theme/orange/assets/js/application.js';
+$config['link_attributes'] = ['href' => '', 'type' => 'text/css', 'rel' => 'stylesheet'];
 
-/* examples */
-/*
-$config['body_class'] = 'example';
+$config['domready_javascript'] = 'document.addEventListener("DOMContentLoaded",function(e){%%});';
 
-$config['data'] = ['name'=>'example'];
+$config['default_priority'] = 50;
 
-$config['css'] = ['/path/file','/path/file'];
-$config['css'] = '/path/file';
+$config['page_prefix'] = 'page_';
 
-$config['js'] = ['/path/file','/path/file];
-$config['js'] = '/path/file';
-
-$config['js'] = '/application/application.js';
-
-$config['script'] = 'console.log("example");';
-$config['style'] = 'h1{ color: #23Ab99 }';
-
-$config['domready'] = 'console.log("dom ready");';
-$config['js_variables'] = ['name'=>'example'];
-
-$config['icon'] = '/path/image';
-*/
+$config['page_'] = [
+	'title'=>'SkyNet',
+	'css'=>'/theme/orange/assets/css/application.css',
+	'js'=>'/theme/orange/assets/js/application.js',
+];

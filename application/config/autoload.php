@@ -29,7 +29,10 @@
 |
 */
 
-/* if you try to load the array key instead load the array value */
+/*
+if you try to load the array key instead load the array value
+ 'auth'=>'my_auth'
+*/
 $autoload['remap'] = [
 ];
 

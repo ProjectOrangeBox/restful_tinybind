@@ -31,3 +31,5 @@ $config['user role table'] = 'orange_user_role';
 $config['role table'] = 'orange_roles';
 $config['role permission table'] = 'orange_role_permission';
 $config['permission table'] = 'orange_permissions';
+
+$config['required_models'] ='o_user_model';

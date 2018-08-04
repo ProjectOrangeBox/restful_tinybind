@@ -2,24 +2,24 @@
 /* NOTE: this uses the FIRST match and stops */
 
 $route = array (
-  'cli/(.*)' => function($url) {
+  'cli/(.*)' => function($url,$router) {
   	return 'cli/'.$url;
   },
 
-  'admin/(.*)' => function($url) {
-  	orange_middleware::on_request('AdminMiddleware','PublicMiddleware','GuiMiddleware','NavbarMiddleware');
+  'admin/(.*)' => function($url,$router) {
+  	$router->on_request('AdminMiddleware','PublicMiddleware','GuiMiddleware','NavbarMiddleware');
 
   	return 'admin/'.$url;
   },
 
-  'login(.*)' => function($url) {
-  	orange_middleware::on_request('LoginMiddleware','PublicMiddleware','GuiMiddleware','NavbarMiddleware');
+  'login(.*)' => function($url,$router) {
+  	$router->on_request('LoginMiddleware','PublicMiddleware','GuiMiddleware','NavbarMiddleware');
 
   	return 'login'.$url;
   },
 
-  '(.*)' => function($url) {
-  	orange_middleware::on_request('PublicMiddleware','GuiMiddleware','NavbarMiddleware');
+  '(.*)' => function($url,$router) {
+  	$router->on_request('PublicMiddleware','GuiMiddleware','NavbarMiddleware');
 
   	return $url;
   },
