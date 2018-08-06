@@ -12,6 +12,9 @@ $config['page_prefix'] = 'page_';
 
 $config['page_'] = [
 	'title'=>'SkyNet',
-	'css'=>'/theme/orange/assets/css/application.css',
-	'js'=>'/theme/orange/assets/js/application.js',
+	'css'=>'/theme/orange/assets/css/application.min.css',
+	'js'=>[
+		'/theme/orange/assets/js/application.min.js',
+		'/theme/orange/assets/js/tools.min.js',
+	]
 ];
