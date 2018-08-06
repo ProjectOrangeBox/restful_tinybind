@@ -13,3 +13,4 @@ config.codekit3
 /application/controllers/DonmyersController.php
 /tests
 /dashboard.txt
+/application/views/donmyers
