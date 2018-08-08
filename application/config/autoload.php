@@ -29,32 +29,14 @@
 |
 */
 
-/*
-if you try to load the array key instead load the array value
- 'auth'=>'my_auth'
-*/
-$autoload['override'] = [
-	'classes'=>[
-		'model_entity'=>ORANGEPATH.'/models/Model_entity.php',
-		'cache_export'=>ORANGEPATH.'/libraries/Cache_export.php',
-		'cache_request'=>ORANGEPATH.'/libraries/Cache_request.php',
-
-		'validate_base'=>ORANGEPATH.'/libraries/abstracts/Validate_base.php',
-		'filter_base'=>ORANGEPATH.'/libraries/abstracts/Filter_base.php',
-		'pear_plugin'=>ORANGEPATH.'/libraries/abstracts/Pear_plugin.php',
-		'middleware_base'=>ORANGEPATH.'/libraries/abstracts/Middleware_base.php',
-
-		'o_user_model'=>ORANGEPATH.'/models/O_user_model.php',
-
-		'auth'=>ORANGEPATH.'/libraries/Auth.php',
-		'my_loader'=>ORANGEPATH.'/core/MY_Loader.php',
-	],
-	'libraries'=>[
-		'auth'=>ROOTPATH.'/packages/quadratec/quad_ldap/libraries/Ldap_auth.php',
-	],
-	'models'=>[
-		'o_user_model'=>ROOTPATH.'/packages/quadratec/quad_ldap/models/O_ldap_user_model.php',
-	],
+/**
+ * when asked to load the array key instead load the array value
+ * but! assign it to the CodeIgniter Super Object (controller) as the array key
+ *
+ */
+$autoload['remap'] = [
+	'auth'=>'ldap_auth',
+	'o_user_model'=>'o_ldap_user_model',
 ];
 
 /*
