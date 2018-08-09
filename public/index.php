@@ -98,6 +98,9 @@ define('ORANGEPATH', ROOTPATH.'/packages/projectorangebox/orange');
 /* absolute path to WWW folder */
 define('WWW', dirname(__FILE__));
 
+define('CACHEPATH',ROOTPATH.'/var/cache');
+define('LOGPATH',ROOTPATH.'/var/logs');
+
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
