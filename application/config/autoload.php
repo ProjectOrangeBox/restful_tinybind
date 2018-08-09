@@ -36,7 +36,7 @@
  */
 $autoload['remap'] = [
 	'unit' => 'unit_test',
-	'agent' => 'user_agent'
+	'agent' => 'user_agent',
 	'auth'=>'ldap_auth',
 	'o_user_model'=>'o_ldap_user_model',
 ];
