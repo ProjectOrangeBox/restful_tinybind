@@ -65,11 +65,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/misc/masquerade',
 	ROOTPATH.'/packages/misc/opcache',
 	ROOTPATH.'/packages/misc/config-viewer',
-	ROOTPATH.'/packages/misc/librarian',
-	ROOTPATH.'/packages/misc/cache-viewer',
 	ROOTPATH.'/packages/misc/login-success',
-	ROOTPATH.'/packages/misc/general_addons',
-	ROOTPATH.'/packages/misc/scaffolding',
 
 	ROOTPATH.'/packages/projectorangebox/extra-validations',
 	ROOTPATH.'/packages/projectorangebox/migrations',
