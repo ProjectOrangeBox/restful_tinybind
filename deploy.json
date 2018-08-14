@@ -90,7 +90,8 @@
 		"gitx update {PWD}/packages/projectorangebox/extra-validations {GITBRANCH}",
 		"gitx update {PWD}/packages/projectorangebox/migrations {GITBRANCH}",
 		"gitx update {PWD}/packages/projectorangebox/orange {GITBRANCH}",
-		"gitx update {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}"
+		"gitx update {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}",
+		"gitx update {PWD}/packages/quadratec/quad_ldap {GITBRANCH}"
 	],
 	"git status": [
 		"// % Show the GIT branches of the projects git folders.",
