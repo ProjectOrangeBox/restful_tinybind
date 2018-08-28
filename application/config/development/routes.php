@@ -7,19 +7,19 @@ $route = array (
   },
 
   'admin/(.*)' => function($url,$router) {
-  	$router->on_request('AdminMiddleware','PublicMiddleware','GuiMiddleware','WhoopsMiddleware','NavbarMiddleware');
+  	$router->on_request('AdminMiddleware','PublicMiddleware','GuiMiddleware',/*'WhoopsMiddleware',*/'NavbarMiddleware');
 
   	return 'admin/'.$url;
   },
 
   'login(.*)' => function($url,$router) {
-  	$router->on_request('LoginMiddleware','PublicMiddleware','GuiMiddleware','WhoopsMiddleware','NavbarMiddleware');
+  	$router->on_request('LoginMiddleware','PublicMiddleware','GuiMiddleware',/*'WhoopsMiddleware',*/'NavbarMiddleware');
 
   	return 'login'.$url;
   },
 
   '(.*)' => function($url,$router) {
-  	$router->on_request('PublicMiddleware','GuiMiddleware','WhoopsMiddleware','NavbarMiddleware');
+  	$router->on_request('PublicMiddleware','GuiMiddleware',/*'WhoopsMiddleware',*/'NavbarMiddleware');
 
   	return $url;
   },

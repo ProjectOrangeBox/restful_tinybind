@@ -35,10 +35,6 @@
  *
  */
 $autoload['remap'] = [
-	'unit' => 'unit_test',
-	'agent' => 'user_agent',
-	'auth'=>'ldap_auth',
-	'o_user_model'=>'o_ldap_user_model',
 ];
 
 /*
@@ -51,27 +47,7 @@ $autoload['remap'] = [
 |
 */
 $autoload['packages'] = array(
-	ROOTPATH.'/packages/quadratec/backorder',
-	ROOTPATH.'/packages/quadratec/stock-status-check',
-	ROOTPATH.'/packages/quadratec/drop-ships',
-	ROOTPATH.'/packages/quadratec/affirm',
-	ROOTPATH.'/packages/quadratec/status-board',
-	ROOTPATH.'/packages/quadratec/gift-certificate',
-	ROOTPATH.'/packages/quadratec/category_mgrs',
-	ROOTPATH.'/packages/quadratec/quad_ldap',
-	ROOTPATH.'/packages/quadratec/qsolr',
-
-	ROOTPATH.'/packages/misc/orange_snippets',
-
-	ROOTPATH.'/packages/misc/masquerade',
-	ROOTPATH.'/packages/misc/opcache',
-	ROOTPATH.'/packages/misc/config-viewer',
-	ROOTPATH.'/packages/misc/login-success',
-
-	ROOTPATH.'/packages/projectorangebox/extra-validations',
-	ROOTPATH.'/packages/projectorangebox/migrations',
 	ROOTPATH.'/packages/projectorangebox/orange',
-	ROOTPATH.'/packages/projectorangebox/theme-orange',
 );
 
 /*
@@ -91,16 +67,7 @@ $autoload['packages'] = array(
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array(
-	'event',
-	'cache',
-	'session',
-	'errors',
-	'database',
-	'validate',
-	'wallet',
-	'auth',
-);
+$autoload['libraries'] = array();
 
 /*
 | -------------------------------------------------------------------
@@ -131,7 +98,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url');
+$autoload['helper'] = array();
 
 /*
 | -------------------------------------------------------------------

@@ -88,6 +88,7 @@ $_ENV = $_ENV + parse_ini_file(ROOTPATH.'/.env',true,INI_SCANNER_TYPED);
 /* if phpunit then setup empty argument as empty array so main/index loads */
 if (isset($_ENV['phpunit'])) {
 	$_SERVER['argv'] = [];
+	$_ENV['SERVER_ENVIRONMENT'] = 'phpunit';
 }
 
 define('ENVIRONMENT',$_ENV['SERVER_ENVIRONMENT']);

@@ -18,3 +18,5 @@ $config['page_'] = [
 		'/theme/orange/assets/js/tools.min.js',
 	]
 ];
+
+$config['page_min'] = (env('SERVER_DEBUG') == 'development');
