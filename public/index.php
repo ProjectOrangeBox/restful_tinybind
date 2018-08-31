@@ -139,7 +139,7 @@ switch ($_ENV['SERVER_DEBUG']) {
  * Set the path if it is not in the same directory as this file.
  */
 
-$system_path = '../vendor/codeigniter/framework/system';
+$system_path = ROOTPATH.'/vendor/codeigniter/framework/system';
 
 /*
  *---------------------------------------------------------------
@@ -157,7 +157,7 @@ $system_path = '../vendor/codeigniter/framework/system';
  * NO TRAILING SLASH!
  */
 
-$application_folder = '../application';
+$application_folder = ROOTPATH.'/application';
 
 /*
  *---------------------------------------------------------------
