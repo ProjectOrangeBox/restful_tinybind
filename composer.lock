@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "319dfe3756cb5cc48dfebcefa6d54390",
+    "content-hash": "82a8c8b76a3cfd461cae661dd1f8d7e7",
     "packages": [
         {
             "name": "adldap/adldap",
@@ -401,6 +401,53 @@
             "time": "2018-07-25T07:21:50+00:00"
         },
         {
+            "name": "matthiasbayer/datadog-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matthiasbayer/datadog-client.git",
+                "reference": "e625132c34bf36f783077c9ee4ed3214633cd272"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matthiasbayer/datadog-client/zipball/e625132c34bf36f783077c9ee4ed3214633cd272",
+                "reference": "e625132c34bf36f783077c9ee4ed3214633cd272",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Bayer\\DataDogClient": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Bayer",
+                    "email": "thematthiasbayer@gmail.com",
+                    "homepage": "http://bayer.io"
+                }
+            ],
+            "description": "Standalone DataDog PHP Client, works without datadog agent",
+            "homepage": "http://bayer.io",
+            "keywords": [
+                "DataDog",
+                "client",
+                "http",
+                "standalone"
+            ],
+            "time": "2013-12-04T11:08:28+00:00"
+        },
+        {
             "name": "mmucklo/krumo",
             "version": "dev-master",
             "source": {
@@ -460,6 +507,50 @@
                 "var_dump"
             ],
             "time": "2018-03-23T13:05:38+00:00"
+        },
+        {
+            "name": "mtdowling/cron-expression",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mtdowling/cron-expression.git",
+                "reference": "37faa61b1ad8d19037753f893f97da927c787de0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mtdowling/cron-expression/zipball/37faa61b1ad8d19037753f893f97da927c787de0",
+                "reference": "37faa61b1ad8d19037753f893f97da927c787de0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cron\\": "src/Cron/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "CRON for PHP: Calculate the next or previous run date and determine if a CRON expression is due",
+            "keywords": [
+                "cron",
+                "schedule"
+            ],
+            "time": "2017-10-12T15:50:39+00:00"
         },
         {
             "name": "opendi/lang",
@@ -791,51 +882,6 @@
             "time": "2016-02-11T07:05:27+00:00"
         },
         {
-            "name": "reprovinci/solr-php-client",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/reprovinci/solr-php-client.git",
-                "reference": "dc8aa2bc06cac64fb72863cffc550c426033ee5b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/reprovinci/solr-php-client/zipball/dc8aa2bc06cac64fb72863cffc550c426033ee5b",
-                "reference": "dc8aa2bc06cac64fb72863cffc550c426033ee5b",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Apache_Solr_": [
-                        "",
-                        "tests"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Reinier Kip",
-                    "email": "github@reinierkip.nl",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Donovan Jiménez",
-                    "email": "donovan.jimenez@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A PHP library for indexing and searching documents within an Apache Solr installation.",
-            "time": "2014-04-24T14:32:44+00:00"
-        },
-        {
             "name": "seld/cli-prompt",
             "version": "dev-master",
             "source": {
@@ -958,12 +1004,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "e2b31a5a237c70e5a12d4862a0c62ec561f970c9"
+                "reference": "42bdc01d6142259e6d5ea6b03f2a03e835319e81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/e2b31a5a237c70e5a12d4862a0c62ec561f970c9",
-                "reference": "e2b31a5a237c70e5a12d4862a0c62ec561f970c9",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/42bdc01d6142259e6d5ea6b03f2a03e835319e81",
+                "reference": "42bdc01d6142259e6d5ea6b03f2a03e835319e81",
                 "shasum": ""
             },
             "require": {
@@ -1006,7 +1052,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2018-08-03T11:20:06+00:00"
+            "time": "2018-08-21T12:03:16+00:00"
         },
         {
             "name": "symfony/finder",
@@ -1176,7 +1222,9 @@
         "zordius/lightncandy": 20,
         "filp/whoops": 20,
         "league/climate": 20,
-        "opendi/solrclient": 20
+        "opendi/solrclient": 20,
+        "matthiasbayer/datadog-client": 20,
+        "mtdowling/cron-expression": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

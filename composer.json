@@ -7,6 +7,8 @@
 		"adldap/adldap": "5.0.*",
 		"filp/whoops": "^2.2@dev",
 		"league/climate": "dev-master",
-		"opendi/solrclient": "dev-master"
+		"opendi/solrclient": "dev-master",
+		"matthiasbayer/datadog-client": "dev-master",
+		"mtdowling/cron-expression": "dev-master"
 	}
 }

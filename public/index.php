@@ -114,14 +114,26 @@ switch ($_ENV['SERVER_DEBUG']) {
 	case 'development':
 		error_reporting(E_ALL & ~E_NOTICE);
 		ini_set('display_errors', 1);
+		
+		assert_options(ASSERT_ACTIVE, 1);
+		assert_options(ASSERT_WARNING, 0);
+		assert_options(ASSERT_QUIET_EVAL, 0);
 	break;
 	case 'testing':
 		error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 		ini_set('display_errors', 1);
+
+		assert_options(ASSERT_ACTIVE, 1);
+		assert_options(ASSERT_WARNING, 0);
+		assert_options(ASSERT_QUIET_EVAL, 0);
 	break;
 	case 'production':
 		error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
 		ini_set('display_errors', 0);
+
+		assert_options(ASSERT_ACTIVE, 0);
+		assert_options(ASSERT_WARNING, 0);
+		assert_options(ASSERT_QUIET_EVAL, 1);
 	break;
 
 	default:
