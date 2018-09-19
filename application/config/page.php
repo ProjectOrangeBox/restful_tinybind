@@ -6,8 +6,6 @@ $config['link_attributes'] = ['href' => '', 'type' => 'text/css', 'rel' => 'styl
 
 $config['domready_javascript'] = 'document.addEventListener("DOMContentLoaded",function(e){%%});';
 
-$config['default_priority'] = 50;
-
 $config['page_prefix'] = 'page_';
 
 $config['page_'] = [
