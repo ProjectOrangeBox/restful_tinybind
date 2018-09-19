@@ -15,3 +15,4 @@ config.codekit3
 /dashboard.txt
 /application/views/donmyers
 .env
+application/config/development/*
