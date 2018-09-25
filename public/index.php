@@ -74,27 +74,22 @@
  *
  */
 
-/* absolute path to projects root level - nothing is stored below this */
+/* absolute path to projects root level - >> NO << files below this folder */
 define('ROOTPATH', realpath(__DIR__.'/../'));
-
-/* .env file */
-if (!file_exists(ROOTPATH.'/.env')) {
-	die('.env file missing');
-}
-
-/* bring in the system .env files */
-$_ENV = $_ENV + parse_ini_file(ROOTPATH.'/.env',true,INI_SCANNER_TYPED);
-
-/* if phpunit then setup empty argument as empty array so main/index loads */
-if (isset($_ENV['phpunit'])) {
-	$_SERVER['argv'] = [];
-	$_ENV['SERVER_ENVIRONMENT'] = 'phpunit';
-}
-
-define('ENVIRONMENT',$_ENV['SERVER_ENVIRONMENT']);
 
 /* absolute path to project orange box folder? */
 define('ORANGEPATH', ROOTPATH.'/packages/projectorangebox/orange');
+
+/* Changes PHP's current directory to directory */
+chdir(ROOTPATH);
+
+/* .env file */
+if (!file_exists('.env')) {
+	die(ROOTPATH.'/.env file missing');
+}
+
+/* bring in the system .env files */
+$_ENV = $_ENV + parse_ini_file('.env',true,INI_SCANNER_TYPED);
 
 /* absolute path to WWW folder */
 define('WWW', dirname(__FILE__));
@@ -110,7 +105,13 @@ define('LOGPATH',ROOTPATH.'/var/logs');
  * Different environments will require different levels of error reporting.
  * By default development will show errors but testing and live will hide them.
  */
-switch ($_ENV['SERVER_DEBUG']) {
+switch ($_ENV['DEBUG']) {
+	case 'phpunit':
+		/* if phpunit then setup empty argument as empty array so main/index loads */
+		$_ENV['ENVIRONMENT'] = 'phpunit';
+		$_SERVER['REMOTE_ADDR'] = '0.0.0.0';
+		$_SERVER['argv'] = [];
+	break;
 	case 'development':
 		error_reporting(E_ALL & ~E_NOTICE);
 		ini_set('display_errors', 1);
@@ -135,12 +136,13 @@ switch ($_ENV['SERVER_DEBUG']) {
 		assert_options(ASSERT_WARNING, 0);
 		assert_options(ASSERT_QUIET_EVAL, 1);
 	break;
-
 	default:
 		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
 		echo 'The application environment is not set correctly.';
 		exit(1); // EXIT_ERROR
 }
+
+define('ENVIRONMENT',$_ENV['ENVIRONMENT']);
 
 /*
  *---------------------------------------------------------------
