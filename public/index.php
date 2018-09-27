@@ -111,6 +111,13 @@ switch ($_ENV['DEBUG']) {
 		$_ENV['ENVIRONMENT'] = 'phpunit';
 		$_SERVER['REMOTE_ADDR'] = '0.0.0.0';
 		$_SERVER['argv'] = [];
+
+		error_reporting(E_ALL & ~E_NOTICE);
+		ini_set('display_errors', 1);
+		
+		assert_options(ASSERT_ACTIVE, 1);
+		assert_options(ASSERT_WARNING, 0);
+		assert_options(ASSERT_QUIET_EVAL, 0);
 	break;
 	case 'development':
 		error_reporting(E_ALL & ~E_NOTICE);
