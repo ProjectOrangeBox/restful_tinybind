@@ -80,6 +80,9 @@ define('ROOTPATH', realpath(__DIR__.'/../'));
 /* absolute path to project orange box folder? */
 define('ORANGEPATH', ROOTPATH.'/packages/projectorangebox/orange');
 
+define('CACHEPATH',ROOTPATH.'/var/cache');
+define('LOGPATH',ROOTPATH.'/var/logs');
+
 /* Changes PHP's current directory to directory */
 chdir(ROOTPATH);
 
@@ -93,9 +96,6 @@ $_ENV = $_ENV + parse_ini_file('.env',true,INI_SCANNER_TYPED);
 
 /* absolute path to WWW folder */
 define('WWW', dirname(__FILE__));
-
-define('CACHEPATH',ROOTPATH.'/var/cache');
-define('LOGPATH',ROOTPATH.'/var/logs');
 
 /*
  *---------------------------------------------------------------
