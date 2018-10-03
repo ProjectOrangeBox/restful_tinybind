@@ -91,7 +91,8 @@
 		"gitx update {PWD}/packages/projectorangebox/migrations {GITBRANCH}",
 		"gitx update {PWD}/packages/projectorangebox/orange {GITBRANCH}",
 		"gitx update {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}",
-		"gitx update {PWD}/packages/quadratec/quad_ldap {GITBRANCH}"
+		"gitx update {PWD}/packages/quadratec/quad_ldap {GITBRANCH}",
+		"gitx update {PWD}/packages/quadratec/vendor-stock {GITBRANCH}"
 	],
 	"git status": [
 		"// % Show the GIT branches of the projects git folders.",
@@ -149,6 +150,8 @@
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/quadratec/status-board",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/quadratec/gift-certificate",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/quadratec/category_mgrs",
+		"cd {PWD}/public;php index.php cli/migrate/up /packages/quadratec/vendor-stock",
+		
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/masquerade",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/opcache",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/config-viewer",
@@ -158,6 +161,7 @@
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/general_addons",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/scaffolding",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/misc/orange_snippets",
+
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/projectorangebox/extra-validations",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/projectorangebox/migrations",
 		"cd {PWD}/public;php index.php cli/migrate/up /packages/projectorangebox/orange",
