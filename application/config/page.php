@@ -8,6 +8,35 @@ $config['domready_javascript'] = 'document.addEventListener("DOMContentLoaded",f
 
 $config['page_prefix'] = 'page_';
 
+/* 
+Send in page values for ALL pages arrays of values also supported
+
+meta
+	'meta'=>['attr'=>'','name'=>'','content'=>'']
+
+script
+	'script'=>'alert("Welcome!");'
+
+domready
+	'domready'=>'alert("Page Loaded");'
+
+title
+	'title'=>''
+	
+style
+	'style'=>'* {font-family: roboto}'
+
+js
+	'js'=>'/assets/javascript.js'
+
+css
+	'css'=>'/assets/application.css'
+
+body_class
+	'body_class'=>'app'
+
+*/
+
 $config['page_'] = [
 	'title'=>'SkyNet',
 	'css'=>'/theme/orange/assets/css/application.min.css',
