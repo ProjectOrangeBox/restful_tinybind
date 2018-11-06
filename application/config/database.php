@@ -139,6 +139,28 @@ $db['mbfoster_worker'] = [
 	'save_queries' => env('database.debug',false),
 ];
 
+$db['mbfoster_marketing_automation'] = [
+	'dsn'	=> '',
+	'hostname' => env('database.mbfoster.hostname'),
+	'username' => env('database.mbfoster.username'),
+	'password' => env('database.mbfoster.password'),
+	'database' => 'marketing_automation',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => env('database.debug',false),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => env('database.debug',false),
+];
+
 $db['tapemacs'] = [
 	'dsn'	=> '',
 	'hostname' => env('database.tapemacs.hostname'),
