@@ -83,6 +83,7 @@
 		"// % Fetch and Reset all git Modules.",
 		"@sudo on",
 		"capture PWD pwd",
+		"import ini {PWD}/.env",
 		"gitx update {PWD} {GITBRANCH}",
 		"gitx update {PWD}/packages/quadratec/affirm {GITBRANCH}",
 		"gitx update {PWD}/packages/quadratec/backorder {GITBRANCH}",
