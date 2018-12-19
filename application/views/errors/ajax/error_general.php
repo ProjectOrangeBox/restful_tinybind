@@ -1,1 +1,1 @@
-<?=json_encode(['heading'=>$heading,'message'=>$message]);
+<?=json_encode(['ci_errors'=>$ci_errors,'heading'=>$heading,'message'=>$message]);

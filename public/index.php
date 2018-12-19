@@ -94,6 +94,13 @@ if (!file_exists('.env')) {
 /* bring in the system .env files */
 $_ENV = $_ENV + parse_ini_file('.env',true,INI_SCANNER_TYPED);
 
+if ($missing = array_diff_key(array_flip(['DEBUG','ENVIRONMENT']),$_ENV)) {
+	$in = ($method) ? ' in '.$method : '';
+	$s = (count($missing) > 1) ? 's are' : ' is';
+	
+	die('The following required value'.$s.' missing: '.implode(', ',array_flip($missing)).$in.'.');
+}
+
 /* absolute path to WWW folder */
 define('WWW', dirname(__FILE__));
 
@@ -150,6 +157,10 @@ switch ($_ENV['DEBUG']) {
 }
 
 define('ENVIRONMENT',$_ENV['ENVIRONMENT']);
+
+if (file_exists('.env.'.$_ENV['ENVIRONMENT'])) {
+	$_ENV = $_ENV + parse_ini_file('.env.'.$_ENV['ENVIRONMENT'],true,INI_SCANNER_TYPED);
+}
 
 /*
  *---------------------------------------------------------------

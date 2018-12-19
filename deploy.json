@@ -24,13 +24,6 @@
 		"capture PWD pwd",
 		"rm -f {PWD}/var/sessions/*"
 	],
-	"git checkout": [
-		"// % Checkout GIT repositories if they are not already checked out.",
-		"@sudo on",
-		"capture PWD pwd",
-		"import ini {PWD}/.env",
-		"gitx checkout git@bitbucket.org:quadratec/affirm.git \"{PWD}/foo/foo bar\" {GITBRANCH}"
-	],
 	"clear caches": [
 		"// % Delete all files in the cache, uploads, downloads folders.",
 		"@sudo on",
@@ -111,7 +104,8 @@
 		"@sudo on",
 		"capture PWD pwd",
 		"import ini {PWD}/.env",
-		"gitx checkout git@bitbucket.org:quadratec/application.git {PWD} {GITBRANCH}",
+		"e 'Using GIT Branch {GITBRANCH}'",
+		"gitx checkout git@bitbucket.org:quadratec/application.git {PWD}/~app {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/quadratec-backorder.git {PWD}/packages/quadratec/backorder {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/quadratec-stock-status-check.git {PWD}/packages/quadratec/stock-status-check {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/quadratec-drop-ships.git {PWD}/packages/quadratec/drop-ships {GITBRANCH}",
@@ -132,7 +126,10 @@
 		"gitx checkout git@bitbucket.org:quadratec/projectorangebox-extra-validations.git {PWD}/packages/projectorangebox/extra-validations {GITBRANCH}",
 		"gitx checkout https://github.com/ProjectOrangeBox/Orange_v2_cli.git {PWD}/packages/projectorangebox/migrations {GITBRANCH}",
 		"gitx checkout https://github.com/ProjectOrangeBox/orangev2.git {PWD}/packages/projectorangebox/orange {GITBRANCH}",
-		"gitx checkout https://github.com/ProjectOrangeBox/theme-orangev2.git {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}"
+		"gitx checkout https://github.com/ProjectOrangeBox/theme-orangev2.git {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}",
+		"rm {PWD}/~app/.env",
+		"cp -R {PWD}/~app/* {PWD}",
+		"rm -fdr {PWD}/~app"
 	],
 	"git status": [
 		"// % Show the GIT branches of the projects git folders.",
