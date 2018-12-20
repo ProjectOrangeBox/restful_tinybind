@@ -9,8 +9,8 @@
 </head>
 <body>
   <div class="cover">
-    <h1><?=$heading ?> <small>Error 400</small></h1>
-    <p class="lead"><?=$message ?></p>
-  </div>
+    <h1><?=$heading ?></h1>
+    <?=$message ?>
+	</div>
 </body>
 </html>

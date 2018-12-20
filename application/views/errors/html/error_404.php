@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="cover">
-    <h1><?=$heading ?> <small>Error 404</small></h1>
+    <h1><?=$heading ?></h1>
     <p class="lead"><?=$message ?></p>
   </div>
 </body>
