@@ -225,6 +225,14 @@
 		"capture PWD pwd",
 		"cd {PWD};composer update"
 	],
+	"setup": [
+		"// % Setup a brand new install.",
+		"task 'git checkout'",
+		"task 'composer update'",
+		"task repair",
+		"task relink",
+		"task 'git status'"
+	],
 	"complete": [
 		"// % Run Complete Site Update.",
 		"task 'complete database backup'",
@@ -235,8 +243,8 @@
 		"task 'clear sessions'",
 		"task relink",
 		"task 'site up'",
-		"task 'git status'",
-		"task 'composer update'"
+		"task 'composer update'",
+		"task 'git status'"
 	],
 	"basic": [
 		"// % Run Basic Site Update.",
