@@ -220,6 +220,11 @@
 		"cp {PWD}/support/site_down.html {PWD}/public/index.html",
 		"chmod -f 775 {PWD}/public"
 	],
+	"composer update": [
+		"// % Run composer update",
+		"capture PWD pwd",
+		"cd {PWD};composer update"
+	],
 	"complete": [
 		"// % Run Complete Site Update.",
 		"task 'complete database backup'",
@@ -230,7 +235,8 @@
 		"task 'clear sessions'",
 		"task relink",
 		"task 'site up'",
-		"task 'git status'"
+		"task 'git status'",
+		"task 'composer update'"
 	],
 	"basic": [
 		"// % Run Basic Site Update.",
