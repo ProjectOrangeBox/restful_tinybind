@@ -128,7 +128,8 @@
 		"gitx checkout https://github.com/ProjectOrangeBox/orangev2.git {PWD}/packages/projectorangebox/orange {GITBRANCH}",
 		"gitx checkout https://github.com/ProjectOrangeBox/theme-orangev2.git {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}",
 		"rm {PWD}/~app/.env",
-		"cp -R {PWD}/~app/* {PWD}",
+		"cp -R {PWD}/~app/.git {PWD}/.git",
+		"cp -Rr {PWD}/~app/* {PWD}",
 		"rm -fdr {PWD}/~app"
 	],
 	"git status": [
@@ -174,6 +175,16 @@
 		"readline FILENAME 'Enter Filename: '",
 		"e 'Using: {PWD}/support/backups/{FILENAME}'",
 		"cat {PWD}/support/backups/{FILENAME} | mysql --user={DBBACKUPUSER} --password={DBBACKUPPASSWORD} {DBBACKUPDATABASE}"
+	],
+	"database schema": [
+		"// % Dump database table schema.",
+		"@sudo on",
+		"capture PWD pwd",
+		"import ini {PWD}/.env",
+		"capture FILE_DATE 'date +%m%d%y_%H%M'",
+		"mkdir -p {PWD}/support/backups",
+		"chmod -f 777 {PWD}/support/backups",
+		"mysqldump --no-data --add-drop-table --add-drop-trigger --create-options --password={DBBACKUPPASSWORD} --events --routines --single-transaction --triggers --user={DBBACKUPUSER} --databases {DBBACKUPDATABASE} | gzip -9 > {PWD}/support/backups/{FILE_DATE}.{DBBACKUPDATABASE}.schema.sql.gz"
 	],
 	"migrate": [
 		"// % Run migration Up.",
