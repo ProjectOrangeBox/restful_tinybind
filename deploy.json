@@ -129,7 +129,7 @@
 		"gitx checkout https://github.com/ProjectOrangeBox/theme-orangev2.git {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}",
 		"rm {PWD}/~app/.env",
 		"cp -R {PWD}/~app/.git {PWD}/.git",
-		"cp -Rr {PWD}/~app/* {PWD}",
+		"cp -R {PWD}/~app/* {PWD}",
 		"rm -fdr {PWD}/~app"
 	],
 	"git status": [
