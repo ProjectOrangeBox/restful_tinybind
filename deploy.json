@@ -1,4 +1,5 @@
 {
+	"@version": 1.0, 
 	"relink": [
 		"// % Create Symbolic links between package folders and public folders.",
 		"@sudo on",
