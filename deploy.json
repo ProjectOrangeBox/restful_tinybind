@@ -116,6 +116,7 @@
 		"gitx checkout git@bitbucket.org:quadratec/tapemacs.git {PWD}/packages/quadratec/tapemacs {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/orange_snippets.git {PWD}/packages/misc/orange_snippets {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/masquerade.git {PWD}/packages/misc/masquerade {GITBRANCH}",
+		"gitx checkout git@bitbucket.org:quadratec/back_order_emails.git {PWD}/packages/quadratec/backorder_emails {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/projectorangebox-opcache.git {PWD}/packages/misc/opcache {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/projectorangebox-config-viewer.git {PWD}/packages/misc/config-viewer {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/projectorangebox-login-success.git {PWD}/packages/misc/login-success {GITBRANCH}",
