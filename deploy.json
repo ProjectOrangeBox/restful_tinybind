@@ -144,6 +144,7 @@
 		"gitx status {PWD}/packages/quadratec/vendor-stock",
 		"gitx status {PWD}/packages/quadratec/emarsys_order_feed",
 		"gitx status {PWD}/packages/quadratec/tapemacs",
+		"gitx status {PWD}/packages/quadratec/backorder_emails",
 		"gitx status {PWD}/packages/misc/orange_snippets",
 		"gitx status {PWD}/packages/misc/masquerade",
 		"gitx status {PWD}/packages/misc/opcache",
