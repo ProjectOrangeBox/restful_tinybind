@@ -27,7 +27,7 @@
 | 6. Language files
 | 7. Models
 |
-*/
+ */
 
 /**
  * when asked to load the array key instead load the array value
@@ -49,7 +49,7 @@ $autoload['remap'] = [
 |
 |  $autoload['packages'] = array(APPPATH.'third_party', '/usr/local/shared');
 |
-*/
+ */
 $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/backorder',
 	ROOTPATH.'/packages/quadratec/stock-status-check',
@@ -59,15 +59,13 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/gift-certificate',
 	ROOTPATH.'/packages/quadratec/category_mgrs',
 	ROOTPATH.'/packages/quadratec/quad_ldap',
-	ROOTPATH.'/packages/quadratec/qsolr',
 	ROOTPATH.'/packages/quadratec/vendor-stock',
 	ROOTPATH.'/packages/quadratec/emarsys_order_feed',
 	ROOTPATH.'/packages/quadratec/tapemacs',
-	ROOTPATH.'/packages/quadratec/back_order_emails',
-	ROOTPATH.'/packages/quadratec/emarsys',
+
+	ROOTPATH.'/packages/quadratec/backorder_emails',
 
 	ROOTPATH.'/packages/misc/orange_snippets',
-
 	ROOTPATH.'/packages/misc/masquerade',
 	ROOTPATH.'/packages/misc/opcache',
 	ROOTPATH.'/packages/misc/config-viewer',
@@ -95,17 +93,8 @@ $autoload['packages'] = array(
 | in the controller:
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
-*/
-$autoload['libraries'] = array(
-	'event',
-	'cache',
-	'session',
-	'errors',
-	'database',
-	'validate',
-	'wallet',
-	'auth',
-);
+ */
+$autoload['libraries'] = array('event','cache','session','errors','database','validate','wallet','auth');
 
 /*
 | -------------------------------------------------------------------
@@ -125,7 +114,7 @@ $autoload['libraries'] = array(
 |
 |	$autoload['drivers'] = array('cache' => 'cch');
 |
-*/
+ */
 $autoload['drivers'] = array();
 
 /*
@@ -135,7 +124,7 @@ $autoload['drivers'] = array();
 | Prototype:
 |
 |	$autoload['helper'] = array('url', 'file');
-*/
+ */
 $autoload['helper'] = array('url');
 
 /*
@@ -149,7 +138,7 @@ $autoload['helper'] = array('url');
 | NOTE: This item is intended for use ONLY if you have created custom
 | config files.  Otherwise, leave it blank.
 |
-*/
+ */
 $autoload['config'] = array();
 
 /*
@@ -163,7 +152,7 @@ $autoload['config'] = array();
 | NOTE: Do not include the "_lang" part of your file.  For example
 | "codeigniter_lang.php" would be referenced as array('codeigniter');
 |
-*/
+ */
 $autoload['language'] = array();
 
 /*
@@ -178,5 +167,5 @@ $autoload['language'] = array();
 | in the controller:
 |
 |	$autoload['model'] = array('first_model' => 'first');
-*/
+ */
 $autoload['model'] = [];
