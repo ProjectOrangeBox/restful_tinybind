@@ -16,6 +16,8 @@ $config['admin role id'] = 1;
 $config['nobody user id'] = 2;
 $config['nobody role id'] = 2;
 
+$config['everyone role id'] = env('everyone_role_id');
+
 $config['login h2'] = 'Please Sign in<h4>Using your Windows Login</h4>';
 $config['username field'] = 'Login';
 
