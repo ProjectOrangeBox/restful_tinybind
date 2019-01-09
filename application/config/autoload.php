@@ -75,6 +75,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/migrations',
 	ROOTPATH.'/packages/projectorangebox/orange',
 	ROOTPATH.'/packages/projectorangebox/theme-orange',
+	ROOTPATH.'/packages/projectorangebox/extras',
 );
 
 /*

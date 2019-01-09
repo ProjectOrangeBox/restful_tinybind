@@ -94,7 +94,8 @@
 		"gitx update {PWD}/packages/projectorangebox/extra-validations {GITBRANCH}",
 		"gitx update {PWD}/packages/projectorangebox/migrations {GITBRANCH}",
 		"gitx update {PWD}/packages/projectorangebox/orange {GITBRANCH}",
-		"gitx update {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}"
+		"gitx update {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}",
+		"gitx update {PWD}/packages/projectorangebox/extras"
 	],
 	"git checkout": [
 		"// % Checkout GIT repositories if they are not already checked out.",
@@ -124,6 +125,7 @@
 		"gitx checkout https://github.com/ProjectOrangeBox/Orange_v2_cli.git {PWD}/packages/projectorangebox/migrations {GITBRANCH}",
 		"gitx checkout https://github.com/ProjectOrangeBox/orangev2.git {PWD}/packages/projectorangebox/orange {GITBRANCH}",
 		"gitx checkout https://github.com/ProjectOrangeBox/theme-orangev2.git {PWD}/packages/projectorangebox/theme-orange {GITBRANCH}",
+		"gitx checkout https://github.com/ProjectOrangeBox/orange_extras.git {PWD}/packages/projectorangebox/extras {GITBRANCH}",
 		"rm {PWD}/~app/.env",
 		"cp -R {PWD}/~app/.git {PWD}/.git",
 		"cp -R {PWD}/~app/* {PWD}",
@@ -153,7 +155,8 @@
 		"gitx status {PWD}/packages/projectorangebox/extra-validations",
 		"gitx status {PWD}/packages/projectorangebox/migrations",
 		"gitx status {PWD}/packages/projectorangebox/orange",
-		"gitx status {PWD}/packages/projectorangebox/theme-orange"
+		"gitx status {PWD}/packages/projectorangebox/theme-orange",
+		"gitx status {PWD}/packages/projectorangebox/extras"
 	],
 	"complete database backup": [
 		"// % Backup the entire database.",
