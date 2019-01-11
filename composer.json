@@ -9,6 +9,8 @@
 		"league/climate": "dev-master",
 		"opendi/solrclient": "dev-master",
 		"matthiasbayer/datadog-client": "dev-master",
-		"mtdowling/cron-expression": "dev-master"
+		"mtdowling/cron-expression": "dev-master",
+		"ddeboer/imap": "^0.5.2",
+      "phpoffice/phpspreadsheet": "^1.2"
 	}
 }
