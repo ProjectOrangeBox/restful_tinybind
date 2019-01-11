@@ -257,6 +257,11 @@
 		"cp {PWD}/support/site_down.html {PWD}/public/index.html",
 		"chmod -f 775 {PWD}/public"
 	],
+	"backup .env": [
+		"// % Site Down.",
+		"capture PWD pwd",
+		"cp {PWD}/.env {PWD}/.env.backup"
+	],
 	"composer update": [
 		"// % Run composer update",
 		"capture PWD pwd",
@@ -283,7 +288,7 @@
 		"task 'composer update'",
 		"task 'git status'"
 	],
-	"basic": [
+	"quick update": [
 		"// % Run Basic Site Update.",
 		"task 'backup database data'",
 		"task 'git update'",

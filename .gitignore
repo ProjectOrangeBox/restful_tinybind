@@ -16,3 +16,4 @@ config.codekit3
 /application/views/donmyers
 .env
 application/config/development/*
+/.env.backup
