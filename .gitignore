@@ -17,3 +17,4 @@ config.codekit3
 .env
 application/config/development/*
 /.env.backup
+/.env.local
