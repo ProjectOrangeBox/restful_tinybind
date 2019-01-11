@@ -55,6 +55,8 @@
 		"mkdir -p {PWD}/var/logs",
 		"mkdir -p {PWD}/var/sessions",
 		"mkdir -p {PWD}/var/tmp",
+		"mkdir -p {PWD}/var/scheduler_output_logs",
+		"mkdir -p {PWD}/var/xdebug",
 		"find {PWD} -type f -print0 | sudo xargs -0 chmod 664",
 		"find {PWD} -type d -print0 | sudo xargs -0 chmod 775",
 		"find {PWD} -type f -print0 | sudo xargs -0 chown {CHOWN}",
