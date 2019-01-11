@@ -81,7 +81,7 @@
 		"gitx update {PWD}",
 		"gitx update {PWD}/packages/quadratec/backorder",
 		"gitx update {PWD}/packages/quadratec/stock-status-check",
-		"gitx update {PWD}/packages/quadratec/drop-ships}",
+		"gitx update {PWD}/packages/quadratec/drop-ships",
 		"gitx update {PWD}/packages/quadratec/affirm",
 		"gitx update {PWD}/packages/quadratec/status-board",
 		"gitx update {PWD}/packages/quadratec/gift-certificate",
