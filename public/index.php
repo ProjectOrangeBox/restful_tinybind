@@ -88,21 +88,23 @@ chdir(ROOTPATH);
 
 /* .env file */
 if (!file_exists('.env')) {
-	die(ROOTPATH.'/.env file missing');
+	echo ROOTPATH.'/.env file missing';
+	exit(1); // EXIT_ERROR
 }
 
 /* bring in the system .env files */
-$_ENV = $_ENV + parse_ini_file('.env',true,INI_SCANNER_TYPED);
+$_ENV = parse_ini_file('.env',true,INI_SCANNER_TYPED) + $_ENV;
 
 if (file_exists('.env.local')) {
-	$_ENV = $_ENV + parse_ini_file('.env.local',true,INI_SCANNER_TYPED);
+	$_ENV = parse_ini_file('.env.local',true,INI_SCANNER_TYPED) + $_ENV;
 }
 
 if ($missing = array_diff_key(array_flip(['DEBUG','ENVIRONMENT']),$_ENV)) {
 	$in = ($method) ? ' in '.$method : '';
 	$s = (count($missing) > 1) ? 's are' : ' is';
 	
-	die('The following required value'.$s.' missing: '.implode(', ',array_flip($missing)).$in.'.');
+	echo 'The following required value'.$s.' missing: '.implode(', ',array_flip($missing)).$in.'.';
+	exit(1); // EXIT_ERROR
 }
 
 /* absolute path to WWW folder */
