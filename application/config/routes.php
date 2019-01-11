@@ -2,6 +2,12 @@
 /* NOTE: this uses the FIRST match and stops */
 
 $route = array (
+	'vendor_stock/(.*)' => function($url,$router) {
+		$router->on_request('PublicMiddleware','GuiMiddleware','NavbarMiddleware');
+
+		return 'vendor_stock/vendor/'.$url;
+	},
+
   'cli/(.*)' => function($url,$router) {
   	return 'cli/'.$url;
   },
