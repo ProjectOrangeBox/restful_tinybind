@@ -78,6 +78,12 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/projectorangebox/extras',
 );
 
+if (isset($_ENV['packages'])) {
+	foreach ($_ENV['packages'] as $addon) {
+		$autoload['packages'][] = ROOTPATH.'/'.$addon;
+	}
+}
+
 /*
 | -------------------------------------------------------------------
 |  Auto-load Libraries
