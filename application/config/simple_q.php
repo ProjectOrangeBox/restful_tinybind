@@ -1,5 +1,6 @@
 <?php
 
 $config['database group'] = 'default';
-$config['clean up days'] = 7;
+$config['clean up hours'] = 168;
 $config['requeue tagged hours'] = 1;
+$config['garbage collection percent'] = 50;
