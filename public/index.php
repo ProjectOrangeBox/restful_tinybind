@@ -93,10 +93,10 @@ if (!file_exists('.env')) {
 }
 
 /* bring in the system .env files */
-$_ENV = parse_ini_file('.env',true,INI_SCANNER_TYPED) + $_ENV;
+$_ENV = array_merge($_ENV,parse_ini_file('.env',true,INI_SCANNER_TYPED));
 
 if (file_exists('.env.local')) {
-	$_ENV = parse_ini_file('.env.local',true,INI_SCANNER_TYPED) + $_ENV;
+	$_ENV = array_merge($_ENV,parse_ini_file('.env.local',true,INI_SCANNER_TYPED));
 }
 
 if ($missing = array_diff_key(array_flip(['DEBUG','ENVIRONMENT']),$_ENV)) {
