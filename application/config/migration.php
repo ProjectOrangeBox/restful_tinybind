@@ -81,4 +81,4 @@ $config['migration_version'] = 2;
 | Also, writing permission is required within the migrations path.
 |
 */
-$config['migration_path'] = ROOTPATH.'/support/migrations/';
+$config['migration_path'] = '/support/migrations/';
