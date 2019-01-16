@@ -258,7 +258,8 @@
 		"chmod -f 775 {PWD}/public"
 	],
 	"backup .env": [
-		"// % Site Down.",
+		"// % Backup the .env file.",
+		"@sudo on",
 		"capture PWD pwd",
 		"cp {PWD}/.env {PWD}/.env.backup"
 	],
