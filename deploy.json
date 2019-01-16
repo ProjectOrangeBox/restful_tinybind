@@ -1,5 +1,5 @@
 {
-	"@version": 1.0, 
+	"@version": 1.0,
 	"relink": [
 		"// % Create Symbolic links between package folders and public folders.",
 		"@sudo on",
@@ -71,9 +71,11 @@
 		"chmod -Rf 777 {PWD}/var/logs/*",
 		"chmod -Rf 777 {PWD}/var/tmp/*",
 		"chmod -Rf 777 {PWD}/var/sessions/*",
-    "chmod -Rf 777 {PWD}/bin/*.sh",
-    "chmod -Rf 777 {PWD}/bin/*.php",
-		"chmod -Rf 777 {PWD}/support/backups"
+		"chmod -Rf 777 {PWD}/bin/*.sh",
+		"chmod -Rf 777 {PWD}/bin/*.php",
+		"chmod -Rf 777 {PWD}/support/backups",
+		"chmod 444 {PWD}/.env",
+		"chmod 444 {PWD}/.env.backup"
 	],
 	"git update": [
 		"// % Fetch and Reset all git Modules.",
@@ -261,7 +263,9 @@
 		"// % Backup the .env file.",
 		"@sudo on",
 		"capture PWD pwd",
-		"cp {PWD}/.env {PWD}/.env.backup"
+		"cp {PWD}/.env {PWD}/.env.backup",
+		"chmod 444 {PWD}/.env",
+		"chmod 444 {PWD}/.env.backup"
 	],
 	"composer update": [
 		"// % Run composer update",
