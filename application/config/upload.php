@@ -22,3 +22,11 @@ $config['filea'] = [
 	'move_to' => ROOTPATH.'/var/tmp/',
 	'strip folder' => ROOTPATH,
 ];
+
+
+$config['imageb'] = [
+	'allowed_types'=>['xls','xlsx'],
+	'move_to' => ROOTPATH.'/var/tmp/',
+	//'encrypt_name'=>true,
+	'strip folder' => ROOTPATH,
+];
