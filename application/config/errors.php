@@ -1,5 +1,7 @@
 <?php 
 
+$config['auto detect'] = true;
+
 $config['flashdata session variable'] = 'ci_errors';
 
 $config['html_prefix'] = '<p class="orange error">';
