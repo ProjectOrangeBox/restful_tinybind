@@ -80,7 +80,7 @@ $autoload['packages'] = array(
 
 if (isset($_ENV['packages'])) {
 	foreach ($_ENV['packages'] as $addon) {
-		$autoload['packages'][] = ROOTPATH.'/'.$addon;
+		$autoload['packages'][] = ROOTPATH.$addon;
 	}
 }
 
