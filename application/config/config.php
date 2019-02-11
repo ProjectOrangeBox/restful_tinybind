@@ -158,7 +158,12 @@ $config['composer_autoload'] = ROOTPATH.'/vendor/autoload.php';
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
+
+if (php_sapi_name() == 'cli') {
+	$config['permitted_uri_chars'] = '';
+} else {	
+	$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
+}
 
 /*
 |--------------------------------------------------------------------------
