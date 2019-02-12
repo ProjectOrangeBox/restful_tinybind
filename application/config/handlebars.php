@@ -30,7 +30,7 @@ $config['cache path'] = CACHEPATH;
 /**
  * sting|array - Single or an array of path to search for partials in
  */
-$config['partials path'] = '/application/views/handlebars';
+$config['partials path'] = '';
 
 /**
  * sting|array - Single or an array of path to search for plugins in
