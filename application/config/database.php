@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -71,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | the query builder class.
 */
 $active_group = 'default';
-$query_builder = TRUE;
+$query_builder = true;
 
 $db['default'] = [
 	'dsn'	=> '',
@@ -81,18 +81,18 @@ $db['default'] = [
 	'database' => env('database.default.database'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => env('database.debug',false),
-	'cache_on' => FALSE,
+	'pconnect' => false,
+	'db_debug' => env('database.debug', false),
+	'cache_on' => false,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
 	'failover' => array(),
-	'save_queries' => env('database.debug',false),
+	'save_queries' => env('database.debug', false),
 ];
 
 $db['mbfoster'] = [
@@ -103,18 +103,18 @@ $db['mbfoster'] = [
 	'database' => env('database.mbfoster.database'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => env('database.debug',false),
-	'cache_on' => FALSE,
+	'pconnect' => false,
+	'db_debug' => env('database.debug', false),
+	'cache_on' => false,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
 	'failover' => array(),
-	'save_queries' => env('database.debug',false),
+	'save_queries' => env('database.debug', false),
 ];
 
 $db['mbfoster_worker'] = [
@@ -125,18 +125,18 @@ $db['mbfoster_worker'] = [
 	'database' => 'worker',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => env('database.debug',false),
-	'cache_on' => FALSE,
+	'pconnect' => false,
+	'db_debug' => env('database.debug', false),
+	'cache_on' => false,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
 	'failover' => array(),
-	'save_queries' => env('database.debug',false),
+	'save_queries' => env('database.debug', false),
 ];
 
 $db['mbfoster_marketing_automation'] = [
@@ -147,18 +147,18 @@ $db['mbfoster_marketing_automation'] = [
 	'database' => 'marketing_automation',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => env('database.debug',false),
-	'cache_on' => FALSE,
+	'pconnect' => false,
+	'db_debug' => env('database.debug', false),
+	'cache_on' => false,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
 	'failover' => array(),
-	'save_queries' => env('database.debug',false),
+	'save_queries' => env('database.debug', false),
 ];
 
 $db['tapemacs'] = [
@@ -169,18 +169,18 @@ $db['tapemacs'] = [
 	'database' => env('database.tapemacs.database'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => env('database.debug',false),
-	'cache_on' => FALSE,
+	'pconnect' => false,
+	'db_debug' => env('database.debug', false),
+	'cache_on' => false,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
 	'failover' => array(),
-	'save_queries' => env('database.debug',false),
+	'save_queries' => env('database.debug', false),
 ];
 
 $db['payment_gateway'] = [
@@ -191,18 +191,18 @@ $db['payment_gateway'] = [
 	'database' => env('database.payment_gateway.database'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => env('database.debug',false),
-	'cache_on' => FALSE,
+	'pconnect' => false,
+	'db_debug' => env('database.debug', false),
+	'cache_on' => false,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
 	'failover' => array(),
-	'save_queries' => env('database.debug',false),
+	'save_queries' => env('database.debug', false),
 ];
 
 $db['web1'] = [
@@ -213,18 +213,18 @@ $db['web1'] = [
 	'database' => env('database.web1.database'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => env('database.debug',false),
-	'cache_on' => FALSE,
+	'pconnect' => false,
+	'db_debug' => env('database.debug', false),
+	'cache_on' => false,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
 	'failover' => array(),
-	'save_queries' => env('database.debug',false),
+	'save_queries' => env('database.debug', false),
 ];
 
 $db['master'] = [
@@ -235,16 +235,16 @@ $db['master'] = [
 	'database' => env('database.master.database'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => env('database.debug',false),
-	'cache_on' => FALSE,
+	'pconnect' => false,
+	'db_debug' => env('database.debug', false),
+	'cache_on' => false,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
 	'failover' => array(),
-	'save_queries' => env('database.debug',false),
+	'save_queries' => env('database.debug', false),
 ];

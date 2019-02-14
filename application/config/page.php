@@ -8,7 +8,7 @@ $config['domready_javascript'] = 'document.addEventListener("DOMContentLoaded",f
 
 $config['page_prefix'] = 'page_';
 
-/* 
+/*
 Send in page values for ALL pages arrays of values also supported
 
 meta
@@ -22,7 +22,7 @@ domready
 
 title
 	'title'=>''
-	
+
 style
 	'style'=>'* {font-family: roboto}'
 

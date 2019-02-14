@@ -83,4 +83,3 @@ $config['generic'] = [
 
 	'content'=>'{text}',
 ];
-

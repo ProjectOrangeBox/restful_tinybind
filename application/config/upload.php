@@ -11,7 +11,7 @@ $config['move_to'] = WWW.'/images/';
 $config['strip folder'] = WWW;
 
 /**
- * 
+ *
  * This array matches the name of a input field
  * this is merged with the base configuration array will additional
  * configuration for this input field

@@ -1,20 +1,20 @@
-<? pear::extends('_templates/orange_admin') ?>
+<?php pear::extends('_templates/orange_admin') ?>
 
-<? pear::section('section_container') ?>
+<?php pear::section('section_container') ?>
 
 <div class="row">
-  <div class="col-md-6"><?=pear::title('Dashboard','th') ?></div>
+  <div class="col-md-6"><?=pear::title('Dashboard', 'th') ?></div>
   <div class="col-md-6"></div>
 </div>
 
 <div class="row metro"></div>
 
 <p><small><?=pear::snippet('Dashboard Update News') ?></small></p>
-<? pear::end() ?>
+<?php pear::end() ?>
 
-<? pear::section('page_body_class') ?>dashboard<? pear::parent() ?><? pear::end() ?>
+<?php pear::section('page_body_class') ?>dashboard<?php pear::parent() ?><?php pear::end() ?>
 
-<? pear::section('page_style') ?>
+<?php pear::section('page_style') ?>
 .dashboard a.btn.btn-lg.btn-block {
 	transition:all 0.3s ease;
   opacity:0.9;
@@ -30,9 +30,9 @@
   opacity:1;
   color: #eee;
 }
-<? pear::end() ?>
+<?php pear::end() ?>
 
-<? pear::section('page_script') ?>
+<?php pear::section('page_script') ?>
 document.addEventListener("DOMContentLoaded", function(event) {
 	$('#navbar ul.dropdown-menu li a').each(function() {
 		var parent_text = $(this).closest('.dropdown').find('a:first').text();
@@ -51,4 +51,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		}
 	});
 });
-<? pear::end() ?>
+<?php pear::end() ?>

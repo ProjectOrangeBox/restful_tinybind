@@ -18,5 +18,5 @@ use Monolog\Handler\BrowserConsoleHandler;
 if (isset($monolog)) {
 	//$monolog->pushHandler(new StreamHandler($config['log_path'].'/'.date('Y-m-d').'.'.$config['log_file_extension'], Logger::DEBUG));
 	//$monolog->pushHandler(new BrowserConsoleHandler(Logger::DEBUG));
-	$monolog->pushHandler(new RotatingFileHandler($config['log_path'].'/log.'.$config['log_file_extension'],7, Logger::DEBUG));
+	$monolog->pushHandler(new RotatingFileHandler($config['log_path'].'/log.'.$config['log_file_extension'], 7, Logger::DEBUG));
 }
