@@ -99,7 +99,7 @@ if (file_exists('.env.local')) {
 	$_ENV = array_merge($_ENV,parse_ini_file('.env.local',true,INI_SCANNER_TYPED));
 }
 
-if ($missing = array_diff_key(array_flip(['DEBUG','ENVIRONMENT']),$_ENV)) {
+if ($missing = array_diff_key(array_flip(['DEBUG','ENVIRONMENT','DOMAIN','encryption_key']),$_ENV)) {
 	$in = ($method) ? ' in '.$method : '';
 	$s = (count($missing) > 1) ? 's are' : ' is';
 	
