@@ -18,3 +18,4 @@ config.codekit3
 application/config/development/*
 /.env.backup
 /.env.local
+/.php_cs.cache
