@@ -107,8 +107,9 @@ if ($missing = array_diff_key(array_flip(['DEBUG','ENVIRONMENT','DOMAIN','encryp
 	exit(1); // EXIT_ERROR
 }
 
-/* absolute path to WWW folder */
-define('WWW', dirname(__FILE__));
+if (isset($_ENV['PHPUNIT'])) {
+	$_ENV['DEBUG'] = 'phpunit';
+}
 
 /*
  *---------------------------------------------------------------
@@ -164,9 +165,12 @@ switch ($_ENV['DEBUG']) {
 
 define('ENVIRONMENT',$_ENV['ENVIRONMENT']);
 
-if (file_exists('.env.'.$_ENV['ENVIRONMENT'])) {
-	$_ENV = $_ENV + parse_ini_file('.env.'.$_ENV['ENVIRONMENT'],true,INI_SCANNER_TYPED);
+if (file_exists('.env.'.ENVIRONMENT)) {
+	$_ENV = $_ENV + parse_ini_file('.env.'.ENVIRONMENT,true,INI_SCANNER_TYPED);
 }
+
+/* absolute path to WWW folder */
+define('WWW', dirname(__FILE__));
 
 /*
  *---------------------------------------------------------------
