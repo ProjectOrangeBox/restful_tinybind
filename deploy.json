@@ -103,7 +103,8 @@
 		"gitx update {PWD}/packages/projectorangebox/orange",
 		"gitx update {PWD}/packages/projectorangebox/theme-orange",
 		"gitx update {PWD}/packages/projectorangebox/extras",
-		"task 'clear caches'"
+		"task 'clear caches'",
+		"task repair"
 	],
 	"git checkout": [
 		"// % Checkout GIT repositories if they are not already checked out.",
