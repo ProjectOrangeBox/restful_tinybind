@@ -11,6 +11,7 @@
 		"matthiasbayer/datadog-client": "dev-master",
 		"mtdowling/cron-expression": "dev-master",
 		"ddeboer/imap": "^0.5.2",
-    "phpoffice/phpspreadsheet": "^1.2"
+		"phpoffice/phpspreadsheet": "^1.2",
+		"reprovinci/solr-php-client": "1.0.x"
 	}
 }
