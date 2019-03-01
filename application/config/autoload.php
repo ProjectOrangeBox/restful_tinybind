@@ -41,6 +41,14 @@ $autoload['remap'] = [
 	'o_user_model'=>'o_ldap_user_model',
 ];
 
+$autoload['services'] = [
+	'errors' => '\projectorangebox\orange\libraries\Errors',
+	'event' => '\projectorangebox\orange\libraries\Event',
+	'page' => '\projectorangebox\orange\libraries\Page',
+	'wallet' => '\projectorangebox\orange\libraries\Wallet',
+	'validate' => '\projectorangebox\orange\libraries\Validate',
+];
+
 /*
 | -------------------------------------------------------------------
 |  Auto-load Packages

@@ -13,5 +13,11 @@
 		"ddeboer/imap": "^0.5.2",
 		"phpoffice/phpspreadsheet": "^1.2",
 		"reprovinci/solr-php-client": "1.0.x"
+	},
+	"autoload": {
+		"psr-4": {
+			"projectorangebox\\orange\\": "packages/projectorangebox/orange",
+			"quadratec\\quad_ldap\\": "packages/quadratec/quad_ldap"
+		}
 	}
 }
