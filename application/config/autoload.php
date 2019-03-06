@@ -42,11 +42,6 @@ $autoload['remap'] = [
 ];
 
 $autoload['services'] = [
-	'errors' => '\projectorangebox\orange\libraries\Errors',
-	'event' => '\projectorangebox\orange\libraries\Event',
-	'page' => '\projectorangebox\orange\libraries\Page',
-	'wallet' => '\projectorangebox\orange\libraries\Wallet',
-	'validate' => '\projectorangebox\orange\libraries\Validate',
 ];
 
 /*
