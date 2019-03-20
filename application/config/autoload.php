@@ -66,6 +66,7 @@ $autoload['packages'] = array(
 	ROOTPATH.'/packages/quadratec/emarsys_order_feed',
 	ROOTPATH.'/packages/quadratec/tapemacs',
 	ROOTPATH.'/packages/quadratec/backorder_emails',
+	ROOTPATH.'/packages/quadratec/backorder_emails2',
 	ROOTPATH.'/packages/quadratec/order-review',
 
 	ROOTPATH.'/packages/misc/orange_snippets',
