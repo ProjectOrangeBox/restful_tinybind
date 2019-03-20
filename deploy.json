@@ -114,7 +114,6 @@
 		"capture PWD pwd",
 		"import ini {PWD}/.env",
 		"e 'Using GIT Branch {GITBRANCH}'",
-		"gitx checkout git@bitbucket.org:quadratec/application.git {PWD}/~app {GITBRANCH}",
 		"gitx checkout donmyersquad@bitbucket.org:quadratec/projectorangebox-config-viewer.git {PWD}/packages/misc/config-viewer {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/projectorangebox-login-success.git {PWD}/packages/misc/login-success {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/masquerade.git {PWD}/packages/misc/masquerade {GITBRANCH}",
@@ -136,11 +135,7 @@
 		"gitx checkout git@bitbucket.org:quadratec/status-board.git {PWD}/packages/quadratec/status-board {GITBRANCH}",
 		"gitx checkout donmyersquad@bitbucket.org:quadratec/quadratec-stock-status-check.git {PWD}/packages/quadratec/stock-status-check {GITBRANCH}",
 		"gitx checkout git@bitbucket.org:quadratec/tapemacs.git {PWD}/packages/quadratec/tapemacs {GITBRANCH}",
-		"gitx checkout git@bitbucket.org:quadratec/quadratec-vendor-stock.git {PWD}/packages/quadratec/vendor-stock {GITBRANCH}",
-		"rm {PWD}/~app/.env",
-		"cp -R {PWD}/~app/.git {PWD}/.git",
-		"cp -R {PWD}/~app/* {PWD}",
-		"rm -fdr {PWD}/~app"
+		"gitx checkout git@bitbucket.org:quadratec/quadratec-vendor-stock.git {PWD}/packages/quadratec/vendor-stock {GITBRANCH}"
 	],
 	"git status": [
 		"// % Show the GIT branches of the projects git folders.",
