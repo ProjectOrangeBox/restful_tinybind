@@ -1,15 +1,12 @@
 <?php
 
-$config['account_suffix'] = '@quadratec.local';
+$config['account_suffix'] = env('ldap_account_suffix');
 $config['domain_controllers'] = [env('ldap.secondary'),env('ldap.primary')];
-$config['base_dn'] = 'DC=quadratec,DC=local'; // CN=Skynet,OU=Information Systems,DC=quadratec,DC=local
+$config['base_dn'] = env('ldap_base_dn');
 
 $config['ad_port'] = 636;
 $config['use_ssl'] = false;
 $config['use_tls'] = true;
 
-$config['admin_username'] = 'skynet_admin';
-$config['admin_password'] = 'FDCQk}\'n';
-
-/* 172.16.62.205 172.16.62.158 */
-/* 'quad-dc2.quadratec.local','quad-dc1.quadratec.local' */
+$config['admin_username'] = env('ldap_username');
+$config['admin_password'] = env('ldap_password');
