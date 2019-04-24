@@ -4,9 +4,9 @@
 		"// % Create Symbolic links between package folders and public folders.",
 		"@sudo on",
 		"capture PWD pwd",
-		"rm -f {PWD}/public/theme/orange",
-		"rm -f {PWD}/public/assets/backorder",
-		"rm -f {PWD}/public/assets/stock-status-check",
+		"rm -fdr {PWD}/public/theme/orange",
+		"rm -fdr {PWD}/public/assets/backorder",
+		"rm -fdr {PWD}/public/assets/stock-status-check",
 		"ln -s {PWD}/packages/projectorangebox/theme-orange/public/theme/orange {PWD}/public/theme/orange",
 		"ln -s {PWD}/packages/quadratec/backorder/public/assets/backorder {PWD}/public/assets/backorder",
 		"ln -s {PWD}/packages/quadratec/stock-status-check/public/assets/stock-status-check {PWD}/public/assets/stock-status-check"
@@ -15,6 +15,9 @@
 		"// % Copy complete folders between package folders and public folders.",
 		"@sudo on",
 		"capture PWD pwd",
+		"rm -fdr {PWD}/public/theme/orange",
+		"rm -fdr {PWD}/public/assets/backorder",
+		"rm -fdr {PWD}/public/assets/stock-status-check",
 		"cp -R {PWD}/packages/projectorangebox/theme-orange/public/theme/orange {PWD}/public/theme/orange",
 		"cp -R {PWD}/packages/quadratec/backorder/public/assets/backorder {PWD}/public/assets/backorder",
 		"cp -R {PWD}/packages/quadratec/stock-status-check/public/assets/stock-status-check {PWD}/public/assets/stock-status-check"

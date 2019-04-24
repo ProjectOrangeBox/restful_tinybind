@@ -19,3 +19,5 @@ application/config/development/*
 /.env.backup
 /.env.local
 /.php_cs.cache
+/public/assets/notify
+/public/assets/orangejax

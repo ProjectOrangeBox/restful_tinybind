@@ -12,7 +12,9 @@
 		"mtdowling/cron-expression": "dev-master",
 		"ddeboer/imap": "^0.5.2",
 		"phpoffice/phpspreadsheet": "^1.2",
-		"reprovinci/solr-php-client": "1.0.x"
+		"reprovinci/solr-php-client": "1.0.x",
+		"symfony/dependency-injection": "^4.3@dev",
+		"fzaninotto/faker": "^1.9@dev"
 	},
 	"autoload": {
 		"psr-4": {
