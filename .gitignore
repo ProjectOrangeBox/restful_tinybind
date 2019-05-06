@@ -21,3 +21,5 @@ application/config/development/*
 /.php_cs.cache
 /public/assets/notify
 /public/assets/orangejax
+/public/assets/rest_api
+/public/bind
