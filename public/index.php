@@ -77,9 +77,13 @@
 /* absolute path to projects root level - >> NO << files below this folder */
 define('ROOTPATH', realpath(__DIR__.'/../'));
 
+/* new syntax to be more inline with built in constants */
+define('__ROOT__', realpath(__DIR__.'/../'));
+
 /* absolute path to project orange box folder? */
 define('ORANGEPATH', ROOTPATH.'/packages/projectorangebox/orange');
 
+/* these are used for some low level functions before the bootstrapping is loaded */
 define('CACHEPATH',ROOTPATH.'/var/cache');
 define('LOGPATH',ROOTPATH.'/var/logs');
 
@@ -102,7 +106,7 @@ if (file_exists('.env.local')) {
 if ($missing = array_diff_key(array_flip(['DEBUG','ENVIRONMENT','DOMAIN','encryption_key']),$_ENV)) {
 	$in = ($method) ? ' in '.$method : '';
 	$s = (count($missing) > 1) ? 's are' : ' is';
-	
+
 	echo 'The following required value'.$s.' missing: '.implode(', ',array_flip($missing)).$in.'.';
 	exit(1); // EXIT_ERROR
 }
@@ -128,7 +132,7 @@ switch ($_ENV['DEBUG']) {
 
 		error_reporting(E_ALL & ~E_NOTICE);
 		ini_set('display_errors', 1);
-		
+
 		assert_options(ASSERT_ACTIVE, 1);
 		assert_options(ASSERT_WARNING, 0);
 		assert_options(ASSERT_QUIET_EVAL, 0);
@@ -136,7 +140,7 @@ switch ($_ENV['DEBUG']) {
 	case 'development':
 		error_reporting(E_ALL & ~E_NOTICE);
 		ini_set('display_errors', 1);
-		
+
 		assert_options(ASSERT_ACTIVE, 1);
 		assert_options(ASSERT_WARNING, 0);
 		assert_options(ASSERT_QUIET_EVAL, 0);
@@ -166,7 +170,7 @@ switch ($_ENV['DEBUG']) {
 define('ENVIRONMENT',$_ENV['ENVIRONMENT']);
 
 if (file_exists('.env.'.ENVIRONMENT)) {
-	$_ENV = $_ENV + parse_ini_file('.env.'.ENVIRONMENT,true,INI_SCANNER_TYPED);
+	$_ENV = array_merge($_ENV,parse_ini_file('.env.'.ENVIRONMENT,true,INI_SCANNER_TYPED));
 }
 
 /* absolute path to WWW folder */
