@@ -21,27 +21,10 @@ class RestController extends \MY_Controller
 				'//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js',
 				'//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js',
 				'//cdnjs.cloudflare.com/ajax/libs/tinysort/3.1.4/tinysort.js',
-
-				'/theme/orange/assets/plugins/notify/notify.min.js',
-				'/theme/orange/assets/plugins/flash-msg/jquery.bootstrap.flash-msg.min.js',
-
-				'/theme/orange/assets/plugins/bound-table-search/bound-table-search.min.js',
-				'/theme/orange/assets/plugins/table_sort/table_sort.min.js',
-				'/theme/orange/assets/plugins/table_remember_position/table_remember_position.min.js',
-				'/theme/orange/assets/plugins/table_sticky_header/jquery.stickytableheaders.min.js',
-
-				'/restful-app/tinybind.stdlib.min.js',
-				'/restful-app/grape.min.js',
-				'/restful-app/myapp.min.js',
+				'/hard/combined.min.js'
 			])
-			->css([
-				'/theme/orange/assets/plugins/table_sort/table_sort.min.css',
-
-				'/theme/orange/assets/plugins/flash-msg/flash-msg.min.css',
-				'/theme/orange/assets/plugins/notify/notify.min.css',
-			]);
-
-		ci('page')->render('/rest/template');
+			->css('/hard/combined.min.css')
+			->render('/rest/template');
 	}
 
 	public function layoutIndexAction() : void

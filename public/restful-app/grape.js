@@ -1,7 +1,7 @@
 /*
  * http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
  */
-var Router = {
+var router = {
 	routes: [],
 	mode: null,
 	root: '/',
@@ -221,13 +221,13 @@ var app = {
 			}
 		},
 		route() {
-			if (!Router._routerSetup) {
-				Router.config({ mode:'history'});
-				Router._routerSetup = true;
-				Router.listen();
+			if (!router._routerSetup) {
+				router.config({ mode:'history'});
+				router._routerSetup = true;
+				router.listen();
 			}
 
-			Router.check(window.location.pathname);
+			router.check(window.location.pathname);
 		},
 	}
 };

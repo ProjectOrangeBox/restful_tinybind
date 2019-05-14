@@ -1,5 +1,5 @@
 /* Add Routes */
-Router
+router
 	.add(/rest\/create/, function(primary_id) {
 		app.helpers.load('/rest/layoutDetails','/rest/createModel');
 	})
@@ -19,12 +19,12 @@ app
 	.addEvent('create',function(url, event) {
 		event.preventDefault();
 
-		Router.navigate(app.page.path + '/create');
+		router.navigate(app.page.path + '/create');
 	})
 	.addEvent('edit',function(url, primaryId, event) {
 		event.preventDefault();
 
-		Router.navigate(app.page.path + '/edit/' + primaryId);
+		router.navigate(app.page.path + '/edit/' + primaryId);
 	})
 	.addEvent('delete',function(url, primaryId, event) {
 		event.preventDefault();
@@ -50,7 +50,7 @@ app
 	.addEvent('goback',function(url, event) {
 		event.preventDefault();
 
-		Router.navigate(app.page.path);
+		router.navigate(app.page.path);
 	})
 	.addEvent('submit',function(event) {
 		event.preventDefault();
@@ -58,13 +58,13 @@ app
 		/* created record - create */
 		app.helpers.defaultResponse[201] = function(data, textStatus, jqXHR) {
 			/* good redirect */
-			Router.navigate(app.page.path);
+			router.navigate(app.page.path);
 		}
 
 		/* accepted record - update */
 		app.helpers.defaultResponse[202] = function(data, textStatus, jqXHR) {
 			/* good redirect */
-			Router.navigate(app.page.path);
+			router.navigate(app.page.path);
 		}
 
 		/* not accepted - show errors */
