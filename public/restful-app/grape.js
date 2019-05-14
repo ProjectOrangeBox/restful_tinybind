@@ -174,63 +174,49 @@ var app = {
 			};
 		},
 		load(layout,modelEndPoint) {
-			/* ok */
-			app.helpers.defaultResponse[200] = app.helpers.default200;
+			/* unbind */
+			jQuery('body').trigger('bound',false);
 
+			/* ok */
+			app.helpers.defaultResponse[200] = function(data, textStatus, jqXHR) {
+				app.helpers.setData(data);
+
+				app.bound = tinybind.bind(document.querySelector(app.id),app);
+
+				/* rebound */
+				jQuery('body').trigger('bound',true);
+			};
+
+			/* have we already loaded the template? */
 			if (app._templates[layout]) {
-				/* we already cached the layout so just bind */
-				jQuery('body').trigger('unbound');
+				/* we already cached the template so just bind */
 				jQuery(app.id).html(app._templates[layout]);
 
+				/* run ajax model grab which calls app.helpers.defaultResponse[200] setup above */
 				app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
 			} else {
-				/* get the layout & bind */
+				/* get the template & on success bind */
 				jQuery.get(layout,function(data) {
+					/* cache it */
 					app._templates[layout] = data;
 
-					jQuery('body').trigger('unbound');
+					/* add it to the app */
 					jQuery(app.id).html(app._templates[layout]);
 
+					/* run ajax model grab which calls app.helpers.defaultResponse[200] setup above */
 					app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
 				});
 			}
 		},
-		/* ok */
-		default200(data, textStatus, jqXHR) {
-			app.helpers.setData(data);
+		route(path) {
+			path = (path) ? path : window.location.pathname;
 
-			app.bound = tinybind.bind(document.querySelector(app.id),app);
-
-			jQuery('body').trigger('bound');
-		},
-		/* created */
-		form201(data, textStatus, jqXHR) {
-			app.helpers.load('index','/rest/indexModel');
-		},
-		/* accepted */
-		form202(data, textStatus, jqXHR) {
-			app.helpers.load('index','/rest/indexModel');
-		},
-		/* not acceptable */
-		form406(jqXHR, textStatus, errorThrown) {
-			app = Object.assign(app,jqXHR.responseJSON);
-
-			if (app.error) {
-				notify.removeAll();
-				for (const key in app.errors) {
-					for (const key2 in app.errors[key]) {
-						notify.addError(app.errors[key][key2]);
-					}
-				}
-			}
-		},
-		route() {
-			if (!app.router._routerSetup) {
-				app.router._routerSetup = true;
+			if (!app.router.isSetup) {
+				app.router.isSetup = true;
 				app.router.config({ mode:'history'}).listen();
 			}
 
-			app.router.check(window.location.pathname);
+			app.router.check(path);
 		},
 	}
 };

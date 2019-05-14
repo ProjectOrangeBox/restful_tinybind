@@ -63,7 +63,7 @@ app.event
 
 		/* accepted record - update */
 		app.helpers.defaultResponse[202] = function(data, textStatus, jqXHR) {
-			/* good redirect */
+			/* good redirect" */
 			app.router.navigate(app.page.path);
 		}
 
