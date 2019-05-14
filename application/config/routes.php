@@ -4,13 +4,6 @@
  */
 
 $route = array(
-	'vendor_stock/(.*)' => function ($url, $router) {
-		$router->on_request('PublicMiddleware', 'GuiMiddleware');
-		$router->on_responds('NavbarMiddleware');
-
-		return 'vendor_stock/vendor/'.$url;
-	},
-
   'cli/(.*)' => function ($url, $router) {
 	  return 'cli/'.$url;
   },
@@ -36,6 +29,6 @@ $route = array(
 	  return $url;
   },
 
-  'default_controller' => 'main/index',
+  'default_controller' => 'angle/index',
   '404_override' => 'main/route404',
 );
