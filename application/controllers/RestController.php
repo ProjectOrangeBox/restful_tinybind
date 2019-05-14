@@ -21,6 +21,7 @@ class RestController extends \MY_Controller
 				'//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js',
 				'//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js',
 				'//cdnjs.cloudflare.com/ajax/libs/tinysort/3.1.4/tinysort.js',
+
 				'/hard/combined.min.js'
 			])
 			->css('/hard/combined.min.css')

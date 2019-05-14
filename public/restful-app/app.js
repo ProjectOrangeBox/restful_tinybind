@@ -1,5 +1,5 @@
 /* Add Routes */
-router
+app.router
 	.add(/rest\/create/, function(primary_id) {
 		app.helpers.load('/rest/layoutDetails','/rest/createModel');
 	})
@@ -15,18 +15,18 @@ router
 	});
 
 /* Add Events */
-app
-	.addEvent('create',function(url, event) {
+app.event
+	.add('create',function(url, event) {
 		event.preventDefault();
 
-		router.navigate(app.page.path + '/create');
+		app.router.navigate(app.page.path + '/create');
 	})
-	.addEvent('edit',function(url, primaryId, event) {
+	.add('edit',function(url, primaryId, event) {
 		event.preventDefault();
 
-		router.navigate(app.page.path + '/edit/' + primaryId);
+		app.router.navigate(app.page.path + '/edit/' + primaryId);
 	})
-	.addEvent('delete',function(url, primaryId, event) {
+	.add('delete',function(url, primaryId, event) {
 		event.preventDefault();
 
 		/* we need to save this for the 202 responds */
@@ -47,24 +47,24 @@ app
 			}
 		});
 	})
-	.addEvent('goback',function(url, event) {
+	.add('goback',function(url, event) {
 		event.preventDefault();
 
-		router.navigate(app.page.path);
+		app.router.navigate(app.page.path);
 	})
-	.addEvent('submit',function(event) {
+	.add('submit',function(event) {
 		event.preventDefault();
 
 		/* created record - create */
 		app.helpers.defaultResponse[201] = function(data, textStatus, jqXHR) {
 			/* good redirect */
-			router.navigate(app.page.path);
+			app.router.navigate(app.page.path);
 		}
 
 		/* accepted record - update */
 		app.helpers.defaultResponse[202] = function(data, textStatus, jqXHR) {
 			/* good redirect */
-			router.navigate(app.page.path);
+			app.router.navigate(app.page.path);
 		}
 
 		/* not accepted - show errors */
