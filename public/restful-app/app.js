@@ -1,17 +1,14 @@
 /* Add Routes */
 app.router
-	.add(/rest\/create/, function(primary_id) {
+	.add(/create/, function(primary_id) {
 		app.helpers.load('/rest/layoutDetails','/rest/createModel');
 	})
-	.add(/rest\/edit\/(.*)/, function(primary_id) {
+	.add(/edit\/(.*)/, function(primary_id) {
 		app.helpers.load('/rest/layoutDetails','/rest/editModel/'+primary_id);
 	})
-	.add(/rest/, function() {
+	.add(function() {
 		notify.removeAll();
 		app.helpers.load('/rest/layoutIndex','/rest/indexModel');
-	})
-	.add(function() {
-		console.log('> default');
 	});
 
 /* Add Events */

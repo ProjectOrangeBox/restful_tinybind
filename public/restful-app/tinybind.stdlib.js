@@ -313,7 +313,6 @@ tinybind.formatters.pairs = function(target) {
 };
 
 tinybind.formatters.catalog = function(input,object,id,value) {
-
 	id = (id) ? id : 'id';
 	value = (value) ? value : 'value';
 

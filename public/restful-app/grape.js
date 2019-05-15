@@ -17,12 +17,15 @@ var app = {
 	records: [{}], /* array of single records */
 	page: {}, /* page variables */
 	form: {}, /* form variables */
+	events: {}, /* store actual events */
 	_templates: [], /* template cache */
 	bound: undefined, /* are we attached to the DOM */
 	init() {
+		/* default just call the router */
 		app.helpers.route();
 	},
 	event: {
+		/* wrapper to add events like app.event.add('name',function(){}); */
 		add(name,handler) {
 			app.events[name] = handler;
 			return this;
@@ -110,24 +113,25 @@ var app = {
 			return this;
 		}
 	},
-	events: {
-		/* store actual events */
-	},
-	addEvent(name,handler)  {
-		app.events[name] = handler;
-		return this;
-	},
 	helpers: {
 		/* dummy respond handlers */
 		defaultResponse: {
-			200: function(data, textStatus, jqXHR){ console.log(data, textStatus, jqXHR); alert('200 (ok) handler'); },
-			201: function(data, textStatus, jqXHR){ console.log(data, textStatus, jqXHR); alert('201 (created) handler'); },
-			202: function(data, textStatus, jqXHR){ console.log(data, textStatus, jqXHR); alert('202 (accepted) handler'); },
-			401: function(jqXHR, textStatus, errorThrown){ console.log(jqXHR, textStatus, errorThrown); alert('401 (unauthorized) handler'); },
-			404: function(jqXHR, textStatus, errorThrown){ console.log(jqXHR, textStatus, errorThrown); alert('404 (not found) handler'); },
-			406: function(jqXHR, textStatus, errorThrown){ console.log(jqXHR, textStatus, errorThrown); alert('406 (not accepted) handler'); },
-			409: function(jqXHR, textStatus, errorThrown){ console.log(jqXHR, textStatus, errorThrown); alert('409 (conflict) handler'); },
-			500: function(jqXHR, textStatus, errorThrown){ console.log(jqXHR, textStatus, errorThrown); alert('500 (server error) handler'); },
+			/* standard get layout or get model */
+			200: function(data, textStatus, jqXHR){ console.log(arguments); alert('200 (ok) handler'); },
+			/* success on create */
+			201: function(data, textStatus, jqXHR){ console.log(arguments); alert('201 (created) handler'); },
+			/* success on edit */
+			202: function(data, textStatus, jqXHR){ console.log(arguments); alert('202 (accepted) handler'); },
+			/* access to resource not allowed */
+			401: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('401 (unauthorized) handler'); },
+			/* resource not found */
+			404: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('404 (not found) handler'); },
+			/* error submitting resource (create, edit, delete) */
+			406: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('406 (not accepted) handler'); },
+			/* resource conflict ie. trying to create a new resource with the same primary id */
+			409: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('409 (conflict) handler'); },
+			/* internal server error */
+			500: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('500 (server error) handler'); },
 		},
 		ajax(method,url,data,handlers) {
 			jQuery.ajax({
@@ -173,14 +177,13 @@ var app = {
 				form: app.form,
 			};
 		},
-		load(layout,modelEndPoint) {
+		load(layoutEndPoint,modelEndPoint) {
 			/* unbind */
 			jQuery('body').trigger('bound',false);
 
 			/* ok */
 			app.helpers.defaultResponse[200] = function(data, textStatus, jqXHR) {
 				app.helpers.setData(data);
-
 				app.bound = tinybind.bind(document.querySelector(app.id),app);
 
 				/* rebound */
@@ -188,20 +191,21 @@ var app = {
 			};
 
 			/* have we already loaded the template? */
-			if (app._templates[layout]) {
+			if (app._templates[layoutEndPoint]) {
 				/* we already cached the template so just bind */
-				jQuery(app.id).html(app._templates[layout]);
+				jQuery(app.id).html(app._templates[layoutEndPoint]);
 
 				/* run ajax model grab which calls app.helpers.defaultResponse[200] setup above */
 				app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
 			} else {
 				/* get the template & on success bind */
-				jQuery.get(layout,function(data) {
+
+				jQuery.get(layoutEndPoint,function(data) {
 					/* cache it */
-					app._templates[layout] = data;
+					app._templates[layoutEndPoint] = data;
 
 					/* add it to the app */
-					jQuery(app.id).html(app._templates[layout]);
+					jQuery(app.id).html(app._templates[layoutEndPoint]);
 
 					/* run ajax model grab which calls app.helpers.defaultResponse[200] setup above */
 					app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
