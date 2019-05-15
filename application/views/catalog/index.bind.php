@@ -8,8 +8,8 @@
 					<input type="text" id="bound-table-search-field" class="form-control input-sm" style="width:222px;" placeholder="search">
 					<i class="fa fa-search form-control-feedback"></i>
 				</div>
-				<a class="btn btn-default btn-sm" rv-on-click="events.goto | wrap '/catalog'"><i class="fa fa-link"></i> Goto Catalog</a>
-				<a class="btn btn-default btn-sm" rv-on-click="events.create | wrap page.path"><i class="fa fa-magic"></i> New {page.title}</a>
+				<a class="btn btn-default btn-sm" rv-on-click="events.goto | wrap '/'"><i class="fa fa-link"></i> Goto Robots</a>
+				<a class="btn btn-default btn-sm js-new" rv-on-click="events.create | wrap page.path"><i class="fa fa-magic"></i> New {page.title}</a>
 			</div>
 		</div>
 	</div>
@@ -19,22 +19,14 @@
 			<thead>
 				<tr class="panel-default">
 					<th class="panel-heading text-center">Id</th>
-					<th class="panel-heading">Name</th>
-					<th class="panel-heading">Type</th>
-					<th class="panel-heading text-center">Year</th>
-					<th class="panel-heading text-center">Select</th>
-					<th class="panel-heading text-center">Enabled</th>
+					<th class="panel-heading">Value</th>
 					<th class="panel-heading text-center nosort">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 			<tr rv-each-record="records" rv-data-id="record.id">
 				<td class="text-center" rv-text="record.id"></td>
-				<td rv-text="record.name"></td>
-				<td rv-text="record.type"></td>
-				<td class="text-center" rv-text="record.year"></td>
-				<td class="text-center" rv-text="record.select | catalog form.select 'id' 'value'"></td>
-				<td class="text-center" rv-data-value="record.enabled"><i rv-class="record.enabled | enum 'fa fa-lg fa-circle-o' 'fa fa-lg fa-check-circle-o'"></i></td>
+				<td rv-text="record.value"></td>
 				<td class="text-center actions">
 					<a rv-on-click="events.edit | wrap page.path record.id"><i class="fa fa-edit fa-lg"></i></a>
 					<a rv-on-click="events.delete | wrap page.path record.id"><i class="fa fa-trash fa-lg"></i></a>

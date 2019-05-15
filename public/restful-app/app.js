@@ -1,10 +1,19 @@
 /* Add Routes */
 app.router
-	.add(/create/, function(primary_id) {
-		app.helpers.load('/rest/layoutDetails','/rest/createModel');
+	.add(/catalog\/edit\/(.*)/, function(primary_id) {
+		app.helpers.load('/catalog/layoutDetails','/catalog/editModel/' + primary_id);
+	})
+	.add(/catalog\/create/, function() {
+		app.helpers.load('/catalog/layoutDetails','/catalog/createModel');
+	})
+	.add(/catalog/, function(primary_id) {
+		app.helpers.load('/catalog/layoutIndex','/catalog/indexModel');
 	})
 	.add(/edit\/(.*)/, function(primary_id) {
-		app.helpers.load('/rest/layoutDetails','/rest/editModel/'+primary_id);
+		app.helpers.load('/rest/layoutDetails','/rest/editModel/' + primary_id);
+	})
+	.add(/create/, function(primary_id) {
+		app.helpers.load('/rest/layoutDetails','/rest/createModel');
 	})
 	.add(function() {
 		notify.removeAll();
@@ -13,19 +22,20 @@ app.router
 
 /* Add Events */
 app.event
+	.add('goto',function(url, event) {
+		event.preventDefault();
+		app.router.navigate(url);
+	})
 	.add('create',function(url, event) {
 		event.preventDefault();
-
-		app.router.navigate(app.page.path + '/create');
+		app.router.navigate(url + '/create');
 	})
 	.add('edit',function(url, primaryId, event) {
 		event.preventDefault();
-
-		app.router.navigate(app.page.path + '/edit/' + primaryId);
+		app.router.navigate(url + '/edit/' + primaryId);
 	})
 	.add('delete',function(url, primaryId, event) {
 		event.preventDefault();
-
 		/* we need to save this for the 202 responds */
 		app.local.closest_tr = jQuery(this).closest('tr');
 
@@ -48,16 +58,11 @@ app.event
 							app.local.closest_tr.remove();
 						};
 
-						app.helpers.ajax('delete',app.page.path + '/delete/' + primaryId,{},app.helpers.getHandlers());
+						app.helpers.ajax('delete',url + '/delete/' + primaryId,{},app.helpers.getHandlers());
 					}
         }
     	},
 		});
-	})
-	.add('goback',function(url, event) {
-		event.preventDefault();
-
-		app.router.navigate(app.page.path);
 	})
 	.add('submit',function(event) {
 		event.preventDefault();

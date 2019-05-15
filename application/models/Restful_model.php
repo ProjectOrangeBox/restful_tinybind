@@ -33,14 +33,48 @@ class Restful_model {
 	 *
 	 * @return void
 	 */
-	public function __construct(array $page)
+	public function __construct()
 	{
-		$this->page = $page;
-
 		/* make sure we send back what ever they gave us */
 		foreach (ci('input')->request() as $key=>$val) {
 			$this->$key = $val;
 		}
+	}
+
+	protected function merge(&$array,$name,$value) {
+		if ($value) {
+			$array[$name] = $value;
+		} elseif(is_array($name)) {
+			foreach ($name as $n=>$v) {
+				$this->merge($array,$n,$v);
+			}
+		} else {
+			$array = $array;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * page
+	 *
+	 * @param array $array
+	 * @return void
+	 */
+	public function page($name,$value=null)
+	{
+		return $this->merge($this->page,$name,$value);
+	}
+
+	/**
+	 * page
+	 *
+	 * @param array $array
+	 * @return void
+	 */
+	public function form($name,$value=null)
+	{
+		return $this->merge($this->form,$name,$value);
 	}
 
 	/**
@@ -49,9 +83,9 @@ class Restful_model {
 	 * @param mixed $errors
 	 * @return void
 	 */
-	public function errors($errors)
+	public function errors(array $array)
 	{
-		$this->errors = $errors;
+		$this->errors = $array;
 
 		return $this;
 	}
@@ -62,9 +96,9 @@ class Restful_model {
 	 * @param mixed $records
 	 * @return void
 	 */
-	public function records($records)
+	public function records(array $array)
 	{
-		$this->records = $records;
+		$this->records = $array;
 
 		return $this;
 	}
@@ -75,9 +109,9 @@ class Restful_model {
 	 * @param mixed $record
 	 * @return void
 	 */
-	public function record($record)
+	public function record(array $array)
 	{
-		$this->record = $record;
+		$this->record = $array;
 
 		return $this;
 	}
