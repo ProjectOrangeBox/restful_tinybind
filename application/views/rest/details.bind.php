@@ -63,7 +63,7 @@
 		<div class="form-group">
 			<label>Select</label>
 			<select name="select" class="form-control" rv-value="record.select">
-				<option rv-each-job="form.select" rv-value="form.select.id">{ form.select.value }</option>
+				<option rv-each-foo="form.select" rv-value="foo.id">{ foo.value }</option>
 			</select>
 		</div>
 

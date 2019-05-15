@@ -36,15 +36,25 @@ app.event
 		 * if result is true then they pressed ok
 		 * if result is false then they pressed cancel
 		 */
-		bootbox.confirm('Are you sure?',function(okButton) {
-			if (okButton) {
-				/* accepted record - delete */
-				app.helpers.defaultResponse[202] = function(data, textStatus, jqXHR) {
-					app.local.closest_tr.remove();
-				};
+		bootbox.confirm({
+			message: 'Are you sure you want to delete this record?',
+			buttons: {
+        cancel: {
+					label: '<i class="fa fa-times"></i> Cancel',
+        },
+        confirm: {
+					label: '<i class="fa fa-trash"></i> Delete',
+					className: 'btn-danger',
+					callback: function() {
+						/* accepted record - delete */
+						app.helpers.defaultResponse[202] = function(data, textStatus, jqXHR) {
+							app.local.closest_tr.remove();
+						};
 
-				app.helpers.ajax('delete',app.page.path + '/delete/' + primaryId,{},app.helpers.getHandlers());
-			}
+						app.helpers.ajax('delete',app.page.path + '/delete/' + primaryId,{},app.helpers.getHandlers());
+					}
+        }
+    	},
 		});
 	})
 	.add('goback',function(url, event) {

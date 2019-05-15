@@ -312,6 +312,20 @@ tinybind.formatters.pairs = function(target) {
 		});
 };
 
+tinybind.formatters.catalog = function(input,object,id,value) {
+
+	id = (id) ? id : 'id';
+	value = (value) ? value : 'value';
+
+	for (const key in object) {
+		if (object[key][id] == input) {
+			return object[key][value];
+		}
+	}
+
+	return '';
+};
+
 tinybind.formatters.keys = function(target) {
 		return Object.keys(target);
 };
@@ -456,15 +470,8 @@ tinybind.binders.intcheck = {
 		el.checked = (el.value == value);
 	},
 	getValue: function(t) {
-		console.log(t);
 		return (t.checked) ? t.value : 0;
 	}
-}
-
-/* http://jsfiddle.net/eimajenthat/94ca1xht/2/ */
-tinybind.formatters.chosen = function(value,selector) {
-	$(selector).val(value).trigger('liszt:updated');
-	return value;
 }
 
 tinybind.formatters.enum = function (el, value) {

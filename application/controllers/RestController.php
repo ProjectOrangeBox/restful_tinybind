@@ -52,6 +52,14 @@ class RestController extends \MY_Controller
 			'title' => $this->controller_title,
 			'titles' => $this->controller_titles,
 		]);
+
+		$this->_restfulObject->form['select'] = [
+			['id'=>1,'value'=>'pizza'],
+			['id'=>2,'value'=>'cookie'],
+			['id'=>3,'value'=>'cat'],
+			['id'=>4,'value'=>'dog'],
+		];
+
 	}
 
 	/**
@@ -65,7 +73,6 @@ class RestController extends \MY_Controller
 	public function editAction(string $id = null) : void
 	{
 		$this->indexAction();
-		//$this->htmlRender($this->controller_path.'/details','edit',$id);
 	}
 
 	/**
@@ -78,17 +85,6 @@ class RestController extends \MY_Controller
 	public function createAction() : void
 	{
 		$this->indexAction();
-		//$this->htmlRender($this->controller_path.'/details','create');
-	}
-
-	protected function htmlRender(string $template = null,string $key,$id = '') : void
-	{
-		/*
-		ci('page')->render($template,[
-			'endpoint'=>sprintf($this->restEndPoints[$key][0],$this->controller_path,$id),
-			'bindjs'=>sprintf($this->restEndPoints[$key][1],$this->controller_path,$id),
-		]);
-		*/
 	}
 
 	/* Ajax Model Request */
