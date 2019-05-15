@@ -63,11 +63,7 @@
 		<div class="form-group">
 			<label>Select</label>
 			<select name="select" class="form-control" rv-value="record.select">
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
+				<option rv-each-job="form.select" rv-value="form.select.id">{ form.select.value }</option>
 			</select>
 		</div>
 
