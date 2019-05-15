@@ -29,6 +29,6 @@ $route = array(
 	  return $url;
   },
 
-  'default_controller' => 'angle/index',
+  'default_controller' => 'rest/index',
   '404_override' => 'main/route404',
 );

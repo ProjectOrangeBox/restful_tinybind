@@ -18,7 +18,7 @@ $config['nobody role id'] = 2;
 
 $config['everyone role id'] = 16;
 
-$config['login h2'] = 'Please Sign in<h4>Using your Windows Login</h4>';
+$config['login h2'] = 'Please Sign in';
 $config['username field'] = 'Login';
 
 $config['empty fields error'] = 'Please enter your login credentials.';

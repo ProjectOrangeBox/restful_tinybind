@@ -39,10 +39,6 @@ body_class
 
 $config['page_'] = [
 	'title'=>'SkyNet',
-	/*
-	'css'=>'/theme/orange/assets/css/application.min.css',
-	'js'=>'/theme/orange/assets/js/application.min.js',
-	*/
 ];
 
 $config['page_min'] = true;
