@@ -49,6 +49,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'robot';
+
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+	/* handle REST http methods */
+	$route['robot/create']['POST'] = 'robot/createPost';
+	$route['robot/edit/(:num)']['PATCH'] = 'robot/editPatch/$1';
+	$route['robot/delete/(:num)']['DELETE'] = 'robot/deleteDelete/$1';
+
+	$route['catalog/create']['POST'] = 'catalog/createPost';
+	$route['catalog/edit/(:num)']['PATCH'] = 'catalog/editPatch/$1';
+	$route['catalog/delete/(:num)']['DELETE'] = 'catalog/deleteDelete/$1';
+
+	$route['default_controller'] = 'robot';
+} else {
+	$route['(.*)'] = 'layout';
+}
+
+$route['default_controller'] = 'layout';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

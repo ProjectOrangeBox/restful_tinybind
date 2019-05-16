@@ -13,7 +13,8 @@ var app = {
 	local: {}, /* storage for local application variables */
 	error: false, /* do we have an error - boolean true/false */
 	errors: {}, /* "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}} */
-	model: {}, /* main bound model */
+	record: {}, /* when model is single records */
+	records: [], /* when model is multiple records */
 	page: {}, /* page variables */
 	form: {}, /* form variables */
 	events: {}, /* store actual events */
@@ -149,11 +150,25 @@ var app = {
 		},
 		setData(data) {
 			/* overwrite */
-			var params = ['error','errors','model'];
+			if (data['error']) {
+				app.error = data['error'];
+			}
 
-			for (var index in params) {
-				if (data[params[index]] != undefined) {
-					app[params[index]] = data[params[index]];
+			if (data['errors']) {
+				app.errors = data['errors'];
+			}
+
+			/**
+			 * need to bind array and object separately
+			 * because if a array is bound and you send a object it chokes
+			 */
+			if (data['model']) {
+				if (Array.isArray(data['model'])) {
+					app.records = data['model'];
+					app.record = undefined;
+				} else {
+					app.record = data['model'];
+					app.records = undefined;
 				}
 			}
 
@@ -161,9 +176,10 @@ var app = {
 			var params = ['page','form'];
 
 			for (var index in params) {
-				if (data[params[index]] != undefined) {
-					for (key2 in data[params[index]]) {
-						app[params[index]][key2] = data[params[index]][key2];
+				var key = params[index];
+				if (data[key] != undefined) {
+					for (subkey in data[key]) {
+						app[key][subkey] = data[key][subkey];
 					}
 				}
 			}
@@ -172,10 +188,16 @@ var app = {
 			return {
 				error: app.error,
 				errors: app.errors,
-				model: app.model,
+				model: app.helpers.getModel(),
 				page: app.page,
 				form: app.form,
 			};
+		},
+		modelIsA() {
+			return (app.record) ? 'object' : 'array';
+		},
+		getModel() {
+			return model = (app.record) ? app.record : app.records;
 		},
 		load(layoutEndPoint,modelEndPoint) {
 			/* unbind */
@@ -196,10 +218,11 @@ var app = {
 				jQuery(app.id).html(app._templates[layoutEndPoint]);
 
 				/* run ajax model grab which calls app.helpers.response[200] setup above */
-				app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
+				if (modelEndPoint) {
+					app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
+				}
 			} else {
 				/* get the template & on success bind */
-
 				jQuery.get(layoutEndPoint,function(data) {
 					/* cache it */
 					app._templates[layoutEndPoint] = data;
@@ -208,7 +231,9 @@ var app = {
 					jQuery(app.id).html(app._templates[layoutEndPoint]);
 
 					/* run ajax model grab which calls app.helpers.response[200] setup above */
-					app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
+					if (modelEndPoint) {
+						app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
+					}
 				});
 			}
 		},
@@ -225,7 +250,7 @@ var app = {
 	}
 };
 
-/* bootstrap */
+/* bootstrap once the DOM is loaded */
 document.addEventListener('DOMContentLoaded',function(){
 	app.init();
 });

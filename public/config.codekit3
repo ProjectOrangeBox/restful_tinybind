@@ -47,36 +47,6 @@
 		"oAP": "/app/app.min.js.map",
 		"oF": 0
 		},
-	"/app/grape.js": {
-		"bF": 0,
-		"ft": 64,
-		"ma": 1,
-		"mi": 1,
-		"oA": 1,
-		"oAP": "/app/grape.min.js",
-		"oF": 0,
-		"sC": 0,
-		"tS": 0
-		},
-	"/app/grape.min.js": {
-		"bF": 0,
-		"ft": 64,
-		"ma": 1,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "/app/grape.min.min.js",
-		"oF": 0,
-		"sC": 0,
-		"tS": 0
-		},
-	"/app/grape.min.js.map": {
-		"cB": 0,
-		"ft": 8192,
-		"hM": 0,
-		"oA": 0,
-		"oAP": "/app/grape.min.js.map",
-		"oF": 0
-		},
 	"/assets/css/application.css": {
 		"aP": 1,
 		"bl": 0,
@@ -133,6 +103,36 @@
 		"hM": 0,
 		"oA": 0,
 		"oAP": "/assets/js/application.min.js.map",
+		"oF": 0
+		},
+	"/assets/js/orangeBind.js": {
+		"bF": 0,
+		"ft": 64,
+		"ma": 1,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "/assets/js/orangeBind.min.js",
+		"oF": 1,
+		"sC": 0,
+		"tS": 0
+		},
+	"/assets/js/orangeBind.min.js": {
+		"bF": 0,
+		"ft": 64,
+		"ma": 1,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "/assets/js/orangeBind.min.min.js",
+		"oF": 0,
+		"sC": 0,
+		"tS": 0
+		},
+	"/assets/js/orangeBind.min.js.map": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/assets/js/orangeBind.min.js.map",
 		"oF": 0
 		},
 	"/assets/js/tinybind.stdlib.js": {

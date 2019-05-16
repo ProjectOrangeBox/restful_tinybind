@@ -28,7 +28,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			<tr rv-each-record="model" rv-data-id="record.id">
+			<tr rv-each-record="records" rv-data-id="record.id">
 				<td class="text-center" rv-text="record.id"></td>
 				<td rv-text="record.name"></td>
 				<td rv-text="record.type"></td>

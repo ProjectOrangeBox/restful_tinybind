@@ -1,24 +1,30 @@
 /* Add Routes */
 app.router
 	.add(/catalog\/edit\/(.*)/, function(primary_id) {
-		app.helpers.load('/catalog/layoutDetails','/catalog/editModel/' + primary_id);
+		app.helpers.load('/layout/get/catalog/details','/catalog/edit/' + primary_id);
 	})
 	.add(/catalog\/create/, function() {
-		app.helpers.load('/catalog/layoutDetails','/catalog/createModel');
+		app.helpers.load('/layout/get/catalog/details','/catalog/create');
 	})
 	.add(/catalog/, function(primary_id) {
-		app.helpers.load('/catalog/layoutIndex','/catalog/indexModel');
+		notify.removeAll();
+		app.helpers.load('/layout/get/catalog/index','/catalog/index');
 	})
 	.add(/edit\/(.*)/, function(primary_id) {
-		app.helpers.load('/robot/layoutDetails','/robot/editModel/' + primary_id);
+		app.helpers.load('/layout/get/robot/details','/robot/edit/' + primary_id);
 	})
 	.add(/create/, function(primary_id) {
-		app.helpers.load('/robot/layoutDetails','/robot/createModel');
+		app.helpers.load('/layout/get/robot/details','/robot/create');
 	})
 	.add(function() {
 		notify.removeAll();
-		app.helpers.load('/robot/layoutIndex','/robot/indexModel');
+		app.helpers.load('/layout/get/robot/index','/robot/index');
 	});
+
+app.helpers.response[404] = function(data, textStatus, jqXHR) {
+	/* good redirect */
+	app.helpers.load('/layout/get/notfound');
+}
 
 /* Add Events */
 app.event
@@ -95,8 +101,6 @@ app.event
 				}
 			}
 		}
-
-		console.log(app.form.action);
 
 		app.helpers.ajax(app.form.method,app.form.action,app.helpers.getData(),app.helpers.getHandlers());
 	});

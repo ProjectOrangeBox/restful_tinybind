@@ -178,17 +178,16 @@ class Restful_model {
 	 */
 	public function send(int $success = 202,int $fail = 406) : void
 	{
-		$this->errors = $this->CI->Errors_model->errors();
 		$this->error = $this->CI->Errors_model->has_error();
 
-		/*
-		 * 406 Not Acceptable
-		 * 200 Ok / 201 Created / 202 Accepted
-		 */
+		if ($this->error) {
+			$this->errors = $this->CI->Errors_model->errors();
+		}
+
 		$this->status = ($this->error) ? $fail : $success;
 		$this->statusMsg = $this->statusMap[$this->status];
 
-		get_instance()->output
+		$this->CI->output
 			->enable_profiler(false)
 			->set_header('Expires: Sat,26 Jul 1997 05:00:00 GMT')
 			->set_header('Cache-Control: no-cache,no-store,must-revalidate,max-age=0')
@@ -196,15 +195,15 @@ class Restful_model {
 			->set_header('Pragma: no-cache')
 			->set_content_type('application/json', 'utf-8')
 			->set_status_header($this->status)
-			->set_output((string)$this);
+			->set_output($this->asJson());
 	}
 
 	/**
-	 * __toString
+	 * asJson
 	 *
-	 * @return void
+	 * @return string
 	 */
-	public function __toString()
+	public function asJson() : string
 	{
 		$payload = new StdClass;
 

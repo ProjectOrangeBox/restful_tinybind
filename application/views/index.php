@@ -10,8 +10,7 @@
 		<link href="/compressed/combined.min.css" rel="stylesheet" media="all">
 	</head>
 	<body>
-		<div id="app" class="container">
-		</div>
+		<div id="app" class="container"></div>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jStorage/0.4.12/jstorage.min.js"></script>

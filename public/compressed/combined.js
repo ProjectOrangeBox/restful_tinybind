@@ -6,7 +6,7 @@
 //@codekit-append "../assets/plugins/table_sticky_header/jquery.stickytableheaders.js"
 
 //@codekit-append "../assets/js/tinybind.stdlib.js"
-//@codekit-append "../app/grape.js"
+//@codekit-append "../assets/js/orangeBind.js"
 //@codekit-append "../assets/js/application.js"
 
 //@codekit-append "../app/app.js"

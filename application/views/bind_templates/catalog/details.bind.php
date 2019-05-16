@@ -16,14 +16,14 @@
 	<hr>
 
 	<form rv-method="form.method" rv-action="form.action">
-		<div class="form-group" rv-if="model.id">
+		<div class="form-group" rv-if="record.id">
 			<label for="id">Id</label>
-			<input type="id" name="id" class="form-control" id="id" placeholder="" rv-value="model.id">
+			<input type="id" name="id" class="form-control" id="id" placeholder="" rv-value="record.id">
 		</div>
 
 		<div class="form-group">
 			<label for="name">Value</label>
-			<input type="name" name="name" class="form-control" id="value" placeholder="" rv-value="model.value">
+			<input type="name" name="name" class="form-control" id="value" placeholder="" rv-value="record.value">
 		</div>
 
 		<button type="submit" class="btn btn-default" rv-on-click="events.submit">Submit</button>
