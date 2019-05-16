@@ -1,8 +1,5 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
-
-/* define this for everyone */
-define('JSON_ALL',JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +23,7 @@ define('JSON_ALL',JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | 
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = env('DOMAIN');
+$config['base_url'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -103,7 +100,7 @@ $config['charset'] = 'UTF-8';
 | setting this variable to TRUE (boolean).  See the user guide for details.
 |
 */
-$config['enable_hooks'] = false;
+$config['enable_hooks'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,7 +136,7 @@ $config['subclass_prefix'] = 'MY_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-$config['composer_autoload'] = ROOTPATH.'/vendor/autoload.php';
+$config['composer_autoload'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -161,12 +158,7 @@ $config['composer_autoload'] = ROOTPATH.'/vendor/autoload.php';
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-
-if (php_sapi_name() == 'cli') {
-	$config['permitted_uri_chars'] = '';
-} else {
-	$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
-}
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 
 /*
 |--------------------------------------------------------------------------
@@ -190,7 +182,7 @@ if (php_sapi_name() == 'cli') {
 | use segment based URLs.
 |
 */
-$config['enable_query_strings'] = false;
+$config['enable_query_strings'] = FALSE;
 $config['controller_trigger'] = 'c';
 $config['function_trigger'] = 'm';
 $config['directory_trigger'] = 'd';
@@ -207,7 +199,7 @@ $config['directory_trigger'] = 'd';
 |          for backwards compatibility purposes!
 |
 */
-$config['allow_get_array'] = true;
+$config['allow_get_array'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -231,7 +223,7 @@ $config['allow_get_array'] = true;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] =  env('LOG_THRESHOLD', 0);
+$config['log_threshold'] = 0;
 
 /*
 |--------------------------------------------------------------------------
@@ -242,7 +234,7 @@ $config['log_threshold'] =  env('LOG_THRESHOLD', 0);
 | application/logs/ directory. Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = ROOTPATH.'/var/logs/';
+$config['log_path'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -256,7 +248,7 @@ $config['log_path'] = ROOTPATH.'/var/logs/';
 | Note: Leaving it blank will default to 'php'.
 |
 */
-$config['log_file_extension'] = 'log';
+$config['log_file_extension'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -279,7 +271,7 @@ $config['log_file_permissions'] = 0644;
 | codes to set your own date formatting
 |
 */
-$config['log_date_format'] = 'Y-m-d H:i:s.u';
+$config['log_date_format'] = 'Y-m-d H:i:s';
 
 /*
 |--------------------------------------------------------------------------
@@ -301,13 +293,7 @@ $config['error_views_path'] = '';
 | application/cache/ directory.  Use a full server path with trailing slash.
 |
 */
-$config['cache_path'] = ROOTPATH.'/var/cache/';
-
-$config['cache_default'] = env('config.cache_default', 'dummy');
-$config['cache_backup'] = 'dummy';
-
-$config['cache_ttl'] = env('config.cache_ttl', 0);
-
+$config['cache_path'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -325,7 +311,7 @@ $config['cache_ttl'] = env('config.cache_ttl', 0);
 |	             of query parameters.
 |
 */
-$config['cache_query_string'] = false;
+$config['cache_query_string'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -338,7 +324,7 @@ $config['cache_query_string'] = false;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = env('encryption_key');
+$config['encryption_key'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -392,12 +378,12 @@ $config['encryption_key'] = env('encryption_key');
 |
 */
 $config['sess_driver'] = 'files';
-$config['sess_cookie_name'] = 'session_id';
-$config['sess_expiration'] = 86400;
-$config['sess_save_path'] = ROOTPATH.'/var/sessions/';
-$config['sess_match_ip'] = false;
-$config['sess_time_to_update'] = 86400;
-$config['sess_regenerate_destroy'] = true;
+$config['sess_cookie_name'] = 'ci_session';
+$config['sess_expiration'] = 7200;
+$config['sess_save_path'] = NULL;
+$config['sess_match_ip'] = FALSE;
+$config['sess_time_to_update'] = 300;
+$config['sess_regenerate_destroy'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -417,8 +403,8 @@ $config['sess_regenerate_destroy'] = true;
 $config['cookie_prefix']	= '';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
-$config['cookie_secure']	= false;
-$config['cookie_httponly'] 	= false;
+$config['cookie_secure']	= FALSE;
+$config['cookie_httponly'] 	= FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -432,7 +418,7 @@ $config['cookie_httponly'] 	= false;
 |          for backwards compatibility purposes!
 |
 */
-$config['standardize_newlines'] = false;
+$config['standardize_newlines'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -446,7 +432,7 @@ $config['standardize_newlines'] = false;
 |          for backwards compatibility purposes!
 |
 */
-$config['global_xss_filtering'] = false;
+$config['global_xss_filtering'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -462,11 +448,11 @@ $config['global_xss_filtering'] = false;
 | 'csrf_regenerate' = Regenerate token on every submission
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
-$config['csrf_protection'] = false;
+$config['csrf_protection'] = FALSE;
 $config['csrf_token_name'] = 'csrf_test_name';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;
-$config['csrf_regenerate'] = true;
+$config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = array();
 
 /*
@@ -489,7 +475,7 @@ $config['csrf_exclude_uris'] = array();
 | by the output class.  Do not 'echo' any values with compression enabled.
 |
 */
-$config['compress_output'] = false;
+$config['compress_output'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -516,7 +502,7 @@ $config['time_reference'] = 'local';
 | Note: You need to have eval() enabled for this to work.
 |
 */
-$config['rewrite_short_tags'] = false;
+$config['rewrite_short_tags'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------

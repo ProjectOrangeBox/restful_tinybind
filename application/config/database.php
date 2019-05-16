@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -47,9 +47,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |				'ssl_key'    - Path to the private key file
 |				'ssl_cert'   - Path to the public key certificate file
 |				'ssl_ca'     - Path to the certificate authority file
-|				'ssl_capath' - Path to a directory containing trusted CA certificats in PEM format
+|				'ssl_capath' - Path to a directory containing trusted CA certificates in PEM format
 |				'ssl_cipher' - List of *allowed* ciphers to be used for the encryption, separated by colons (':')
-|				'ssl_verify' - TRUE/FALSE; Whether verify the server certificate or not ('mysqli' only)
+|				'ssl_verify' - TRUE/FALSE; Whether verify the server certificate or not
 |
 |	['compress'] Whether or not to use client compression (MySQL only)
 |	['stricton'] TRUE/FALSE - forces 'Strict Mode' connections
@@ -71,26 +71,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | the query builder class.
 */
 $active_group = 'default';
-$query_builder = true;
+$query_builder = TRUE;
 
-$db['default'] = [
+$db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => env('database.default.hostname'),
-	'username' => env('database.default.username'),
-	'password' => env('database.default.password'),
-	'database' => env('database.default.database'),
+	'hostname' => 'localhost',
+	'username' => 'developer',
+	'password' => 'developer',
+	'database' => 'skynet_development_com',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => false,
-	'db_debug' => env('database.debug', false),
-	'cache_on' => false,
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => false,
-	'compress' => false,
-	'stricton' => false,
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => env('database.debug', false),
-];
+	'save_queries' => TRUE
+);

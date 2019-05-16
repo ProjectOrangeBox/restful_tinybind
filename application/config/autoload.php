@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -27,20 +28,7 @@
 | 6. Language files
 | 7. Models
 |
- */
-
-/**
- * when asked to load the array key instead load the array value
- * but! assign it to the CodeIgniter Super Object (controller) as the array key
- *
- */
-$autoload['remap'] = [
-	'unit' => 'unit_test',
-	'agent' => 'user_agent',
-];
-
-$autoload['services'] = [
-];
+*/
 
 /*
 | -------------------------------------------------------------------
@@ -50,19 +38,8 @@ $autoload['services'] = [
 |
 |  $autoload['packages'] = array(APPPATH.'third_party', '/usr/local/shared');
 |
- */
-$autoload['packages'] = array(
-	ROOTPATH.'/packages/misc/orange_snippets',
-	ROOTPATH.'/packages/projectorangebox/orange',
-	ROOTPATH.'/packages/projectorangebox/theme-orange',
-	ROOTPATH.'/packages/projectorangebox/extras',
-);
-
-if (isset($_ENV['packages'])) {
-	foreach ($_ENV['packages'] as $addon) {
-		$autoload['packages'][] = ROOTPATH.$addon;
-	}
-}
+*/
+$autoload['packages'] = array();
 
 /*
 | -------------------------------------------------------------------
@@ -80,8 +57,8 @@ if (isset($_ENV['packages'])) {
 | in the controller:
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
- */
-$autoload['libraries'] = array('event','cache','session','errors','database','validate','wallet','auth');
+*/
+$autoload['libraries'] = array('database');
 
 /*
 | -------------------------------------------------------------------
@@ -101,7 +78,7 @@ $autoload['libraries'] = array('event','cache','session','errors','database','va
 |
 |	$autoload['drivers'] = array('cache' => 'cch');
 |
- */
+*/
 $autoload['drivers'] = array();
 
 /*
@@ -111,8 +88,8 @@ $autoload['drivers'] = array();
 | Prototype:
 |
 |	$autoload['helper'] = array('url', 'file');
- */
-$autoload['helper'] = array('url');
+*/
+$autoload['helper'] = array();
 
 /*
 | -------------------------------------------------------------------
@@ -125,7 +102,7 @@ $autoload['helper'] = array('url');
 | NOTE: This item is intended for use ONLY if you have created custom
 | config files.  Otherwise, leave it blank.
 |
- */
+*/
 $autoload['config'] = array();
 
 /*
@@ -139,7 +116,7 @@ $autoload['config'] = array();
 | NOTE: Do not include the "_lang" part of your file.  For example
 | "codeigniter_lang.php" would be referenced as array('codeigniter');
 |
- */
+*/
 $autoload['language'] = array();
 
 /*
@@ -154,5 +131,5 @@ $autoload['language'] = array();
 | in the controller:
 |
 |	$autoload['model'] = array('first_model' => 'first');
- */
-$autoload['model'] = array();
+*/
+$autoload['model'] = array('Errors_model');

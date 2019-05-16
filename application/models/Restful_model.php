@@ -22,11 +22,71 @@
 class Restful_model {
 	public $error = false;
 	public $errors = [];
-	public $record = [];
-	public $records = [];
+	public $model = [];
 	public $page = [];
 	public $form = [];
 	public $status = 200;
+	public $statusMsg = '';
+
+	private $CI;
+	private $statusMap = [
+    100 => 'Continue',
+    101 => 'Switching Protocols',
+    102 => 'Processing',
+    103 => 'Checkpoint',
+    200 => 'OK',
+    201 => 'Created',
+    202 => 'Accepted',
+    203 => 'Non-Authoritative Information',
+    204 => 'No Content',
+    205 => 'Reset Content',
+    206 => 'Partial Content',
+    207 => 'Multi-Status',
+    300 => 'Multiple Choices',
+    301 => 'Moved Permanently',
+    302 => 'Found',
+    303 => 'See Other',
+    304 => 'Not Modified',
+    305 => 'Use Proxy',
+    306 => 'Switch Proxy',
+    307 => 'Temporary Redirect',
+    400 => 'Bad Request',
+    401 => 'Unauthorized',
+    402 => 'Payment Required',
+    403 => 'Forbidden',
+    404 => 'Not Found',
+    405 => 'Method Not Allowed',
+    406 => 'Not Acceptable',
+    407 => 'Proxy Authentication Required',
+    408 => 'Request Timeout',
+    409 => 'Conflict',
+    410 => 'Gone',
+    411 => 'Length Required',
+    412 => 'Precondition Failed',
+    413 => 'Request Entity Too Large',
+    414 => 'Request-URI Too Long',
+    415 => 'Unsupported Media Type',
+    416 => 'Requested Range Not Satisfiable',
+    417 => 'Expectation Failed',
+    418 => 'I\'m a teapot',
+    422 => 'Unprocessable Entity',
+    423 => 'Locked',
+    424 => 'Failed Dependency',
+    425 => 'Unordered Collection',
+    426 => 'Upgrade Required',
+    449 => 'Retry With',
+    450 => 'Blocked by Windows Parental Controls',
+    500 => 'Internal Server Error',
+    501 => 'Not Implemented',
+    502 => 'Bad Gateway',
+    503 => 'Service Unavailable',
+    504 => 'Gateway Timeout',
+    505 => 'HTTP Version Not Supported',
+    506 => 'Variant Also Negotiates',
+    507 => 'Insufficient Storage',
+    509 => 'Bandwidth Limit Exceeded',
+    510 => 'Not Extended'
+	];
 
 	/**
 	 * __construct
@@ -35,9 +95,15 @@ class Restful_model {
 	 */
 	public function __construct()
 	{
+		$this->CI = get_instance();
+
+		$request = $this->CI->input->request();
+
 		/* make sure we send back what ever they gave us */
-		foreach (ci('input')->request() as $key=>$val) {
-			$this->$key = $val;
+		if (is_array($request)) {
+			foreach ($request as $key=>$val) {
+				$this->$key = $val;
+			}
 		}
 	}
 
@@ -91,27 +157,14 @@ class Restful_model {
 	}
 
 	/**
-	 * records
+	 * model
 	 *
-	 * @param mixed $records
+	 * @param array $array
 	 * @return void
 	 */
-	public function records(array $array)
+	public function model(array $array)
 	{
-		$this->records = $array;
-
-		return $this;
-	}
-
-	/**
-	 * record
-	 *
-	 * @param mixed $record
-	 * @return void
-	 */
-	public function record(array $array)
-	{
-		$this->record = $array;
+		$this->model = $array;
 
 		return $this;
 	}
@@ -125,16 +178,25 @@ class Restful_model {
 	 */
 	public function send(int $success = 202,int $fail = 406) : void
 	{
-		$this->errors = ci('errors')->as_array();
-		$this->error = (bool)count($this->errors);
+		$this->errors = $this->CI->Errors_model->errors();
+		$this->error = $this->CI->Errors_model->has_error();
 
 		/*
 		 * 406 Not Acceptable
 		 * 200 Ok / 201 Created / 202 Accepted
 		 */
-		$status = ($this->error) ? $fail : $success;
+		$this->status = ($this->error) ? $fail : $success;
+		$this->statusMsg = $this->statusMap[$this->status];
 
-		ci('output')->set_status_header($status)->json((string)$this);
+		get_instance()->output
+			->enable_profiler(false)
+			->set_header('Expires: Sat,26 Jul 1997 05:00:00 GMT')
+			->set_header('Cache-Control: no-cache,no-store,must-revalidate,max-age=0')
+			->set_header('Cache-Control: post-check=0,pre-check=0', false)
+			->set_header('Pragma: no-cache')
+			->set_content_type('application/json', 'utf-8')
+			->set_status_header($this->status)
+			->set_output((string)$this);
 	}
 
 	/**
@@ -144,7 +206,16 @@ class Restful_model {
 	 */
 	public function __toString()
 	{
-		return json_encode($this);
+		$payload = new StdClass;
+
+		/* send out only the ones that aren't empty to keep the payload small */
+		foreach (['error','errors','model','page','form','status','statusMsg'] as $key) {
+			if (!empty($this->$key)) {
+				$payload->$key = $this->$key;
+			}
+		}
+
+		return json_encode($payload);
 	}
 
 } /* end class */
