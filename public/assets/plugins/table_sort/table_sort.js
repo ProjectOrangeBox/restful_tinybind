@@ -45,7 +45,7 @@ tableSort.determineIcons = function(index,dir) {
 
 /* Load the last sort if any */
  tableSort.load = function() {
-	var saved = storage.get(window.location.href+'saved_sort_column','');
+	var saved = storage.get(window.location.href+'.ssc','');
 
 	if (saved != '') {
 		parts = saved.split("\t");
@@ -59,7 +59,7 @@ tableSort.determineIcons = function(index,dir) {
 
 /* Save the Last Sort */
  tableSort.save = function(index,dir) {
-	storage.set(window.location.href+'saved_sort_column',index + "\t" + dir);
+	storage.set(window.location.href+'.ssc',index + "\t" + dir);
 }
 
 tableSort.init = function() {

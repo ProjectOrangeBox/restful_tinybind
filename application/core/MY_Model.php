@@ -2,7 +2,7 @@
 
 class MY_Model extends CI_Model {
 	public $primary_key = 'id';
-	public $columns = [];
+	public $empty = [];
 	public $required = '';
 
 	/**
@@ -12,9 +12,7 @@ class MY_Model extends CI_Model {
 	 */
 	public function all()
 	{
-		$query = $this->db->query("select * from ".$this->table);
-
-		return $query->result();
+		return $this->db->get($this->table)->result();
 	}
 
 	/**
@@ -35,9 +33,7 @@ class MY_Model extends CI_Model {
 	 */
 	public function get(int $primary_id)
 	{
-		$query = $this->db->query("select * from ".$this->table." where ".$this->primary_key.' = '.(int)$primary_id);
-
-		$row = $query->row();
+		$row = $this->db->get_where($this->table,[$this->primary_key=>$primary_id])->row();
 
 		return (isset($row)) ? $row : false;
 	}
@@ -68,7 +64,7 @@ class MY_Model extends CI_Model {
 	public function update(array $data)
 	{
 		if ($success = $this->check($data,true)) {
-			$this->db->update($this->table, $data,[$this->primary_key => $data[$this->primary_key]]);
+			$this->db->update($this->table, $data,[$this->primary_key=>$data[$this->primary_key]]);
 
 			$success = $this->db->affected_rows();
 		}
@@ -84,7 +80,7 @@ class MY_Model extends CI_Model {
 	 */
 	public function delete(int $primary_id)
 	{
-		$this->db->query("delete * from ".$this->table." where ".$this->primary_key.' = '.(int)$primary_id);
+		$this->db->delete($this->table,[$this->primary_key=>$primary_id]);
 
 		return $this->db->affected_rows();
 	}

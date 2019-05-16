@@ -49,10 +49,10 @@ BoundTableSearch.updateCount = function(searchTerm) {
 }
 
 /* Load the search term into the input field and do the search */
-BoundTableSearch.load = function() { BoundTableSearch.setField(storage.get(window.location.href+'bts','')); }
+BoundTableSearch.load = function() { BoundTableSearch.setField(storage.get(window.location.href+'.bts','')); }
 
 /* Place the last search into the search box change the background color as needed */
-BoundTableSearch.save = function(searchTerm) { storage.set(window.location.href+'bts',searchTerm); }
+BoundTableSearch.save = function(searchTerm) { storage.set(window.location.href+'.bts',searchTerm); }
 
 /* Set and Get the search from the search field */
 BoundTableSearch.setField = function(searchTerm) { BoundTableSearch.field.val(searchTerm); }

@@ -212,6 +212,9 @@ var app = {
 				jQuery('body').trigger('bound',true);
 			};
 
+			/* Get bind template from browser local session storage? */
+			app._templates[layoutEndPoint] = sessionStorage.getItem(layoutEndPoint+'.bind');
+
 			/* have we already loaded the template? */
 			if (app._templates[layoutEndPoint]) {
 				/* we already cached the template so just bind */
@@ -226,6 +229,8 @@ var app = {
 				jQuery.get(layoutEndPoint,function(data) {
 					/* cache it */
 					app._templates[layoutEndPoint] = data;
+
+					sessionStorage.setItem(layoutEndPoint+'.bind',data);
 
 					/* add it to the app */
 					jQuery(app.id).html(app._templates[layoutEndPoint]);
