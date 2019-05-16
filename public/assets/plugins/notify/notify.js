@@ -74,11 +74,11 @@ notify.show = function(msg) {
 };
 
 notify.save = function(msg) {
-	var message = $.jStorage.get('notify_flash_msg',[]);
+	var message = storage.get('notify_flash_msg',[]);
 
 	message.push(msg);
 
-	$.jStorage.set('notify_flash_msg',message);
+	storage.set('notify_flash_msg',message);
 };
 
 notify.init = function() {
@@ -142,9 +142,9 @@ notify.buildMsg = function(text,style) {
 };
 
 notify._load = function(msg) {
-	var messages = $.jStorage.get('notify_flash_msg',false);
+	var messages = storage.get('notify_flash_msg',false);
 
-	$.jStorage.deleteKey('notify_flash_msg');
+	storage.delete('notify_flash_msg');
 
 	return messages;
 };

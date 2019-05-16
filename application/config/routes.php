@@ -50,7 +50,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
-if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+$isJson = (!empty($_SERVER['HTTP_ACCEPT']) && strpos(strtolower($_SERVER['HTTP_ACCEPT']),'application/json') !== false);
+
+if ($isAjax || $isJson) {
 	/* handle REST http methods */
 	$route['robot/create']['POST'] = 'robot/createPost';
 	$route['robot/edit/(:num)']['PATCH'] = 'robot/editPatch/$1';
@@ -62,6 +65,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
 
 	$route['default_controller'] = 'robot';
 } else {
+	/* everyone else get the empty application template */
 	$route['(.*)'] = 'layout';
 }
 

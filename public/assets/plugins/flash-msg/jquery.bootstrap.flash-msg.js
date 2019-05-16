@@ -36,7 +36,7 @@ modified to do a bootstrap growl notice
 			}
 
 			var options, noticeWrapAll, noticeItemOuter, noticeItemInner, noticeItemClose;
-			
+
 			/* time sent in seconds not milliseconds */
 			if (options.stayTime < 15) {
 				options.stayTime = options.stayTime * 1000;
@@ -91,7 +91,7 @@ modified to do a bootstrap growl notice
 				options.stay = true;
 			}
 
-			$.jStorage.set('flash_msg',options);
+			storage.set('flash_msg',options);
 		}
 
 	});
@@ -129,7 +129,7 @@ orange.flash_msg = function(text,type,redirect) {
 	  $.noticeAdd(msg);
 	} else {
 		/* otherwise store it for the next page refresh */
-		$.jStorage.set('flash_msg',msg);
+		storage.set('flash_msg',msg);
 
 		/* if redirect isn't undefined then they must have included a redirect url */
 		if (redirect !== undefined) {
@@ -139,14 +139,14 @@ orange.flash_msg = function(text,type,redirect) {
 }
 
 /* any message in cold storage? */
-var flash_msg = $.jStorage.get('flash_msg',null);
+var flash_msg = storage.get('flash_msg',null);
 
 if (flash_msg) {
 	/* get it out and show it */
 	$.noticeAdd(flash_msg);
 
 	/* remove the key */
-	$.jStorage.deleteKey('flash_msg');
+	storage.deleteKey('flash_msg');
 }
 
 /* any in message attached to the javascript variable message? */

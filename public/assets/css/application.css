@@ -37,7 +37,7 @@ body {
 	position: relative;
 	padding-top: 4px;
 	-webkit-font-smoothing: antialiased;
-	font-family: 'Roboto', sans-serif;
+	font-family: sans-serif;
 }
 .container {
 	width: 98% !important;

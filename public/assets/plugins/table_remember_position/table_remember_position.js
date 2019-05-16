@@ -4,12 +4,12 @@
  *
  */
 $(window).scroll(function() {
-	$.jStorage.set(window.location.href+'scrollTop',$(window).scrollTop());
+	storage.set(window.location.href+'scrollTop',$(window).scrollTop());
 });
 
 $('body').on('bound',function(event,isbound) {
 	if (isbound) {
-		var ypos = $.jStorage.get(window.location.href+'scrollTop',null);
+		var ypos = storage.get(window.location.href+'scrollTop',null);
 
 		if (ypos > 0) {
 			$(window).scrollTop(ypos);
