@@ -13,6 +13,9 @@
  */
 var app = {
 	id: 'app',
+	config: {
+		templateCache: 3600, /* cache for a a hour */
+	},
 	local: {}, /* storage for local application variables */
 	error: false, /* do we have an error - boolean true/false */
 	errors: {}, /* "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}} */
@@ -244,8 +247,7 @@ var app = {
 			} else {
 				/* setup retrieve model - success */
 				app.helpers.response[200] = function(data, textStatus, jqXHR) {
-					storage.setItem(layoutEndPoint+'.bind',data);
-
+					storage.setItem(layoutEndPoint+'.bind',data,app.config.templateCache);
 					then(data);
 				};
 

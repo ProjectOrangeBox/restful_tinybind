@@ -104,13 +104,13 @@ var storage = {
 
 			// sets timestamp, and sets it to customTime if it's been provided
 			var	timestamp = Math.floor(new Date().getTime()/1000);
-			var expireTime = (expireSeconds) ?Math.floor(new Date().getTime()/1000) + expireSeconds : -1;
+			var expireSeconds = (expireSeconds) ?Math.floor(new Date().getTime()/1000) + expireSeconds : -1;
 
 			try {
 				// attempt to save the record
 				localStorage.setItem(recordPrefix + '-data', data);
 				localStorage.setItem(recordPrefix + '-modified', timestamp);
-				localStorage.setItem(recordPrefix + '-expires', expireTime);
+				localStorage.setItem(recordPrefix + '-expires', expireSeconds);
 				// if there's currently no 'created' record for the supplied ID, we know that this is a record, so we'll make the associated 'created' record
 				if (typeof(localStorage[recordPrefix + '-created']) === 'undefined' ) {
 					localStorage.setItem(recordPrefix + '-created', timestamp);
