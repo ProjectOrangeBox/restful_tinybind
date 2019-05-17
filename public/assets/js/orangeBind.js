@@ -3,13 +3,16 @@
  * https://blikblum.github.io/tinybind/
  * https://github.com/matthieuriolo/rivetsjs-stdlib
  * http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
-*/
+ *
+ * Using jQuery trigger, ajax
+ *
+ */
 
 /**
  * Setup the default application
  */
 var app = {
-	id: '#app',
+	id: 'app',
 	local: {}, /* storage for local application variables */
 	error: false, /* do we have an error - boolean true/false */
 	errors: {}, /* "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}} */
@@ -132,13 +135,15 @@ var app = {
 			/* internal server error */
 			500: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('500 (server error) handler'); },
 		},
-		ajax(method,url,data,handlers) {
+		ajax(method,url,data,handlers,dataType) {
+			dataType = (dataType) || 'json';
+
 			jQuery.ajax({
 				method: method,
 				url: url,
 				data: data,
-				dataType: 'json',
-				cache: false,
+				dataType: dataType,
+				cache: true,
 				timeout: 5000, /* 5 seconds */
 				async: true,
 				statusCode: Object.assign(app.helpers.response,handlers),
@@ -177,7 +182,7 @@ var app = {
 			for (var index in params) {
 				var key = params[index];
 				if (data[key] != undefined) {
-					for (subkey in data[key]) {
+					for (var subkey in data[key]) {
 						app[key][subkey] = data[key][subkey];
 					}
 				}
@@ -203,13 +208,13 @@ var app = {
 			jQuery('body').trigger('bound',false);
 
 			app.helpers.loadTemplate(layoutEndPoint,function(template) {
-				jQuery(app.id).html(template);
+				document.getElementById(app.id).innerHTML = template;
 
 				if (modelEndPoint) {
 					/* setup retrieve model - success */
 					app.helpers.response[200] = function(data, textStatus, jqXHR) {
 						app.helpers.setData(data);
-						app.bound = tinybind.bind(document.querySelector(app.id),app);
+						app.bound = tinybind.bind(document.getElementById(app.id),app);
 
 						/* rebound */
 						jQuery('body').trigger('bound',true);
@@ -237,11 +242,14 @@ var app = {
 			if (cachedTemplate) {
 				then(cachedTemplate);
 			} else {
-				jQuery.get(layoutEndPoint,function(template) {
-					storage.setItem(layoutEndPoint+'.bind',template);
+				/* setup retrieve model - success */
+				app.helpers.response[200] = function(data, textStatus, jqXHR) {
+					storage.setItem(layoutEndPoint+'.bind',data);
 
-					then(template);
-				});
+					then(data);
+				};
+
+				app.helpers.ajax('get',layoutEndPoint,{},app.helpers.getHandlers(),'text');
 			}
 		},
 	}

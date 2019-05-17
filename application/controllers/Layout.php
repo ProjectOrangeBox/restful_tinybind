@@ -11,7 +11,7 @@ class Layout extends CI_Controller {
 	/* get bind templates */
 	public function get()
 	{
-		$this->load->view('/bind_templates/'.preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/',func_get_args())).'.bind.php');
+		$this->load->view('/bind_templates/'.preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/',func_get_args())).'.html');
 	}
 
 } /* end class */
