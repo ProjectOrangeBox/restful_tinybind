@@ -3,12 +3,13 @@
  * https://github.com/benjaminallison/SuperLocal
  *
  * Added expires, mirrors localStorage Syntax
- * Remove a few "extra" methods & settings
+ * Removed a few "extra" methods & settings
  *
  */
 var storage = {
+	_capable: undefined,
 	settings : {
-		dbPrefix:'db'
+		dbPrefix:'db',
 	},
 	// made a function so it's "private"
 	prefixRegex : function() {
@@ -18,14 +19,20 @@ var storage = {
 		return new RegExp('modified','g');
 	},
 	capable : function() {
-		var testData = 'ls';
-		try {
-			localStorage.setItem(testData, testData);
-			localStorage.removeItem(testData);
-			return true;
-		} catch(e) {
-			return false;
+		if (this._capable == undefined) {
+			var testData = 'ls';
+			try {
+				localStorage.setItem(testData, testData);
+				localStorage.removeItem(testData);
+				this._capable = true;
+				return true;
+			} catch(e) {
+				this._capable = false;
+				return false;
+			}
 		}
+
+		return this._capable;
 	},
 	findOldest : function() {
 		/* should really only be used internally */
