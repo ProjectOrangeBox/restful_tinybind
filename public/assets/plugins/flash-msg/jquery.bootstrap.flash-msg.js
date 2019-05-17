@@ -129,7 +129,7 @@ orange.flash_msg = function(text,type,redirect) {
 	  $.noticeAdd(msg);
 	} else {
 		/* otherwise store it for the next page refresh */
-		storage.set('flash_msg',msg);
+		storage.setItem('flash_msg',msg);
 
 		/* if redirect isn't undefined then they must have included a redirect url */
 		if (redirect !== undefined) {
@@ -139,14 +139,14 @@ orange.flash_msg = function(text,type,redirect) {
 }
 
 /* any message in cold storage? */
-var flash_msg = storage.get('flash_msg',null);
+var flash_msg = storage.getItem('flash_msg',null);
 
 if (flash_msg) {
 	/* get it out and show it */
 	$.noticeAdd(flash_msg);
 
 	/* remove the key */
-	storage.deleteKey('flash_msg');
+	storage.removeItem('flash_msg');
 }
 
 /* any in message attached to the javascript variable message? */

@@ -18,7 +18,6 @@ var app = {
 	page: {}, /* page variables */
 	form: {}, /* form variables */
 	events: {}, /* store actual events */
-	_templates: [], /* template cache */
 	bound: undefined, /* are we attached to the DOM */
 	init() {
 		/* default just call the router */
@@ -203,44 +202,22 @@ var app = {
 			/* unbind */
 			jQuery('body').trigger('bound',false);
 
-			/* ok */
-			app.helpers.response[200] = function(data, textStatus, jqXHR) {
-				app.helpers.setData(data);
-				app.bound = tinybind.bind(document.querySelector(app.id),app);
+			app.helpers.loadTemplate(layoutEndPoint,function(template) {
+				jQuery(app.id).html(template);
 
-				/* rebound */
-				jQuery('body').trigger('bound',true);
-			};
-
-			/* Get bind template from browser local session storage? */
-			app._templates[layoutEndPoint] = sessionStorage.getItem(layoutEndPoint+'.bind');
-
-			/* have we already loaded the template? */
-			if (app._templates[layoutEndPoint]) {
-				/* we already cached the template so just bind */
-				jQuery(app.id).html(app._templates[layoutEndPoint]);
-
-				/* run ajax model grab which calls app.helpers.response[200] setup above */
 				if (modelEndPoint) {
+					/* setup retrieve model - success */
+					app.helpers.response[200] = function(data, textStatus, jqXHR) {
+						app.helpers.setData(data);
+						app.bound = tinybind.bind(document.querySelector(app.id),app);
+
+						/* rebound */
+						jQuery('body').trigger('bound',true);
+					};
+
 					app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
 				}
-			} else {
-				/* get the template & on success bind */
-				jQuery.get(layoutEndPoint,function(data) {
-					/* cache it */
-					app._templates[layoutEndPoint] = data;
-
-					sessionStorage.setItem(layoutEndPoint+'.bind',data);
-
-					/* add it to the app */
-					jQuery(app.id).html(app._templates[layoutEndPoint]);
-
-					/* run ajax model grab which calls app.helpers.response[200] setup above */
-					if (modelEndPoint) {
-						app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
-					}
-				});
-			}
+			});
 		},
 		route(path) {
 			path = (path) ? path : window.location.pathname;
@@ -251,6 +228,21 @@ var app = {
 			}
 
 			app.router.check(path);
+		},
+		loadTemplate(layoutEndPoint,then) {
+			/* Get bind template from browser local session storage? */
+			var cachedTemplate = storage.getItem(layoutEndPoint+'.bind');
+
+			/* have we already loaded the template? */
+			if (cachedTemplate) {
+				then(cachedTemplate);
+			} else {
+				jQuery.get(layoutEndPoint,function(template) {
+					storage.setItem(layoutEndPoint+'.bind',template);
+
+					then(template);
+				});
+			}
 		},
 	}
 };

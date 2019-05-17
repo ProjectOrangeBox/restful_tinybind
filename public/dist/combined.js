@@ -1,4 +1,4 @@
-//@codekit-append "../assets/js/pre-application.js"
+//@codekit-append "../assets/js/superStorage.js"
 
 //@codekit-append "../assets/plugins/bound-table-search/bound-table-search.js"
 //@codekit-append "../assets/plugins/flash-msg/jquery.bootstrap.flash-msg.js"
