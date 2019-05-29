@@ -16,10 +16,11 @@
 var app = {
 	id: 'app', /* attach to this DOM selector */
 	configurationURL: '/', /* default location to call for the configuration */
-	config: {
+	config: { /* config options */
 		ajaxTimeout: 5000, /* ajax timeout in seconds */
 		routerRoot: '/', /* router url root */
-	}, /* config options */
+	},
+	_flags: {}, /* configuration/server flags */
 	local: {}, /* storage for local application variables */
 	error: false, /* do we have an error - boolean true/false */
 	errors: {}, /* "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}} */
@@ -39,12 +40,16 @@ var app = {
 	},
 	init(configurationURL) {
 		app.response[200] = function(data, xhr) {
-			if (data.config != undefined) {
+			if (typeof data.config === 'object' && data.config !== null) {
 				app.config = Object.assign(app.config, data.config);
 			}
 
-			if (data.flags.cache != undefined) {
-				storage.removeOlderThan(data.flags.cache);
+			if (typeof data.flags === 'object' && data.flags !== null) {
+				app._flags = Object.assign(app._flags, data.flags);
+			}
+
+			if (app.readFlag('cache')) {
+				storage.removeOlderThan(app.readFlag('cache'));
 			}
 
 			/* then call the router */
@@ -54,6 +59,9 @@ var app = {
 		configurationURL = configurationURL || app.configurationURL;
 
 		app.request('get',configurationURL);
+	},
+	readFlag: function(name) {
+		return app._flags[name];
 	},
 	event: {
 		/* wrapper to add events like app.event.add('name',function(){}); */

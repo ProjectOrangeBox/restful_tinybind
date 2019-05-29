@@ -29,9 +29,8 @@ class Restful_model {
 	public $config = [];
 	public $status = 200; /* int */
 	public $statusMsg = ''; /* string */
-	public $template = ''; /* string */
+	public $template = []; /* string */
 
-	protected $CI;
 	protected $statusMap = [
     100 => 'Continue',
     101 => 'Switching Protocols',
@@ -98,9 +97,7 @@ class Restful_model {
 	 */
 	public function __construct()
 	{
-		$this->CI = get_instance();
-
-		$request = $this->CI->input->request();
+		$request = get_instance()->input->request();
 
 		/* make sure we send back what ever they gave us */
 		if (is_array($request)) {
@@ -231,20 +228,21 @@ class Restful_model {
 	 */
 	public function send(int $success = 200,int $fail = null) : void
 	{
+		$this->error = false;
+
+		/* test for a fail */
 		if ($fail) {
-			$this->error = $this->CI->Errors_model->has_error();
+			$this->error = get_instance()->Errors_model->has_error();
 
 			if ($this->error) {
-				$this->errors = $this->CI->Errors_model->errors();
+				$this->errors = get_instance()->Errors_model->errors();
 			}
-		} else {
-			$this->error = false;
 		}
 
 		$this->status = ($this->error) ? $fail : $success;
 		$this->statusMsg = $this->statusMap[$this->status];
 
-		$this->CI->output
+		get_instance()->output
 			->enable_profiler(false)
 			->set_header('Expires: Sat,26 Jul 1997 05:00:00 GMT')
 			->set_header('Cache-Control: no-cache,no-store,must-revalidate,max-age=0')
@@ -262,16 +260,22 @@ class Restful_model {
 	 */
 	public function asJson() : string
 	{
-		$payload = new StdClass;
+		$object = new StdClass;
+
+		/* get the properties */
+		$public = get_object_vars($this);
+
+		/* remove http status map */
+		unset($public['statusMap']);
 
 		/* send out only the ones that aren't empty to keep the payload small */
-		foreach (['error','errors','model','page','form','status','statusMsg','flags','config','template'] as $key) {
-			if (!empty($this->$key)) {
-				$payload->$key = $this->$key;
+		foreach ($public as $key=>$value) {
+			if (!empty($value)) {
+				$object->$key = $value;
 			}
 		}
 
-		return json_encode($payload);
+		return json_encode($object);
 	}
 
 } /* end class */
