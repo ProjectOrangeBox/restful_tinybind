@@ -1,6 +1,7 @@
 <?php
 
 class Layout extends CI_Controller {
+	protected $cachePagesForSeconds = 60;
 
 	/* default */
 	public function index()
@@ -11,7 +12,15 @@ class Layout extends CI_Controller {
 	/* get bind templates */
 	public function get()
 	{
-		$this->load->view('/bind_templates/'.preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/',func_get_args())).'.html');
+		$this->Restful_model
+			->template($this->load->view('/bind_templates/'.preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/',func_get_args())).'.html',[],true),$this->cachePagesForSeconds)
+			->send(200);
+	}
+
+	public function configuration() {
+		$this->Restful_model
+			->flag('cache',$this->cachePagesForSeconds)
+			->send(200);
 	}
 
 } /* end class */

@@ -1,10 +1,12 @@
 /**
  *
+ * Rely on TinyBind being loaded
+ * uses javascript router code
+ * Using jQuery trigger, ajax
+ *
  * https://blikblum.github.io/tinybind/
  * https://github.com/matthieuriolo/rivetsjs-stdlib
  * http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
- *
- * Using jQuery trigger, ajax
  *
  */
 
@@ -12,10 +14,9 @@
  * Setup the default application
  */
 var app = {
-	id: 'app',
-	config: {
-		templateCache: 3600, /* cache for a a hour */
-	},
+	id: 'app', /* attach to this DOM selector */
+	configurationURL: '/', /* default location to call for the configuration */
+	config: {}, /* config options */
 	local: {}, /* storage for local application variables */
 	error: false, /* do we have an error - boolean true/false */
 	errors: {}, /* "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}} */
@@ -25,9 +26,23 @@ var app = {
 	form: {}, /* form variables */
 	events: {}, /* store actual events */
 	bound: undefined, /* are we attached to the DOM */
-	init() {
-		/* default just call the router */
-		app.helpers.route();
+	init(configurationURL) {
+		app.response[200] = function(data, textStatus, jqXHR) {
+			if (data.config != undefined) {
+				app.config = Object.assign(app.config, data.config);
+			}
+
+			if (data.flags.cache != undefined) {
+				storage.removeOlderThan(data.flags.cache);
+			}
+
+			/* then call the router */
+			app.helpers.route();
+		};
+
+		configurationURL = (configurationURL) ? configurationURL : app.configurationURL;
+
+		app.helpers.ajax('get',configurationURL,{},app.helpers.getHandlers());
 	},
 	event: {
 		/* wrapper to add events like app.event.add('name',function(){}); */
@@ -118,26 +133,27 @@ var app = {
 			return this;
 		}
 	},
+	response: {
+		/* default responds */
+
+		/* standard get layout or get model */
+		200: function(data, textStatus, jqXHR){ console.log(arguments); alert('200 (ok) handler'); },
+		/* success on create */
+		201: function(data, textStatus, jqXHR){ console.log(arguments); alert('201 (created) handler'); },
+		/* success on edit */
+		202: function(data, textStatus, jqXHR){ console.log(arguments); alert('202 (accepted) handler'); },
+		/* access to resource not allowed */
+		401: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('401 (unauthorized) handler'); },
+		/* resource not found */
+		404: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('404 (not found) handler'); },
+		/* error submitting resource (create, edit, delete) */
+		406: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('406 (not accepted) handler'); },
+		/* resource conflict ie. trying to create a new resource with the same primary id */
+		409: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('409 (conflict) handler'); },
+		/* internal server error */
+		500: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('500 (server error) handler'); },
+	},
 	helpers: {
-		/* dummy respond handlers */
-		response: {
-			/* standard get layout or get model */
-			200: function(data, textStatus, jqXHR){ console.log(arguments); alert('200 (ok) handler'); },
-			/* success on create */
-			201: function(data, textStatus, jqXHR){ console.log(arguments); alert('201 (created) handler'); },
-			/* success on edit */
-			202: function(data, textStatus, jqXHR){ console.log(arguments); alert('202 (accepted) handler'); },
-			/* access to resource not allowed */
-			401: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('401 (unauthorized) handler'); },
-			/* resource not found */
-			404: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('404 (not found) handler'); },
-			/* error submitting resource (create, edit, delete) */
-			406: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('406 (not accepted) handler'); },
-			/* resource conflict ie. trying to create a new resource with the same primary id */
-			409: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('409 (conflict) handler'); },
-			/* internal server error */
-			500: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('500 (server error) handler'); },
-		},
 		ajax(method,url,data,handlers,dataType) {
 			dataType = (dataType) || 'json';
 
@@ -149,11 +165,11 @@ var app = {
 				cache: true,
 				timeout: 5000, /* 5 seconds */
 				async: true,
-				statusCode: Object.assign(app.helpers.response,handlers),
+				statusCode: Object.assign(app.response,handlers),
 			});
 		},
 		getHandlers() {
-			return app.helpers.response;
+			return app.response;
 		},
 		setData(data) {
 			/* overwrite */
@@ -210,12 +226,15 @@ var app = {
 			/* unbind */
 			jQuery('body').trigger('bound',false);
 
-			app.helpers.loadTemplate(layoutEndPoint,function(template) {
-				document.getElementById(app.id).innerHTML = template;
+			/* load this layout then call this */
+			app.helpers.loadTemplate(layoutEndPoint,function(data, textStatus, jqXHR) {
+				document.getElementById(app.id).innerHTML = data.source;
+
+				console.log(textStatus,data);
 
 				if (modelEndPoint) {
 					/* setup retrieve model - success */
-					app.helpers.response[200] = function(data, textStatus, jqXHR) {
+					app.response[200] = function(data, textStatus, jqXHR) {
 						app.helpers.setData(data);
 						app.bound = tinybind.bind(document.getElementById(app.id),app);
 
@@ -239,19 +258,22 @@ var app = {
 		},
 		loadTemplate(layoutEndPoint,then) {
 			/* Get bind template from browser local session storage? */
-			var cachedTemplate = storage.getItem(layoutEndPoint+'.bind');
+			var cachedTemplateData = storage.getItem(layoutEndPoint+'.bind');
 
 			/* have we already loaded the template? */
-			if (cachedTemplate) {
-				then(cachedTemplate);
+			if (cachedTemplateData) {
+				then(cachedTemplateData, 'cached', undefined);
 			} else {
 				/* setup retrieve model - success */
-				app.helpers.response[200] = function(data, textStatus, jqXHR) {
-					storage.setItem(layoutEndPoint+'.bind',data,app.config.templateCache);
-					then(data);
+				app.response[200] = function(data, textStatus, jqXHR) {
+					var cacheTemplateData = {source: data.template.source, cache: data.template.cache};
+
+					storage.setItem(layoutEndPoint+'.bind',cacheTemplateData,data.template.cache);
+
+					then(cacheTemplateData, textStatus, jqXHR);
 				};
 
-				app.helpers.ajax('get',layoutEndPoint,{},app.helpers.getHandlers(),'text');
+				app.helpers.ajax('get',layoutEndPoint,{},app.helpers.getHandlers());
 			}
 		},
 	}

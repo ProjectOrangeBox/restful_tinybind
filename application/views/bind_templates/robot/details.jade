@@ -1,4 +1,4 @@
-.row
+.row.heading
 	.col-md-6
 		h3
 			i.fa.fa-tags
@@ -13,36 +13,39 @@ hr
 form(rv-method='form.method' rv-action='form.action')
 	.form-group(rv-if='record.id')
 		label(for='id') Id
-		input.form-control#id(type='id' name='id' placeholder rv-value='record.id')
+		input.form-control#id(type='id' name='id' placeholder="Id" rv-value='record.id')
 	.form-group
 		label(for='name') Name
-		input.form-control#name(type='name' name='name' placeholder rv-value='record.name')
+		input.form-control#name(type='name' name='name' placeholder="Name" rv-value='record.name')
 	.form-group
 		label(for='type') Type
-		input.form-control#type(type='type' name='type' placeholder rv-value='record.type')
+		input.form-control#type(type='type' name='type' placeholder="Type" rv-value='record.type')
 	.form-group
 		label(for='year') Year
-		input.form-control(type='year' name='year' placeholder rv-value='record.year')
+		input.form-control(type='year' name='year' placeholder="Year" rv-value='record.year')
 	.form-group
-		label(for='checkbox') Enabled
 		input(type='checkbox' name='enabled' value='1' rv-intcheck='record.enabled')
-	.radio
-		label
-			input(type='radio' name='options' value='11' rv-checked='record.options')
-			| Option one is this and that—be sure to include why it's great
+		label(for='checkbox') Enabled
+	
+	.form-group
+		.radio
+			label
+				input(type='radio' name='options' value='11' rv-checked='record.options')
+				| Option one is this and that—be sure to include why it's great
 
-	.radio
-		label
-			input(type='radio' name='options' value='22' rv-checked='record.options')
-			| Option two can be something else and selecting it will deselect option one
+		.radio
+			label
+				input(type='radio' name='options' value='22' rv-checked='record.options')
+				| Option two can be something else and selecting it will deselect option one
 
-	.radio
-		label
-			input(type='radio' name='options' value='33' rv-checked='record.options')
-			| Option three is disabled
+		.radio
+			label
+				input(type='radio' name='options' value='33' rv-checked='record.options')
+				| Option three is disabled
 
 	.form-group
 		label Select
 		select.form-control(name='select' rv-value='record.select')
 			option(rv-each-foo='form.select' rv-value='foo.id') { foo.value }
+	
 	button.btn.btn-default(type='submit' rv-on-click='events.submit') Submit

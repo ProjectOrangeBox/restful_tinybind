@@ -25,11 +25,14 @@ class Restful_model {
 	public $model = [];
 	public $page = [];
 	public $form = [];
-	public $status = 200;
-	public $statusMsg = '';
+	public $flags = [];
+	public $config = [];
+	public $status = 200; /* int */
+	public $statusMsg = ''; /* string */
+	public $template = ''; /* string */
 
-	private $CI;
-	private $statusMap = [
+	protected $CI;
+	protected $statusMap = [
     100 => 'Continue',
     101 => 'Switching Protocols',
     102 => 'Processing',
@@ -107,7 +110,44 @@ class Restful_model {
 		}
 	}
 
-	protected function merge(&$array,$name,$value) {
+	/**
+	 * flag
+	 *
+	 * @param mixed $name
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function flag(string $name, $value) : Restful_model
+	{
+		$this->flags[$name] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * config
+	 *
+	 * @param mixed $name
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function config(string $name, $value) : Restful_model
+	{
+		$this->config[$name] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * merge
+	 *
+	 * @param mixed &$array
+	 * @param mixed $name
+	 * @param mixed $value
+	 * @return void
+	 */
+	protected function merge(&$array,$name,$value) : Restful_model
+	{
 		if ($value) {
 			$array[$name] = $value;
 		} elseif(is_array($name)) {
@@ -127,7 +167,7 @@ class Restful_model {
 	 * @param array $array
 	 * @return void
 	 */
-	public function page($name,$value=null)
+	public function page($name,$value=null) : Restful_model
 	{
 		return $this->merge($this->page,$name,$value);
 	}
@@ -138,7 +178,7 @@ class Restful_model {
 	 * @param array $array
 	 * @return void
 	 */
-	public function form($name,$value=null)
+	public function form($name,$value=null) : Restful_model
 	{
 		return $this->merge($this->form,$name,$value);
 	}
@@ -149,7 +189,7 @@ class Restful_model {
 	 * @param mixed $errors
 	 * @return void
 	 */
-	public function errors(array $array)
+	public function errors(array $array) : Restful_model
 	{
 		$this->errors = $array;
 
@@ -162,9 +202,22 @@ class Restful_model {
 	 * @param array $array
 	 * @return void
 	 */
-	public function model(array $array)
+	public function model(array $array) : Restful_model
 	{
 		$this->model = $array;
+
+		return $this;
+	}
+
+	/**
+	 * template
+	 *
+	 * @param string $template
+	 * @return void
+	 */
+	public function template(string $template,int $cache_seconds = 0) : Restful_model
+	{
+		$this->template = ['source'=>$template,'cache'=>$cache_seconds];
 
 		return $this;
 	}
@@ -176,12 +229,16 @@ class Restful_model {
 	 * @param mixed int
 	 * @return void
 	 */
-	public function send(int $success = 202,int $fail = 406) : void
+	public function send(int $success = 200,int $fail = null) : void
 	{
-		$this->error = $this->CI->Errors_model->has_error();
+		if ($fail) {
+			$this->error = $this->CI->Errors_model->has_error();
 
-		if ($this->error) {
-			$this->errors = $this->CI->Errors_model->errors();
+			if ($this->error) {
+				$this->errors = $this->CI->Errors_model->errors();
+			}
+		} else {
+			$this->error = false;
 		}
 
 		$this->status = ($this->error) ? $fail : $success;
@@ -208,7 +265,7 @@ class Restful_model {
 		$payload = new StdClass;
 
 		/* send out only the ones that aren't empty to keep the payload small */
-		foreach (['error','errors','model','page','form','status','statusMsg'] as $key) {
+		foreach (['error','errors','model','page','form','status','statusMsg','flags','config','template'] as $key) {
 			if (!empty($this->$key)) {
 				$payload->$key = $this->$key;
 			}

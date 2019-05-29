@@ -1,3 +1,5 @@
+app.configurationURL = '/layout/configuration';
+
 /* Add Routes */
 app.router
 	.add(/catalog\/edit\/(.*)/, function(primary_id) {
@@ -21,7 +23,7 @@ app.router
 		app.helpers.load('/layout/get/robot/index','/robot/index');
 	});
 
-app.helpers.response[404] = function(data, textStatus, jqXHR) {
+app.response[404] = function(data, textStatus, jqXHR) {
 	/* good redirect */
 	app.helpers.load('/layout/get/notfound');
 }
@@ -63,7 +65,7 @@ app.event
 			callback: function(confirm) {
 				if (confirm) {
 					/* accepted record - delete */
-					app.helpers.response[202] = function(data, textStatus, jqXHR) {
+					app.response[202] = function(data, textStatus, jqXHR) {
 						app.local.closest_tr.remove();
 					};
 
@@ -76,19 +78,19 @@ app.event
 		event.preventDefault();
 
 		/* created record - create */
-		app.helpers.response[201] = function(data, textStatus, jqXHR) {
+		app.response[201] = function(data, textStatus, jqXHR) {
 			/* good redirect */
 			app.router.navigate(app.page.path);
 		}
 
 		/* accepted record - update */
-		app.helpers.response[202] = function(data, textStatus, jqXHR) {
+		app.response[202] = function(data, textStatus, jqXHR) {
 			/* good redirect" */
 			app.router.navigate(app.page.path);
 		}
 
 		/* not accepted - show errors */
-		app.helpers.response[406] = function(jqXHR, textStatus, errorThrown) {
+		app.response[406] = function(jqXHR, textStatus, errorThrown) {
 			/* good show errors */
 			app.helpers.setData(jqXHR.responseJSON);
 
