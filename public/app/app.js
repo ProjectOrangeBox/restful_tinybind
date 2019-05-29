@@ -1,3 +1,4 @@
+/* where to request configuration from */
 app.configurationURL = '/layout/configuration';
 
 /* Add Routes */
@@ -19,16 +20,17 @@ app.router
 		app.helpers.load('/layout/get/robot/details','/robot/create');
 	})
 	.add(function() {
+		/* default */
 		notify.removeAll();
 		app.helpers.load('/layout/get/robot/index','/robot/index');
 	});
 
-app.response[404] = function(data, textStatus, jqXHR) {
-	/* good redirect */
+app.response[404] = function(data,xhr) {
+	/* don't show the default alert() - instead show not found */
 	app.helpers.load('/layout/get/notfound');
 }
 
-/* Add Events */
+/* Button Events */
 app.event
 	.add('goto',function(url, event) {
 		event.preventDefault();
@@ -65,11 +67,11 @@ app.event
 			callback: function(confirm) {
 				if (confirm) {
 					/* accepted record - delete */
-					app.response[202] = function(data, textStatus, jqXHR) {
+					app.response[202] = function(data,xhr) {
 						app.local.closest_tr.remove();
 					};
 
-					app.helpers.ajax('delete',url + '/delete/' + primaryId,{},app.helpers.getHandlers());
+					app.request('delete',url + '/delete/' + primaryId);
 				}
 			},
 		});
@@ -78,21 +80,21 @@ app.event
 		event.preventDefault();
 
 		/* created record - create */
-		app.response[201] = function(data, textStatus, jqXHR) {
+		app.response[201] = function(data,xhr) {
 			/* good redirect */
 			app.router.navigate(app.page.path);
 		}
 
 		/* accepted record - update */
-		app.response[202] = function(data, textStatus, jqXHR) {
+		app.response[202] = function(data,xhr) {
 			/* good redirect" */
 			app.router.navigate(app.page.path);
 		}
 
 		/* not accepted - show errors */
-		app.response[406] = function(jqXHR, textStatus, errorThrown) {
+		app.response[406] = function(data,xhr) {
 			/* good show errors */
-			app.helpers.setData(jqXHR.responseJSON);
+			app.helpers.setData(data);
 
 			if (app.error) {
 				notify.removeAll();
@@ -104,5 +106,5 @@ app.event
 			}
 		}
 
-		app.helpers.ajax(app.form.method,app.form.action,app.helpers.getData(),app.helpers.getHandlers());
+		app.request(app.form.method,app.form.action,app.helpers.getData());
 	});

@@ -18,7 +18,6 @@ var app = {
 	configurationURL: '/', /* default location to call for the configuration */
 	config: {
 		ajaxTimeout: 5000, /* ajax timeout in seconds */
-		routerMode: 'history', /* history or hash */
 		routerRoot: '/', /* router url root */
 	}, /* config options */
 	local: {}, /* storage for local application variables */
@@ -39,7 +38,7 @@ var app = {
 		},
 	},
 	init(configurationURL) {
-		app.response[200] = function(data, textStatus, jqXHR) {
+		app.response[200] = function(data, xhr) {
 			if (data.config != undefined) {
 				app.config = Object.assign(app.config, data.config);
 			}
@@ -52,9 +51,9 @@ var app = {
 			app.helpers.route();
 		};
 
-		configurationURL = (configurationURL) ? configurationURL : app.configurationURL;
+		configurationURL = configurationURL ? configurationURL : app.configurationURL;
 
-		app.helpers.ajax('get',configurationURL);
+		app.request('get',configurationURL);
 	},
 	event: {
 		/* wrapper to add events like app.event.add('name',function(){}); */
@@ -68,14 +67,9 @@ var app = {
 		getFragment: function() {
 			var fragment = '';
 
-			if(app.config.routerMode === 'history') {
-				fragment = this.clearSlashes(decodeURI(location.pathname + location.search));
-				fragment = fragment.replace(/\?(.*)$/, '');
-				fragment = app.config.routerRoot != '/' ? fragment.replace(app.config.routerRoot, '') : fragment;
-			} else {
-				var match = window.location.href.match(/#(.*)$/);
-				fragment = match ? match[1] : '';
-			}
+			fragment = this.clearSlashes(decodeURI(location.pathname + location.search));
+			fragment = fragment.replace(/\?(.*)$/, '');
+			fragment = app.config.routerRoot != '/' ? fragment.replace(app.config.routerRoot, '') : fragment;
 
 			return this.clearSlashes(fragment);
 		},
@@ -108,6 +102,7 @@ var app = {
 			return this;
 		},
 		check: function(f) {
+			/* multiple exists */
 			var fragment = f || this.getFragment();
 
 			for (var i=0; i<this.routes.length; i++) {
@@ -143,53 +138,33 @@ var app = {
 		navigate: function(path) {
 			path = path ? path : '';
 
-			if (app.config.routerMode === 'history') {
-				history.pushState(null, null, app.config.routerRoot + this.clearSlashes(path));
-			} else {
-				window.location.href = window.location.href.replace(/#(.*)$/, '') + '#' + path;
-			}
+			history.pushState(null, null, app.config.routerRoot + this.clearSlashes(path));
 
 			return this;
 		}
 	},
 	response: {
-		/* default responds */
-
 		/* standard get layout or get model */
-		200: function(data, textStatus, jqXHR){ console.log(arguments); alert('200 (ok) handler'); },
+		200: function(responds, xhr){ console.log(arguments); alert('200 (ok) handler'); },
 		/* success on create */
-		201: function(data, textStatus, jqXHR){ console.log(arguments); alert('201 (created) handler'); },
+		201: function(responds, xhr){ console.log(arguments); alert('201 (created) handler'); },
 		/* success on edit */
-		202: function(data, textStatus, jqXHR){ console.log(arguments); alert('202 (accepted) handler'); },
+		202: function(responds, xhr){ console.log(arguments); alert('202 (accepted) handler'); },
 		/* access to resource not allowed */
-		401: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('401 (unauthorized) handler'); },
+		401: function(responds, xhr){ console.log(arguments); alert('401 (unauthorized) handler'); },
 		/* resource not found */
-		404: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('404 (not found) handler'); },
+		404: function(responds, xhr){ console.log(arguments); alert('404 (not found) handler'); },
 		/* error submitting resource (create, edit, delete) */
-		406: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('406 (not accepted) handler'); },
+		406: function(responds, xhr){ console.log(arguments); alert('406 (not accepted) handler'); },
 		/* resource conflict ie. trying to create a new resource with the same primary id */
-		409: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('409 (conflict) handler'); },
+		409: function(responds, xhr){ console.log(arguments); alert('409 (conflict) handler'); },
 		/* internal server error */
-		500: function(jqXHR, textStatus, errorThrown){ console.log(arguments); alert('500 (server error) handler'); },
+		500: function(responds, xhr){ console.log(arguments); alert('500 (server error) handler'); },
+
+		/* else */
+		else: function(responds, xhr){ console.log(arguments); alert('else?'); },
 	},
 	helpers: {
-		ajax(method,url,data,handlers,dataType) {
-			dataType = (dataType) || 'json';
-
-			jQuery.ajax({
-				method: method,
-				url: url,
-				data: data,
-				statusCode: Object.assign(app.response,handlers),
-				dataType: dataType,
-				timeout: app.config.ajaxTimeout, /* 5 seconds */
-				cache: true,
-				async: true,
-			});
-		},
-		getAjaxHandlers() {
-			return app.response;
-		},
 		setData(data) {
 			/* overwrite */
 			if (data['error']) {
@@ -236,22 +211,22 @@ var app = {
 			};
 		},
 		modelIsA() {
-			return (app.record) ? 'object' : 'array';
+			return app.record ? 'object' : 'array';
 		},
 		getModel() {
-			return model = (app.record) ? app.record : app.records;
+			return model = app.record ? app.record : app.records;
 		},
 		load(layoutEndPoint,modelEndPoint) {
 			/* unbind */
 			app.triggers.unbound();
 
 			/* load this layout then call this */
-			app.helpers.loadTemplate(layoutEndPoint,function(data, textStatus, jqXHR) {
+			app.helpers.loadTemplate(layoutEndPoint,function(data, xhr) {
 				document.getElementById(app.id).innerHTML = data.source;
 
 				if (modelEndPoint) {
 					/* setup retrieve model - success */
-					app.response[200] = function(data, textStatus, jqXHR) {
+					app.response[200] = function(data, xhr) {
 						app.helpers.setData(data);
 						app.bound = tinybind.bind(document.getElementById(app.id),app);
 
@@ -259,12 +234,12 @@ var app = {
 						app.triggers.bound();
 					};
 
-					app.helpers.ajax('get',modelEndPoint);
+					app.request('get',modelEndPoint);
 				}
 			});
 		},
 		route(path) {
-			path = (path) ? path : window.location.pathname;
+			path = path ? path : window.location.pathname;
 
 			if (!app.router.isSetup) {
 				app.router.isSetup = true;
@@ -284,66 +259,73 @@ var app = {
 				then(cachedTemplateData, 'cached', undefined);
 			} else {
 				/* setup retrieve model - success */
-				app.response[200] = function(data, textStatus, jqXHR) {
+				app.response[200] = function(data, xhr) {
 					storage.setItem(key,data.template,data.template.cache);
 
-					then(data.template, textStatus, jqXHR);
+					then(data.template, xhr);
 				};
 
-				app.helpers.ajax('get',layoutEndPoint);
+				app.request('get',layoutEndPoint);
 			}
 		},
-	}
-};
+		urlencoded: function(obj, prefix) {
+			var str = [];
 
-var tinyajax = {
-	send: function(method,url,data,handlers) {
-		data = (data) ? data : {};
-		handlers = Object.assign(app.response,handlers)
+			for (var p in obj) {
+				if (obj.hasOwnProperty(p)) {
+					var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
 
-    var xhr = new XMLHttpRequest();
+					str.push(typeof v == "object" ? this.urlencoded(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
+				}
+			}
 
-		xhr.open(method,url);
+			return str.join("&");
+		},
+	},
+	request: function(method,url,data,handlers) {
+		var xhr = new XMLHttpRequest();
+
+		xhr.timeout = app.config.ajaxTimeout;
+
+		xhr.open(method.toUpperCase(),url,true); /* true = async */
 		xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 		xhr.setRequestHeader('Accept','application/json, text/javascript, */*');
 		xhr.setRequestHeader('Cache-Control','no-cache');
 		xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
 
-		var onHandler = function() {
-			if (handlers[xhr.status]) {
-				try {
-					var object = JSON.parse(xhr.response);
-				} catch(e) {
-					var object = {};
-				}
+		/* merge any sent in with any of the defaults - used inside onHandler() */
+		handlers = Object.assign(app.response,handlers);
 
-				handlers[xhr.status](object,xhr.statusText,xhr);
-			} else {
-				alert(xhr.status + ' handler not found.');
+		/* this handles everything because we setup the handlers */
+		var onHandler = function() {
+			/**
+			 * try to convert the responds to a json object
+			 * everything in orangeBind is a ajax request and json should be returned
+			 */
+			try {
+				var object = JSON.parse(xhr.response);
+			} catch(e) {
+				var object = {};
 			}
+
+			/* do we have a handler for this responds? if not fall back to "else" */
+			var handlerKey = handlers.hasOwnProperty(xhr.status) ? xhr.status : 'else';
+
+			/* call the handler */
+			handlers[handlerKey](object,xhr);
 		}
 
+		/* they all use the same handler? */
 		xhr.onload = onHandler;
 		xhr.onerror = onHandler;
+		xhr.onabort = onHandler;
+		xhr.ontimeout = onHandler;
 
-		xhr.send(this.param(data));
-	},
-	param: function(object) {
-		var encodedString = '';
+		var request = data ? app.helpers.urlencoded(data) : '';
 
-		for (var prop in object) {
-			if (object.hasOwnProperty(prop)) {
-				if (encodedString.length > 0) {
-					encodedString += '&';
-				}
-
-				encodedString += encodeURI(prop + '=' + object[prop]);
-			}
-		}
-
-		return encodedString;
+		xhr.send(request);
 	}
-}
+};
 
 /* bootstrap once the DOM is loaded */
 document.addEventListener('DOMContentLoaded',function(){
