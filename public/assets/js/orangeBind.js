@@ -1,12 +1,12 @@
 /**
  *
  * Rely on TinyBind being loaded
- * uses javascript router code
- * Using jQuery trigger, ajax
- *
  * https://blikblum.github.io/tinybind/
  * https://github.com/matthieuriolo/rivetsjs-stdlib
- * http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
+ *
+ * Router idea from http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
+ *
+ * Using jQuery trigger to notify other plugins of binding changes. see app.triggers
  *
  */
 
@@ -51,7 +51,7 @@ var app = {
 			app.helpers.route();
 		};
 
-		configurationURL = configurationURL ? configurationURL : app.configurationURL;
+		configurationURL = configurationURL || app.configurationURL;
 
 		app.request('get',configurationURL);
 	},
@@ -136,7 +136,7 @@ var app = {
 			return this;
 		},
 		navigate: function(path) {
-			path = path ? path : '';
+			path = path || '';
 
 			history.pushState(null, null, app.config.routerRoot + this.clearSlashes(path));
 
@@ -214,7 +214,7 @@ var app = {
 			return app.record ? 'object' : 'array';
 		},
 		getModel() {
-			return model = app.record ? app.record : app.records;
+			return model = app.record || app.records;
 		},
 		load(layoutEndPoint,modelEndPoint) {
 			/* unbind */
@@ -239,7 +239,7 @@ var app = {
 			});
 		},
 		route(path) {
-			path = path ? path : window.location.pathname;
+			path = path || window.location.pathname;
 
 			if (!app.router.isSetup) {
 				app.router.isSetup = true;
