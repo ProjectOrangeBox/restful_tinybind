@@ -1,5 +1,5 @@
 /**
- * Based On:
+ * Originally Based On:
  * https://github.com/benjaminallison/SuperLocal
  *
  * Added expires, mirrors localStorage Syntax
@@ -8,144 +8,118 @@
  *
  */
 var storage = {
-	_capable: undefined,
 	settings : {
-		dbPrefix:'db',
+		dbPrefix:'superStorge',
+		storage: 'localStorage',
+		capable: undefined
 	},
-	prefixRegex : function() {
-		return new RegExp(this.settings.dbPrefix,'g');
-	},
-	modifiedRegex : function() {
-		return new RegExp('modified','g');
-	},
-	capable : function() {
-		if (this._capable == undefined) {
-			var testData = 'ls';
-			try {
-				localStorage.setItem(testData, testData);
-				localStorage.removeItem(testData);
-				this._capable = true;
-				return true;
-			} catch(e) {
-				this._capable = false;
-				return false;
+	getItem : function(key,defaultValue) {
+		var record = this._getByComplete(this.settings.dbPrefix + key);
+
+		if (record.expires > 0) {
+			if (Math.floor(new Date().getTime()/1000) > record.expires) {
+				this.removeItem(key);
+				record.data = undefined;
 			}
 		}
 
-		return this._capable;
+		return (record.data) ? record.data : defaultValue;
 	},
-	findOldest : function() {
-		/* should really only be used internally */
-		var timestamp = 0;
-		var localKeys = Object.keys(localStorage);
-		var totalKeys = localKeys.length;
-		var oldestRecordID = 0;
+	removeItem : function(key,completeId) {
+		if (this.capable()) {
+			var completeId = (completeId) ? completeId : this.settings.dbPrefix + key;
 
-		for (var i = 0; i < totalKeys; i++) {
-			if (this.prefixRegex().test(localKeys[i]) && this.modifiedRegex().test(localKeys[i])) {
-				var currentKey = localKeys[i].replace(this.settings.dbPrefix,'').replace('-modified','');
-				var thisModified = parseInt(localStorage[this.settings.dbPrefix + currentKey + '-modified']);
-
-				if (thisModified < timestamp || timestamp === 0) {
-					oldestRecordID = currentKey;
-					timestamp = thisModified;
-				}
-			}
-		}
-		return oldestRecordID;
-	},
-	removeOlderThan : function(seconds) {
-		/* should really only be used internally */
-		var timestamp = (seconds == 0 || seconds === undefined) ? 0 : Math.floor(new Date().getTime()/1000) - seconds;
-		var localKeys = Object.keys(localStorage);
-		var totalKeys = localKeys.length;
-
-		for (var i = 0; i < totalKeys; i++) {
-			if (this.prefixRegex().test(localKeys[i]) && this.modifiedRegex().test(localKeys[i])) {
-				var currentKey = localKeys[i].replace(this.settings.dbPrefix,'').replace('-modified','');
-				var thisModified = parseInt(localStorage[this.settings.dbPrefix + currentKey + '-modified']);
-
-				if (timestamp > thisModified || timestamp === 0) {
-					this.removeItem(currentKey);
-				}
-			}
-		}
-	},
-	getItem : function(uID,defaultValue) {
-		var data = this.getDetailed(uID);
-
-		if (data.expires > 0) {
-			if (Math.floor(new Date().getTime()/1000) > data.expires) {
-				data.data = undefined;
-				this.removeItem(uID);
-			}
-		}
-
-		return (data.data) ? data.data : defaultValue;
-	},
-	getDetailed : function(uID) {
-		var data = {};
-
-		data.uID = uID;
-
-		if (this.capable() === true) {
-			var recordPrefix = this.settings.dbPrefix + uID;
-			var jsonData = localStorage[recordPrefix + '-data'];
-
-			data.data = (jsonData) ? JSON.parse(jsonData) : undefined;
-			data.created = localStorage[recordPrefix + '-created'];
-			data.modified = localStorage[recordPrefix + '-modified'];
-			data.expires = localStorage[recordPrefix + '-expires'];
-		}
-
-		return data;
-	},
-	removeItem : function(uID) {
-		var recordPrefix = this.settings.dbPrefix + uID;
-
-		if (this.capable() === true) {
-			console.log('remove ' + recordPrefix);
-
-			localStorage.removeItem(recordPrefix + '-data');
-			localStorage.removeItem(recordPrefix + '-created');
-			localStorage.removeItem(recordPrefix + '-modified');
-			localStorage.removeItem(recordPrefix + '-expires');
+			localStorage.removeItem(completeId);
 		}
 	},
 	clear : function() {
-		if (this.capable() === true) {
-			localStorage.clear();
-		}
+		this.removeOlderThan(0);
 	},
-	setItem : function(uID,data,expireSeconds) {
-		if (this.capable() === true) {
-			var recordPrefix = this.settings.dbPrefix + uID;
-
-			// sets timestamp, and sets it to customTime if it's been provided
+	setItem : function(key,data,expireSeconds) {
+		if (this.capable()) {
 			var	timestamp = Math.floor(new Date().getTime()/1000);
-			var expireSeconds = (expireSeconds) ? Math.floor(new Date().getTime()/1000) + expireSeconds : -1;
+			var expireSeconds = (expireSeconds) ? timestamp + expireSeconds : -1;
 
 			try {
-				// attempt to save the record
-				localStorage.setItem(recordPrefix + '-data', JSON.stringify(data));
-				localStorage.setItem(recordPrefix + '-modified', timestamp);
-				localStorage.setItem(recordPrefix + '-expires', expireSeconds);
-				// if there's currently no 'created' record for the supplied ID, we know that this is a record, so we'll make the associated 'created' record
-				if (typeof(localStorage[recordPrefix + '-created']) === 'undefined' ) {
-					localStorage.setItem(recordPrefix + '-created', timestamp);
-				}
+				localStorage.setItem(this.settings.dbPrefix + key, JSON.stringify({data:data,modified:timestamp,expires:expireSeconds}));
+
 				return true;
 			} catch(e) {
-				// remove any partially failed data (example, 'modified' might have saved, but 'data' failed)
-				this.removeItem(uID);
-				// if the save fails, it's likely because localStorage is full
-				// we get around this by deleting the oldest record to free space...
-				this.removeItem(this.findOldest());
-				// ...then try the save again!
-				this.setItem(uID,data,expireSeconds);
+				/* if the save fails, it's likely because localStorage is full we get around this by deleting the oldest record to free space... */
+				this.removeItem(this._findOldest(),true);
+
+				/* ...then try the save again! */
+				this.setItem(key,data,expireSeconds);
 
 				return false;
 			}
 		}
+	},
+	getDetailed : function(key) {
+		return this._getByComplete(this.settings.dbPrefix + key);
+	},
+	removeOlderThan : function(seconds) {
+		/* should really only be used internally */
+		var timestamp = Math.floor(new Date().getTime()/1000);
+		var olderThanTimestamp = (seconds == 0 || seconds === undefined) ? timestamp : timestamp - seconds;
+		var localKeys = Object.keys(localStorage);
+		var totalKeys = localKeys.length;
+
+		for (var i = 0; i < totalKeys; i++) {
+			var key = localKeys[i];
+			if (key.startsWith(this.settings.dbPrefix)) {
+				var record = this._getByComplete(key);
+				if (olderThanTimestamp > record.modified || olderThanTimestamp > record.expires) {
+					this.removeItem(key,true);
+				}
+			}
+		}
+	},
+	_getByComplete: function (completeId) {
+		var record = {};
+
+		if (this.capable()) {
+			var jsonData = localStorage[completeId];
+
+			record = (jsonData) ? JSON.parse(jsonData) : record;
+		}
+
+		return record;
+	},
+	_findOldest : function() {
+		/* should really only be used internally */
+		var oldestTimestamp = 0;
+		var localKeys = Object.keys(localStorage);
+		var totalKeys = localKeys.length;
+		var oldestRecordKey = 0;
+
+		for (var i = 0; i < totalKeys; i++) {
+			var key = localKeys[i];
+			if (key.startsWith(this.settings.dbPrefix)) {
+				var record = this._getByComplete(key);
+				if (record.modified < oldestTimestamp || oldestTimestamp === 0) {
+					oldestRecordKey = key;
+					oldestTimestamp = record.modified;
+				}
+			}
+		}
+		return oldestRecordKey;
+	},
+	capable : function(type) {
+		if (this.settings.capable == undefined) {
+			type = (type) ? type : this.settings.storage;
+
+			try {
+				var x = '__storage_test__';
+				window[type].setItem(x, x);
+				window[type].removeItem(x);
+
+				this.settings.capable = true;
+			} catch(e) {
+				this.settings.capable = false;
+			}
+		}
+
+		return this.settings.capable;
 	}
 };
