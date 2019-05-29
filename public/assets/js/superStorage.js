@@ -4,21 +4,22 @@
 var storage = {
 	storage: undefined, /* local reference */
 	config : {
-		dbPrefix:'superStorge', /* every key must start with this */
-		storage: 'localStorage' /* which storage to use localStorage or sessionStorage */
+		dbPrefix:'{superStorge}', /* every key must start with this */
+		storage: 'localStorage', /* which storage to use localStorage or sessionStorage */
+		defaultSecondCache: 2629746, /* default seconds to cache a value before it expires (roughly 1 month) */
 	},
 	getItem : function(key,defaultValue) {
+		/* get the complete record regardless of the expiration */
 		var record = this._getByComplete(this.config.dbPrefix + key);
+		var now = Math.floor(new Date().getTime() / 1000);
 
-		if (record.expires > 0) {
-			/* if the unix timestamp is currently greater than records expires timestamp */
-			if (Math.floor(new Date().getTime() / 1000) > record.expires) {
-				/* remove it completely */
-				this.removeItem(key);
+		/* if the unix timestamp is currently greater than records expires timestamp */
+		if (now > record.expires) {
+			/* remove the record */
+			this.removeItem(key);
 
-				/* and make sure the records data is really nothing */
-				record.data = undefined;
-			}
+			/* and make sure the records data is really nothing */
+			record = this._emptyRecord();
 		}
 
 		/* if the records data is undefined then return the default value */
@@ -26,21 +27,53 @@ var storage = {
 	},
 	removeItem : function(key,completeKey) {
 		if (this.capable()) {
+			/* if they didn't send in the complete key build it */
 			var completeKey = (completeKey) ? completeKey : this.config.dbPrefix + key;
+
+			console.debug('removing',completeKey);
 
 			this.storage.removeItem(completeKey);
 		}
 	},
+	/* clear all of the storage key that match our prefix passing no argument uses right now as the timestamp */
 	clear : function() {
-		this.removeOlderThan(0);
+		this.removeOlderThan();
 	},
+	getDetailed : function(key) {
+		return this._getByComplete(this.config.dbPrefix + key);
+	},
+	removeOlderThan : function(olderThanTimestamp) {
+		var localKeys = Object.keys(this.storage);
+		var totalKeys = localKeys.length;
+		var now = Math.floor(new Date().getTime() / 1000);
+
+		/* created before the timestamp sent in or right now if nothing sent in */
+		olderThanTimestamp = (olderThanTimestamp) ? olderThanTimestamp : now;
+
+		for (var i = 0; i < totalKeys; i++) {
+			var key = localKeys[i];
+			if (key.startsWith(this.config.dbPrefix)) {
+				var record = this._getByComplete(key);
+				/* remove any record regardless of the expires created before X */
+				if (olderThanTimestamp > record.created) {
+					/* sending in complete key */
+					this.removeItem(key,true);
+				}
+			}
+		}
+	},
+	/* Set a storage value */
 	setItem : function(key,data,expireSeconds) {
 		if (this.capable()) {
-			var	timestamp = Math.floor(new Date().getTime()/1000);
-			var expireSeconds = (expireSeconds) ? timestamp + expireSeconds : -1;
+			var	now = Math.floor(new Date().getTime() / 1000);
+			var expireSeconds = (expireSeconds) ? now + expireSeconds : now + this.config.defaultSecondCache;
 
 			try {
-				this.storage.setItem(this.config.dbPrefix + key, JSON.stringify({data:data,modified:timestamp,expires:expireSeconds}));
+				var completeKey = this.config.dbPrefix + key;
+
+				console.debug('setting',completeKey);
+
+				this.storage.setItem(completeKey, JSON.stringify({data:data,created:now,expires:expireSeconds}));
 
 				return true;
 			} catch(e) {
@@ -54,31 +87,14 @@ var storage = {
 			}
 		}
 	},
-	getDetailed : function(key) {
-		return this._getByComplete(this.config.dbPrefix + key);
-	},
-	removeOlderThan : function(seconds) {
-		/* should really only be used internally */
-		var timestamp = Math.floor(new Date().getTime()/1000);
-		var olderThanTimestamp = (seconds == 0 || seconds === undefined) ? timestamp : timestamp - seconds;
-		var localKeys = Object.keys(this.storage);
-		var totalKeys = localKeys.length;
-
-		for (var i = 0; i < totalKeys; i++) {
-			var key = localKeys[i];
-			if (key.startsWith(this.config.dbPrefix)) {
-				var record = this._getByComplete(key);
-				if (olderThanTimestamp > record.modified || olderThanTimestamp > record.expires) {
-					this.removeItem(key,true);
-				}
-			}
-		}
-	},
+	/* includes the record prefix */
 	_getByComplete: function (completeKey) {
 		/* default empty record */
-		var record = {expires: -1,modified: -1, data: undefined};
+		var record = this._emptyRecord();
 
 		if (this.capable()) {
+			console.debug('reading',completeKey);
+
 			var jsonData = this.storage[completeKey];
 
 			record = (jsonData) ? JSON.parse(jsonData) : record;
@@ -86,26 +102,31 @@ var storage = {
 
 		return record;
 	},
+	_emptyRecord : function() {
+		return {expires: -1,created: -1, data: undefined};
+	},
+	/* find the oldest record and return the complete key */
 	_findOldest : function() {
 		/* should really only be used internally */
-		var oldestTimestamp = 0;
 		var localKeys = Object.keys(this.storage);
 		var totalKeys = localKeys.length;
 		var oldestRecordKey = 0;
+		var oldestTimestamp = 0;
 
 		for (var i = 0; i < totalKeys; i++) {
 			var key = localKeys[i];
 			if (key.startsWith(this.config.dbPrefix)) {
 				var record = this._getByComplete(key);
-				if (record.modified < oldestTimestamp || oldestTimestamp === 0) {
+				if (record.created < oldestTimestamp || oldestTimestamp === 0) {
 					oldestRecordKey = key;
-					oldestTimestamp = record.modified;
+					oldestTimestamp = record.created;
 				}
 			}
 		}
 
 		return oldestRecordKey;
 	},
+	/* is storage supported? */
 	capable : function(type) {
 		if (this.storage == undefined) {
 			type = (type) ? type : this.config.storage;

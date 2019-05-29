@@ -16,7 +16,11 @@
 var app = {
 	id: 'app', /* attach to this DOM selector */
 	configurationURL: '/', /* default location to call for the configuration */
-	config: {}, /* config options */
+	config: {
+		ajaxTimeout: 5000, /* ajax timeout in seconds */
+		routerMode: 'history', /* history or hash */
+		routerRoot: '/', /* router url root */
+	}, /* config options */
 	local: {}, /* storage for local application variables */
 	error: false, /* do we have an error - boolean true/false */
 	errors: {}, /* "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}} */
@@ -26,6 +30,14 @@ var app = {
 	form: {}, /* form variables */
 	events: {}, /* store actual events */
 	bound: undefined, /* are we attached to the DOM */
+	triggers: {
+		bound: function(){
+			jQuery('body').trigger('bound',true);
+		},
+		unbound: function(){
+			jQuery('body').trigger('bound',false);
+		},
+	},
 	init(configurationURL) {
 		app.response[200] = function(data, textStatus, jqXHR) {
 			if (data.config != undefined) {
@@ -42,7 +54,7 @@ var app = {
 
 		configurationURL = (configurationURL) ? configurationURL : app.configurationURL;
 
-		app.helpers.ajax('get',configurationURL,{},app.helpers.getHandlers());
+		app.helpers.ajax('get',configurationURL);
 	},
 	event: {
 		/* wrapper to add events like app.event.add('name',function(){}); */
@@ -53,23 +65,18 @@ var app = {
 	},
 	router: {
 		routes: [],
-		mode: null,
-		root: '/',
-		config: function(options) {
-			this.mode = options && options.mode && options.mode == 'history' && !!(history.pushState) ? 'history' : 'hash';
-			this.root = options && options.root ? '/' + this.clearSlashes(options.root) + '/' : '/';
-			return this;
-		},
 		getFragment: function() {
 			var fragment = '';
-			if(this.mode === 'history') {
+
+			if(app.config.routerMode === 'history') {
 				fragment = this.clearSlashes(decodeURI(location.pathname + location.search));
 				fragment = fragment.replace(/\?(.*)$/, '');
-				fragment = this.root != '/' ? fragment.replace(this.root, '') : fragment;
+				fragment = app.config.routerRoot != '/' ? fragment.replace(app.config.routerRoot, '') : fragment;
 			} else {
 				var match = window.location.href.match(/#(.*)$/);
 				fragment = match ? match[1] : '';
 			}
+
 			return this.clearSlashes(fragment);
 		},
 		clearSlashes: function(path) {
@@ -81,55 +88,67 @@ var app = {
 				re = '';
 			}
 			this.routes.push({ re: re, handler: handler});
+
 			return this;
 		},
 		remove: function(param) {
 			for (var i=0, r; i<this.routes.length, r = this.routes[i]; i++) {
 				if (r.handler === param || r.re.toString() === param.toString()) {
 					this.routes.splice(i, 1);
+
 					return this;
 				}
 			}
+
 			return this;
 		},
 		flush: function() {
 			this.routes = [];
-			this.mode = null;
-			this.root = '/';
+
 			return this;
 		},
 		check: function(f) {
 			var fragment = f || this.getFragment();
+
 			for (var i=0; i<this.routes.length; i++) {
 				var match = fragment.match(this.routes[i].re);
+
 				if (match) {
 					match.shift();
 					this.routes[i].handler.apply({}, match);
+
 					return this;
 				}
 			}
+
 			return this;
 		},
 		listen: function() {
 			var self = this;
 			var current = self.getFragment();
+
 			var fn = function() {
 				if (current !== self.getFragment()) {
 					current = self.getFragment();
 					self.check(current);
 				}
 			}
+
 			clearInterval(this.interval);
+
 			this.interval = setInterval(fn, 50);
+
 			return this;
 		},
 		navigate: function(path) {
 			path = path ? path : '';
-			if (this.mode === 'history') {
-				history.pushState(null, null, this.root + this.clearSlashes(path));
+
+			if (app.config.routerMode === 'history') {
+				history.pushState(null, null, app.config.routerRoot + this.clearSlashes(path));
 			} else {
 				window.location.href = window.location.href.replace(/#(.*)$/, '') + '#' + path;
 			}
+
 			return this;
 		}
 	},
@@ -161,14 +180,14 @@ var app = {
 				method: method,
 				url: url,
 				data: data,
-				dataType: dataType,
-				cache: true,
-				timeout: 5000, /* 5 seconds */
-				async: true,
 				statusCode: Object.assign(app.response,handlers),
+				dataType: dataType,
+				timeout: app.config.ajaxTimeout, /* 5 seconds */
+				cache: true,
+				async: true,
 			});
 		},
-		getHandlers() {
+		getAjaxHandlers() {
 			return app.response;
 		},
 		setData(data) {
@@ -224,13 +243,11 @@ var app = {
 		},
 		load(layoutEndPoint,modelEndPoint) {
 			/* unbind */
-			jQuery('body').trigger('bound',false);
+			app.triggers.unbound();
 
 			/* load this layout then call this */
 			app.helpers.loadTemplate(layoutEndPoint,function(data, textStatus, jqXHR) {
 				document.getElementById(app.id).innerHTML = data.source;
-
-				console.log(textStatus,data);
 
 				if (modelEndPoint) {
 					/* setup retrieve model - success */
@@ -239,10 +256,10 @@ var app = {
 						app.bound = tinybind.bind(document.getElementById(app.id),app);
 
 						/* rebound */
-						jQuery('body').trigger('bound',true);
+						app.triggers.bound();
 					};
 
-					app.helpers.ajax('get',modelEndPoint,{},app.helpers.getHandlers());
+					app.helpers.ajax('get',modelEndPoint);
 				}
 			});
 		},
@@ -251,14 +268,16 @@ var app = {
 
 			if (!app.router.isSetup) {
 				app.router.isSetup = true;
-				app.router.config({ mode:'history'}).listen();
+				app.router.listen();
 			}
 
 			app.router.check(path);
 		},
 		loadTemplate(layoutEndPoint,then) {
+			var key = layoutEndPoint+'.template';
+
 			/* Get bind template from browser local session storage? */
-			var cachedTemplateData = storage.getItem(layoutEndPoint+'.bind');
+			var cachedTemplateData = storage.getItem(key);
 
 			/* have we already loaded the template? */
 			if (cachedTemplateData) {
@@ -266,14 +285,12 @@ var app = {
 			} else {
 				/* setup retrieve model - success */
 				app.response[200] = function(data, textStatus, jqXHR) {
-					var cacheTemplateData = {source: data.template.source, cache: data.template.cache};
+					storage.setItem(key,data.template,data.template.cache);
 
-					storage.setItem(layoutEndPoint+'.bind',cacheTemplateData,data.template.cache);
-
-					then(cacheTemplateData, textStatus, jqXHR);
+					then(data.template, textStatus, jqXHR);
 				};
 
-				app.helpers.ajax('get',layoutEndPoint,{},app.helpers.getHandlers());
+				app.helpers.ajax('get',layoutEndPoint);
 			}
 		},
 	}

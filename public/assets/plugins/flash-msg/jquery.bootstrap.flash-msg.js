@@ -91,7 +91,7 @@ modified to do a bootstrap growl notice
 				options.stay = true;
 			}
 
-			storage.set('flash_msg',options);
+			storage.setItem('flash_msg',options);
 		}
 
 	});
