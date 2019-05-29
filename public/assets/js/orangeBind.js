@@ -296,6 +296,55 @@ var app = {
 	}
 };
 
+var tinyajax = {
+	send: function(method,url,data,handlers) {
+		data = (data) ? data : {};
+		handlers = Object.assign(app.response,handlers)
+
+    var xhr = new XMLHttpRequest();
+
+		xhr.open(method,url);
+		xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+		xhr.setRequestHeader('Accept','application/json, text/javascript, */*');
+		xhr.setRequestHeader('Cache-Control','no-cache');
+		xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
+
+		var onHandler = function() {
+			if (handlers[xhr.status]) {
+				try {
+					var object = JSON.parse(xhr.response);
+				} catch(e) {
+					var object = {};
+				}
+
+				handlers[xhr.status](object,xhr.statusText,xhr);
+			} else {
+				alert(xhr.status + ' handler not found.');
+			}
+		}
+
+		xhr.onload = onHandler;
+		xhr.onerror = onHandler;
+
+		xhr.send(this.param(data));
+	},
+	param: function(object) {
+		var encodedString = '';
+
+		for (var prop in object) {
+			if (object.hasOwnProperty(prop)) {
+				if (encodedString.length > 0) {
+					encodedString += '&';
+				}
+
+				encodedString += encodeURI(prop + '=' + object[prop]);
+			}
+		}
+
+		return encodedString;
+	}
+}
+
 /* bootstrap once the DOM is loaded */
 document.addEventListener('DOMContentLoaded',function(){
 	app.init();
