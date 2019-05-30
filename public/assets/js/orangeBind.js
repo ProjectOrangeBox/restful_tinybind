@@ -4,9 +4,7 @@
  * https://blikblum.github.io/tinybind/
  * https://github.com/matthieuriolo/rivetsjs-stdlib
  *
- * Router idea from http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
- *
- * Using jQuery trigger to notify other plugins of binding changes. see app.triggers
+ * Router idea from: http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
  *
  */
 
@@ -32,10 +30,10 @@ var app = {
 	bound: undefined, /* are we attached to the DOM */
 	triggers: {
 		bound: function(){
-			jQuery('body').trigger('bound',true);
+			trigger.fire('bound',true);
 		},
 		unbound: function(){
-			jQuery('body').trigger('bound',false);
+			trigger.fire('bound',false);
 		},
 	},
 	init(configurationURL) {

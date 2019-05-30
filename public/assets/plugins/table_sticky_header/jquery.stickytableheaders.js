@@ -291,7 +291,7 @@
 
 })(jQuery, window);
 
-$('body').on('bound',function(event,isbound) {
+trigger.register('bound',function(event,isbound) {
 	if (isbound) {
 		$('.table-sticky-header').stickyTableHeaders({fixedOffset: $('.page-header.navbar.navbar-fixed-top')});
 	}

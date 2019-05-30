@@ -1,125 +1,46 @@
-var notify = {};
-
 /**
- * Add a notice
- * notify.add('text',"[success|danger|warning|info]",(optional redirect)'/foo/bar);
+ *
+ * Add Notification
+ * optional redirect (see add examples)
+ *
+ * notify.info('Ya!')
+ * notify.success('Saved')
+ * notify.error('Oh Darn!')
+ *
+ * Show message on the Screen
+ * notify.show('Oh No!','info')
+ * notify.show('Oh No!','danger')
+ * notify.show('Oh No!','warning')
+ *
+ * Save a message to display at a later time
+ * optional redirect
+ * notify.add('Oh No!','success')
+ * notify.add('Oh No!','warning','@back')
+ * notify.add('Oh No!','danger','/people/index')
+ *
+ * Show all variable and saved notifications
+ * notify.showAll()
  *
  * Remove all of the notices on the screen
- * notify.removeAll();
+ * notify.removeAll()
  *
- * Raw add msg
- * notify.show({text:'text message',style:"[success|danger|warning|info]",stay: [true|false]});
+ * Flushes all variable and saved notifications
+ * notify.flush()
+ *
+ * Redirect to another page
+ * notify.redirect('@back')
+ * notify.redirect('/people/index')
  *
  */
+var messages = (messages) || [];
 
-notify.addInfo = function(text,redirect) {
-	notify.add(text,'info',redirect);
-};
-
-notify.addSuccess = function(text,redirect) {
-	notify.add(text,'success',redirect);
-};
-
-notify.addError = function(text,redirect) {
-	notify.add(text,'danger',redirect);
-};
-
-notify.add = function(text,style,redirect) {
-	var msg = notify.buildMsg(text,style);
-
-	if (redirect == undefined) {
-		notify.show(msg);
-	} else {
-		notify.save(msg);
-
-		/* special @ redirects? we only have 1 right now */
-		switch(redirect) {
-			case '@back':
-				window.history.back();
-			break;
-			default:
-				window.location.href = redirect;
-		}
-	}
-};
-
-notify.removeAll = function() {
-	jQuery('.notice-item-wrapper').each(function(){
-		$(this).remove();
-	});
-};
-
-notify.show = function(msg) {
-	var noticeWrapAll, noticeItemOuter, noticeItemInner, noticeItemClose;
-
-	noticeWrapAll	= (!jQuery('.notice-wrap').length) ? jQuery('<div></div>').addClass('notice-wrap').appendTo('body') : jQuery('.notice-wrap');
-	noticeItemOuter	= jQuery('<div></div>').addClass('notice-item-wrapper');
-	noticeItemInner	= jQuery('<div></div>').hide().addClass('notice-item alert alert-' + msg.style).attr('data-dismiss','alert').appendTo(noticeWrapAll).html(msg.text).animate({opacity: 'show'}, 600).wrap(noticeItemOuter);
-	noticeItemClose	= jQuery('<div></div>').addClass('close').prependTo(noticeItemInner).html('&times;').click(function(e) {
-		e.stopPropagation();
-		notify._remove(noticeItemInner)
-	});
-
-	if (!msg.stay) {
-		/* if they didn't include anything then use 4 seconds */
-		msg.stayTime = (msg.stayTime != undefined) ? msg.stayTime : notify.stayTime;
-
-		/* if they didn't use milliseconds adjust it */
-		msg.stayTime = (msg.stayTime > 30) ? msg.stayTime : msg.stayTime * 1000;
-
-		setTimeout(function() {
-			notify._remove(noticeItemInner);
-		}, msg.stayTime);
-	}
-};
-
-notify.save = function(msg) {
-	var message = storage.getItem('notify_flash_msg',[]);
-
-	message.push(msg);
-
-	storage.setItem('notify_flash_msg',message);
-};
-
-notify.init = function() {
-	if (typeof messages !== 'undefined') {
-		/* if they didn't include anything then use 4 seconds */
-		notify.stayTime = (messages.pause != undefined) ? messages.pause : 3000;
-
-		/* if they didn't use milliseconds adjust it */
-		notify.stayTime = (notify.stayTime > 30) ? notify.stayTime : notify.stayTime * 1000;
-	} else {
-		notify.stayTime = 3000;
-	}
-
-	/* Any message in cold storage? */
-	var saved_messages = notify._load();
-
-	if (saved_messages) {
-		saved_messages.forEach(function(message) {
-			notify.add(message.text,message.style);
-		});
-	}
-
-	/**
-	 * Any messages attached to the
-	 * javascript global variable message on the page?
-	 * this is inserted into the page from the server code
-	 *
-	 * <script>var $messages = "[{text:'Foo',style:'success'},{text:'Bar',style:'danager'}]";</script>
-	 */
-	if (typeof messages !== 'undefined') {
-		messages.forEach(function(message) {
-			notify.add(message.msg,message.type);
-		});
-	}
-};
-
-/**
- * "Internal" Functions
- */
-notify.buildMsg = function(text,style) {
-	var map = {
+var notify = {
+	stayTime: 3, /* seconds */
+	storageKey: 'notifyMsg',
+	defaultMsg: 'No Message Giving.',
+	defaultStyle: 'info',
+	noticeWrapAll: undefined,
+	map: {
 		red: 'danger',
 		yellow: 'warning',
 		blue: 'info',
@@ -128,33 +49,155 @@ notify.buildMsg = function(text,style) {
 		warning: 'warning',
 		info: 'info',
 		success: 'info',
-		error: 'danager',
-		failure: 'danager'
-	};
+		error: 'danger',
+		failure: 'danger'
+	},
+	stay: ['danger'],
+	init: function() {
+		if (!this.noticeWrapAll) {
+			this.noticeWrapAll	= jQuery('<div></div>').addClass('notice-wrap').appendTo('body');
+		}
 
-	var msg = {};
+		return this.showAll();
+	},
+	showAll: function() {
+		/* show all saved and variable messages */
+		return this.loadFromStorage().loadFromVariable();
+	},
+	info: function(msg,redirect) {
+		return this._autoDetect(msg,this.map.info,redirect);
+	},
+	success: function(msg,redirect) {
+		return this._autoDetect(msg,this.map.success,redirect);
+	},
+	error: function(msg,redirect) {
+		return this._autoDetect(msg,this.map.error,redirect);
+	},
+	show: function(msg,style) {
+		/* immediately show a notification */
+		return this._show(this.msgObj(msg,style));
+	},
+	add: function(msg,style,redirect) {
+		/**
+		 * Save the notification for the next page load
+		 * if you included a optional redirect then redirect to it
+		 */
+		return this.save(this.msgObj(msg,style)).redirect(redirect);
+	},
+	redirect: function(redirect) {
+		if (redirect) {
+			if (redirect == '@back') {
+				window.history.back();
+			} else {
+				window.location.href = redirect;
+			}
+		}
 
-	msg.text = (text != undefined) ? text : 'No Message Giving.';
-	msg.style = (style != undefined) ? map[style] : 'info';
-	msg.stay = (msg.style == 'danger');
-
-	return msg;
-};
-
-notify._load = function(msg) {
-	var messages = storage.getItem('notify_flash_msg',false);
-
-	storage.removeItem('notify_flash_msg');
-
-	return messages;
-};
-
-notify._remove = function(obj) {
-	obj.animate({opacity: '0'}, 600, function() {
-		obj.parent().animate({height: '0px'}, 300, function() {
-			obj.parent().remove();
+		return this;
+	},
+	removeAll: function() {
+		/* remove from screen */
+		jQuery('.notice-item-wrapper').each(function(){
+			$(this).remove();
 		});
-	});
+
+		return this;
+	},
+	flush: function() {
+		/* on page */
+		messages = [];
+
+		/* in storage */
+		storage.removeItem(this.storageKey);
+
+		return this;
+	},
+	loadFromStorage: function() {
+		/**
+		 * Any message saved in cold storage?
+		 */
+		var inStorageMessages = storage.getItem(this.storageKey,false);
+
+		/* clear out */
+		storage.removeItem(this.storageKey);
+
+		return this._asArray(inStorageMessages);
+	},
+	loadFromVariable: function() {
+		/**
+		 * Any messages attached to the
+		 * javascript global variable message on the page?
+		 * this is inserted into the page from the server code
+		 *
+		 * <script>var messages = [{msg:'Foo',style:'success'},{msg:'Bar',style:'danger'}];</script>
+		 */
+		var onPageMessages = messages;
+
+		/* clear out */
+		messages = [];
+
+		return this._asArray(onPageMessages);
+	},
+	msgObj: function(msg,style) {
+		var msgObj = {};
+
+		msgObj.msg = msg || this.defaultMsg;
+		msgObj.style = this.map.hasOwnProperty(style) ? this.map[style] : this.defaultStyle;
+
+		return msgObj;
+	},
+	save: function(msgObj) {
+		var inStorageMessages = storage.getItem(this.storageKey,[]);
+
+		inStorageMessages.push(msgObj);
+
+		storage.setItem(this.storageKey,inStorageMessages);
+
+		return this;
+	},
+	/* "Internal" Functions */
+	_show: function(msgObj) {
+		var parent = this;
+		var noticeItemOuter, noticeItemInner, noticeItemClose;
+
+		noticeItemOuter	= jQuery('<div></div>').addClass('notice-item-wrapper');
+		noticeItemInner	= jQuery('<div></div>').hide().addClass('notice-item alert alert-' + msgObj.style).attr('data-dismiss','alert').appendTo(this.noticeWrapAll).html(msgObj.msg).animate({opacity: 'show'}, 600).wrap(noticeItemOuter);
+
+		noticeItemClose	= jQuery('<div></div>').addClass('close').prependTo(noticeItemInner).html('&times;').click(function(event) {
+			event.stopPropagation();
+			parent._remove(noticeItemInner)
+		});
+
+		/* if it's NOT in the stay array set the timer to hide it */
+		if (this.stay.indexOf(msgObj.style) == -1) {
+			setTimeout(function() {
+				parent._remove(noticeItemInner);
+			}, this.stayTime  * 1000 /* convert to milliseconds */ );
+		}
+
+		return this;
+	},
+	_remove: function(obj) {
+		obj.animate({opacity: '0'}, 600, function() {
+			obj.parent().animate({height: '0px'}, 300, function() {
+				obj.parent().remove();
+			});
+		});
+
+		return this;
+	},
+	_asArray: function(messages) {
+		for (var index in messages) {
+			if (messages.hasOwnProperty(index)) {
+				this._show(messages[index]);
+			}
+		}
+
+		return this;
+	},
+	_autoDetect: function(msg,style,redirect) {
+		return (redirect) ? this.add(msg,style,redirect) : this.show(msg,style);
+	},
 };
 
 notify.init();

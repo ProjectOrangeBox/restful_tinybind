@@ -10,7 +10,6 @@ app.router
 		app.helpers.load('/layout/get/catalog/details','/catalog/create');
 	})
 	.add(/catalog/, function(primary_id) {
-		notify.removeAll();
 		app.helpers.load('/layout/get/catalog/index','/catalog/index');
 	})
 	.add(/edit\/(.*)/, function(primary_id) {
@@ -21,7 +20,6 @@ app.router
 	})
 	.add(function() {
 		/* default */
-		notify.removeAll();
 		app.helpers.load('/layout/get/robot/index','/robot/index');
 	});
 
@@ -34,6 +32,7 @@ app.response[404] = function(data,xhr) {
 app.event
 	.add('goto',function(url, event) {
 		event.preventDefault();
+		notify.removeAll();
 		app.router.navigate(url);
 	})
 	.add('create',function(url, event) {
@@ -100,7 +99,7 @@ app.event
 				notify.removeAll();
 				for (const key in app.errors) {
 					for (const key2 in app.errors[key]) {
-						notify.addError(app.errors[key][key2]);
+						notify.error(app.errors[key][key2]);
 					}
 				}
 			}

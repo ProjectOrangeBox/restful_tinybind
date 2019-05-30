@@ -1,99 +1,97 @@
 /* Create the object to hold the search properties and methods */
-var BoundTableSearch = {};
+var BoundTableSearch = {
+	/* Do the actual search */
+	search: function() {
+		var searchTerm = this.getField();
 
-/* Do the actual search */
-BoundTableSearch.search = function() {
-	var searchTerm = BoundTableSearch.getField();
+		if (typeof searchTerm === 'string') {
+			if (searchTerm.length > 0) {
+				/* run regular expression search on table text */
 
-	if (typeof searchTerm === 'string') {
-		if (searchTerm.length > 0) {
-			/* run regular expression search on table text */
+				/* hide the tr's */
+				$(this.table_class).hide();
 
-			/* hide the tr's */
-			$(BoundTableSearch.table_class).hide();
+				/* wildcard - still needs to be in order of the columns */
+				/* build javascript regular expression object */
+				var searchReg = searchTerm.replace(/[-[\]{}()+?.,\\^$|#\s]/g, '\\$&');
+				searchReg = searchReg.replace(/\*/gi,'(.*)');
 
-			/* wildcard - still needs to be in order of the columns */
-			/* build javascript regular expression object */
-			var searchReg = searchTerm.replace(/[-[\]{}()+?.,\\^$|#\s]/g, '\\$&');
-			searchReg = searchReg.replace(/\*/gi,'(.*)');
+				console.debug('filter regular expression '+searchReg);
 
-			console.log('filter regular expression '+searchReg);
+				var rex = new RegExp(searchReg,'img');
 
-			var rex = new RegExp(searchReg,'img');
+				/* filter them */
+				$(this.table_class).filter(function () {
+					return rex.test($(this).text().replace(/(\r\n|\n|\r)/gm," "));
+				}).show(); /* show this row again */
+			} else {
+				/* show all */
+				$(this.table_class).show();
+			}
 
-			/* filter them */
-			$(BoundTableSearch.table_class).filter(function () {
-				return rex.test($(this).text().replace(/(\r\n|\n|\r)/gm," "));
-			}).show(); /* show this row again */
-		} else {
-			/* show all */
-			$(BoundTableSearch.table_class).show();
+			jQuery('body').trigger('BoundTableSearch','search');
+
+			this.save(searchTerm);
+			this.determineIcons(searchTerm);
+			this.updateCount(searchTerm);
 		}
+	},
+	updateCount: function(searchTerm) {
+		var vis = $(this.table_class+':visible').length;
+		var all = $(this.table_class).length;
+		var shown = (vis != all) ? vis + ' of ' + all : all;
 
-		jQuery('body').trigger('BoundTableSearch','search');
+		this.count_element.html(shown);
 
-		BoundTableSearch.save(searchTerm);
-		BoundTableSearch.determineIcons(searchTerm);
-		BoundTableSearch.updateCount(searchTerm);
+		console.debug('bound table search filtering on "'+searchTerm+'" showing ' + shown);
+	},
+	/* Load the search term into the input field and do the search */
+	load: function() {
+		this.setField(storage.getItem(window.location.pathname+'.bts',''));
+	},
+	/* Place the last search into the search box change the background color as needed */
+	save: function(searchTerm) {
+		storage.setItem(window.location.pathname+'.bts',searchTerm);
+	},
+	/* Set and Get the search from the search field */
+	setField: function(searchTerm) {
+		this.field.val(searchTerm);
+	},
+	getField: function() {
+		return (this.field) ? this.field.val() : false;
+	},
+	determineIcons: function(searchTerm) {
+		if (searchTerm.length > 0) {
+			this.field.css({'background-color':'#F0F2F7'});
+			this.field.next().addClass('text-info');
+		} else {
+			this.field.css({'background-color':''});
+			this.field.next().removeClass('text-info');
+		}
+	},
+	init: function() {
+		var parent = this;
+
+		/* Save a few things for "quick" access */
+		this.table_class = 'table.bound-table-search tbody tr';
+		this.field = $('#bound-table-search-field');
+		this.count_element = $('#table-search-field-count');
+		this.tbody = $('table.bound-table-search tbody');
+
+		/* text field search with debounce */
+		this.field.on('keyup',debounce(function(){
+			parent.search();
+		},500));
+
+		this.load();
+
+		this.search();
+
+		this.bound = true;
 	}
-}
+};
 
-BoundTableSearch.updateCount = function(searchTerm) {
-	var vis = $(BoundTableSearch.table_class+':visible').length;
-	var all = $(BoundTableSearch.table_class).length;
-	var shown = (vis != all) ? vis + ' of ' + all : all;
-
-	BoundTableSearch.count_element.html(shown);
-
-	console.log('bound table search filtering on "'+searchTerm+'" showing ' + shown);
-}
-
-/* Load the search term into the input field and do the search */
-BoundTableSearch.load = function() {
-	BoundTableSearch.setField(storage.getItem(window.location.pathname+'.bts',''));
-}
-
-/* Place the last search into the search box change the background color as needed */
-BoundTableSearch.save = function(searchTerm) {
-	storage.setItem(window.location.pathname+'.bts',searchTerm);
-}
-
-/* Set and Get the search from the search field */
-BoundTableSearch.setField = function(searchTerm) {
-	BoundTableSearch.field.val(searchTerm);
-}
-BoundTableSearch.getField = function() {
-	return (BoundTableSearch.field) ? BoundTableSearch.field.val() : false;
-}
-
-BoundTableSearch.determineIcons = function(searchTerm) {
-	if (searchTerm.length > 0) {
-		BoundTableSearch.field.css({'background-color':'#F0F2F7'});
-		BoundTableSearch.field.next().addClass('text-info');
-	} else {
-		BoundTableSearch.field.css({'background-color':''});
-		BoundTableSearch.field.next().removeClass('text-info');
-	}
-}
-
-BoundTableSearch.init = function() {
-	/* Save a few things for "quick" access */
-	BoundTableSearch.table_class = 'table.bound-table-search tbody tr';
-	BoundTableSearch.field = $('#bound-table-search-field');
-	BoundTableSearch.count_element = $('#table-search-field-count');
-	BoundTableSearch.tbody = $('table.bound-table-search tbody');
-
-	/* text field search with debounce */
-	BoundTableSearch.field.on('keyup',debounce(function(){ BoundTableSearch.search(); },500));
-
-	BoundTableSearch.load();
-
-	BoundTableSearch.search();
-
-	BoundTableSearch.bound = true;
-}
-
-$('body').on('bound',function(event,isbound) {
+trigger.register('bound',function(event,isbound) {
 	if (isbound) {
 		if (!BoundTableSearch.bound) {
 			BoundTableSearch.init();
