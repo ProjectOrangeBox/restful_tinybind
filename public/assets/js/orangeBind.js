@@ -1,10 +1,13 @@
 /**
  *
- * Rely on TinyBind being loaded
+ * Relies on TinyBind
  * https://blikblum.github.io/tinybind/
  * https://github.com/matthieuriolo/rivetsjs-stdlib
  *
- * Router idea from: http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
+ * Relies on jQuery for Ajax calls and events
+ *
+ * Router idea from:
+ * http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
  *
  */
 
@@ -30,39 +33,41 @@ var app = {
 	bound: undefined, /* are we attached to the DOM */
 	triggers: {
 		bound: function(){
-			trigger.fire('bound',true);
+			jQuery('body').trigger('tiny-bind-bound');
 		},
 		unbound: function(){
-			trigger.fire('bound',false);
+			jQuery('body').trigger('tiny-bind-unbound');
 		},
 	},
 	init(configurationURL) {
-		app.response[200] = function(data, xhr) {
+		var parent = this;
+
+		this.response[200] = function(data, xhr) {
 			if (typeof data.config === 'object' && data.config !== null) {
-				app.config = Object.assign(app.config, data.config);
+				parent.config = Object.assign(parent.config, data.config);
 			}
 
 			if (typeof data.flags === 'object' && data.flags !== null) {
-				app._flags = Object.assign(app._flags, data.flags);
+				parent._flags = Object.assign(parent._flags, data.flags);
 			}
 
-			if (app.readFlag('cache')) {
-				storage.removeOlderThan(app.readFlag('cache'));
+			if (parent.readFlag('cache') !== undefined) {
+				storage.removeOlderThan(parent.readFlag('cache'));
 			}
 
 			/* then call the router */
-			app.helpers.route();
+			parent.helpers.route();
 		};
 
-		configurationURL = configurationURL || app.configurationURL;
+		configurationURL = configurationURL || this.configurationURL;
 
-		app.request('get',configurationURL);
+		this.request('get',configurationURL);
 	},
 	readFlag: function(name) {
-		return app._flags[name];
+		return this._flags[name];
 	},
 	event: {
-		/* wrapper to add events like app.event.add('name',function(){}); */
+		/* wrapper to add events like this.event.add('name',function(){}); */
 		add(name,handler) {
 			app.events[name] = handler;
 			return this;
@@ -151,51 +156,65 @@ var app = {
 	},
 	response: {
 		/* standard get layout or get model */
-		200: function(responds, xhr){ console.log(arguments); alert('200 (ok) handler'); },
+		200: function(data,status,xhr){ console.log(arguments); alert('200 (ok) handler'); },
 		/* success on create */
-		201: function(responds, xhr){ console.log(arguments); alert('201 (created) handler'); },
+		201: function(data,status,xhr){ console.log(arguments); alert('201 (created) handler'); },
 		/* success on edit */
-		202: function(responds, xhr){ console.log(arguments); alert('202 (accepted) handler'); },
+		202: function(data,status,xhr){ console.log(arguments); alert('202 (accepted) handler'); },
 		/* access to resource not allowed */
-		401: function(responds, xhr){ console.log(arguments); alert('401 (unauthorized) handler'); },
+		401: function(xhr,status,error){ console.log(arguments); alert('401 (unauthorized) handler'); },
 		/* resource not found */
-		404: function(responds, xhr){ console.log(arguments); alert('404 (not found) handler'); },
+		404: function(xhr,status,error){ console.log(arguments); alert('404 (not found) handler'); },
 		/* error submitting resource (create, edit, delete) */
-		406: function(responds, xhr){ console.log(arguments); alert('406 (not accepted) handler'); },
+		406: function(xhr,status,error){ console.log(arguments); alert('406 (not accepted) handler'); },
 		/* resource conflict ie. trying to create a new resource with the same primary id */
-		409: function(responds, xhr){ console.log(arguments); alert('409 (conflict) handler'); },
+		409: function(xhr,status,error){ console.log(arguments); alert('409 (conflict) handler'); },
 		/* internal server error */
-		500: function(responds, xhr){ console.log(arguments); alert('500 (server error) handler'); },
+		500: function(xhr,status,error){ console.log(arguments); alert('500 (server error) handler'); },
+	},
+	request: function(method,url,data,handlers) {
+		handlers = handlers ? Object.assign(this.response,handlers) : this.response;
 
-		/* else */
-		else: function(responds, xhr){ console.log(arguments); alert('else?'); },
+		jQuery.ajax({
+			method: method,
+			url: url,
+			data: data,
+			dataType: 'json',
+			cache: true,
+			async: true,
+			timeout: this.config.ajaxTimeout, /* 5 seconds */
+			statusCode: handlers,
+		});
 	},
 	helpers: {
-		setData(data) {
+		modelIsA: undefined,
+		setData: function(data) {
 			/* overwrite */
-			if (data['error']) {
-				app.error = data['error'];
+			if (data.error) {
+				app.error = data.error;
 			}
 
-			if (data['errors']) {
-				app.errors = data['errors'];
+			if (data.errors) {
+				app.errors = data.errors;
 			}
 
 			/**
 			 * need to bind array and object separately
 			 * because if a array is bound and you send a object it chokes
 			 */
-			if (data['model']) {
-				if (Array.isArray(data['model'])) {
-					app.records = data['model'];
+			if (data.model) {
+				if (Array.isArray(data.model)) {
 					app.record = undefined;
+					app.records = data.model;
+					this.modelIsA = 'array';
 				} else {
-					app.record = data['model'];
+					app.record = data.model;
 					app.records = undefined;
+					this.modelIsA = 'object';
 				}
 			}
 
-			/* merge */
+			/* merge these values */
 			var params = ['page','form'];
 
 			for (var index in params) {
@@ -207,7 +226,7 @@ var app = {
 				}
 			}
 		},
-		getData() {
+		getData: function() {
 			return {
 				error: app.error,
 				errors: app.errors,
@@ -216,13 +235,13 @@ var app = {
 				form: app.form,
 			};
 		},
-		modelIsA() {
-			return app.record ? 'object' : 'array';
+		modelIsA: function() {
+			return this.modelIsA;
 		},
-		getModel() {
-			return model = app.record || app.records;
+		getModel: function() {
+			return (this.modelIsA == 'object') ? app.record : app.records;
 		},
-		load(layoutEndPoint,modelEndPoint) {
+		load: function(layoutEndPoint,modelEndPoint) {
 			/* unbind */
 			app.triggers.unbound();
 
@@ -232,7 +251,7 @@ var app = {
 
 				if (modelEndPoint) {
 					/* setup retrieve model - success */
-					app.response[200] = function(data, xhr) {
+					app.response[200] = function(data,status,xhr) {
 						app.helpers.setData(data);
 						app.bound = tinybind.bind(document.getElementById(app.id),app);
 
@@ -241,10 +260,12 @@ var app = {
 					};
 
 					app.request('get',modelEndPoint);
+				} else {
+					app.triggers.bound();
 				}
 			});
 		},
-		route(path) {
+		route: function(path) {
 			path = path || window.location.pathname;
 
 			if (!app.router.isSetup) {
@@ -254,7 +275,7 @@ var app = {
 
 			app.router.check(path);
 		},
-		loadTemplate(layoutEndPoint,then) {
+		loadTemplate: function(layoutEndPoint,then) {
 			var key = layoutEndPoint+'.template';
 
 			/* Get bind template from browser local session storage? */
@@ -265,7 +286,7 @@ var app = {
 				then(cachedTemplateData, 'cached', undefined);
 			} else {
 				/* setup retrieve model - success */
-				app.response[200] = function(data, xhr) {
+				app.response[200] = function(data,status,xhr) {
 					storage.setItem(key,data.template,data.template.cache);
 
 					then(data.template, xhr);
@@ -274,63 +295,7 @@ var app = {
 				app.request('get',layoutEndPoint);
 			}
 		},
-		urlencoded: function(obj, prefix) {
-			var str = [];
-
-			for (var p in obj) {
-				if (obj.hasOwnProperty(p)) {
-					var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-
-					str.push(typeof v == "object" ? this.urlencoded(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
-				}
-			}
-
-			return str.join("&");
-		},
 	},
-	request: function(method,url,data,handlers) {
-		var xhr = new XMLHttpRequest();
-
-		xhr.timeout = app.config.ajaxTimeout;
-
-		xhr.open(method.toUpperCase(),url,true); /* true = async */
-		xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-		xhr.setRequestHeader('Accept','application/json, text/javascript, */*');
-		xhr.setRequestHeader('Cache-Control','no-cache');
-		xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
-
-		/* merge any sent in with any of the defaults - used inside onHandler() */
-		handlers = Object.assign(app.response,handlers);
-
-		/* this handles everything because we setup the handlers */
-		var onHandler = function() {
-			/**
-			 * try to convert the responds to a json object
-			 * everything in orangeBind is a ajax request and json should be returned
-			 */
-			try {
-				var object = JSON.parse(xhr.response);
-			} catch(e) {
-				var object = {};
-			}
-
-			/* do we have a handler for this responds? if not fall back to "else" */
-			var handlerKey = handlers.hasOwnProperty(xhr.status) ? xhr.status : 'else';
-
-			/* call the handler */
-			handlers[handlerKey](object,xhr);
-		}
-
-		/* they all use the same handler? */
-		xhr.onload = onHandler;
-		xhr.onerror = onHandler;
-		xhr.onabort = onHandler;
-		xhr.ontimeout = onHandler;
-
-		var request = data ? app.helpers.urlencoded(data) : '';
-
-		xhr.send(request);
-	}
 };
 
 /* bootstrap once the DOM is loaded */

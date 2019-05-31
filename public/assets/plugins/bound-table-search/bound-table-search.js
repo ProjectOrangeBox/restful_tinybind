@@ -1,5 +1,6 @@
 /* Create the object to hold the search properties and methods */
 var BoundTableSearch = {
+	storageKey: '.search',
 	/* Do the actual search */
 	search: function() {
 		var searchTerm = this.getField();
@@ -16,7 +17,7 @@ var BoundTableSearch = {
 				var searchReg = searchTerm.replace(/[-[\]{}()+?.,\\^$|#\s]/g, '\\$&');
 				searchReg = searchReg.replace(/\*/gi,'(.*)');
 
-				console.debug('filter regular expression '+searchReg);
+				console.debug('filter regular expression ' + searchReg);
 
 				var rex = new RegExp(searchReg,'img');
 
@@ -47,11 +48,11 @@ var BoundTableSearch = {
 	},
 	/* Load the search term into the input field and do the search */
 	load: function() {
-		this.setField(storage.getItem(window.location.pathname+'.bts',''));
+		this.setField(storage.getItem(window.location.pathname+this.storageKey,''));
 	},
 	/* Place the last search into the search box change the background color as needed */
 	save: function(searchTerm) {
-		storage.setItem(window.location.pathname+'.bts',searchTerm);
+		storage.setItem(window.location.pathname+this.storageKey,searchTerm);
 	},
 	/* Set and Get the search from the search field */
 	setField: function(searchTerm) {
@@ -88,17 +89,22 @@ var BoundTableSearch = {
 		this.search();
 
 		this.bound = true;
-	}
-};
-
-trigger.register('bound',function(event,isbound) {
-	if (isbound) {
-		if (!BoundTableSearch.bound) {
-			BoundTableSearch.init();
+	},
+	bind: function() {
+		if (!this.bound) {
+			this.init();
 		}
 
-		BoundTableSearch.search();
-	} else {
-		BoundTableSearch.bound = false;
-	}
+		this.search();
+	},
+	unbind: function() {
+		this.bound = false;
+	},
+};
+
+$('body').on('tiny-bind-bound',function() {
+	BoundTableSearch.bind();
+});
+$('body').on('tiny-bind-unbound',function() {
+	BoundTableSearch.unbind();
 });

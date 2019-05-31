@@ -28,11 +28,11 @@ var storage = {
 	removeItem : function(key,completeKey) {
 		if (this.capable()) {
 			/* if they didn't send in the complete key build it */
-			var completeKey = (completeKey) ? completeKey : this.config.dbPrefix + key;
+			key = (completeKey) ? key : this.config.dbPrefix + key;
 
-			console.debug('removing',completeKey);
+			console.debug('removing',key);
 
-			this.storage.removeItem(completeKey);
+			this.storage.removeItem(key);
 		}
 	},
 	/* clear all of the storage key that match our prefix passing no argument uses right now as the timestamp */
@@ -42,21 +42,20 @@ var storage = {
 	getDetailed : function(key) {
 		return this._getByComplete(this.config.dbPrefix + key);
 	},
-	removeOlderThan : function(olderThanTimestamp) {
+	removeOlderThan : function(seconds) {
 		var localKeys = Object.keys(this.storage);
 		var totalKeys = localKeys.length;
 		var now = Math.floor(new Date().getTime() / 1000);
 
-		/* created before the timestamp sent in or right now if nothing sent in */
-		olderThanTimestamp = (olderThanTimestamp) ? olderThanTimestamp : now;
+		seconds = seconds || 0;
 
 		for (var i = 0; i < totalKeys; i++) {
 			var key = localKeys[i];
 			if (key.startsWith(this.config.dbPrefix)) {
 				var record = this._getByComplete(key);
-				/* remove any record regardless of the expires created before X */
-				if (olderThanTimestamp > record.created) {
-					/* sending in complete key */
+				/* remove any record regardless of the expires */
+				if (record.created + seconds < now) {
+						/* sending in complete key */
 					this.removeItem(key,true);
 				}
 			}

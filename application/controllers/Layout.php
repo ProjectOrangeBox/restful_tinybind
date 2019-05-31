@@ -1,7 +1,7 @@
 <?php
 
 class Layout extends CI_Controller {
-	protected $cachePagesForSeconds = 60;
+	protected $cachePagesForSeconds = 0;
 
 	/* default */
 	public function index() : void

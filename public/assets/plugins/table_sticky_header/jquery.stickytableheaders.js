@@ -1,7 +1,5 @@
-/**
- * ! Copyright (c) 2011 by Jonas Mosbech - https://github.com/jmosbech/StickyTableHeaders
- *	MIT license info: https://github.com/jmosbech/StickyTableHeaders/blob/master/license.txt
- */
+/*! Copyright (c) Jonas Mosbech - https://github.com/jmosbech/StickyTableHeaders
+	MIT license info: https://github.com/jmosbech/StickyTableHeaders/blob/master/license.txt */
 
 ;(function ($, window, undefined) {
 	'use strict';
@@ -11,8 +9,13 @@
 		defaults = {
 			fixedOffset: 0,
 			leftOffset: 0,
-			marginTop: 39,
-			scrollableArea: window
+			marginTop: 0,
+			objDocument: document,
+			objHead: 'head',
+			objWindow: window,
+			scrollableArea: window,
+			cacheHeaderHeight: false,
+			zIndex: 3
 		};
 
 	function Plugin (el, options) {
@@ -24,8 +27,6 @@
 		base.$el = $(el);
 		base.el = el;
 		base.id = id++;
-		base.$window = $(window);
-		base.$document = $(document);
 
 		// Listen for destroyed, call teardown
 		base.$el.bind('destroyed',
@@ -35,6 +36,9 @@
 		base.$clonedHeader = null;
 		base.$originalHeader = null;
 
+		// Cache header height for performance reasons
+		base.cachedHeaderHeight = null;
+
 		// Keep track of state
 		base.isSticky = false;
 		base.hasBeenSticky = false;
@@ -42,6 +46,8 @@
 		base.topOffset = null;
 
 		base.init = function () {
+			base.setOptions(options);
+
 			base.$el.each(function () {
 				var $this = $(this);
 
@@ -53,7 +59,7 @@
 				$this.trigger('clonedHeader.' + name, [base.$clonedHeader]);
 
 				base.$clonedHeader.addClass('tableFloatingHeader');
-				base.$clonedHeader.css('display', 'none');
+				base.$clonedHeader.css({display: 'none', opacity: 0.0});
 
 				base.$originalHeader.addClass('tableFloatingHeaderOriginal');
 
@@ -63,10 +69,11 @@
 					'.tableFloatingHeader{display:none !important;}' +
 					'.tableFloatingHeaderOriginal{position:static !important;}' +
 					'</style>');
-				$('head').append(base.$printStyle);
+				base.$head.append(base.$printStyle);
 			});
 
-			base.setOptions(options);
+			base.$clonedHeader.find("input, select").attr("disabled", true);
+
 			base.updateWidth();
 			base.toggleHeaders();
 			base.bind();
@@ -113,7 +120,19 @@
 			base.$scrollableArea.off('.' + name, base.updateWidth);
 		};
 
-		base.toggleHeaders = function () {
+		// We debounce the functions bound to the scroll and resize events
+		base.debounce = function (fn, delay) {
+			var timer = null;
+			return function () {
+				var context = this, args = arguments;
+				clearTimeout(timer);
+				timer = setTimeout(function () {
+					fn.apply(context, args);
+				}, delay);
+			};
+		};
+
+		base.toggleHeaders = base.debounce(function () {
 			if (base.$el) {
 				base.$el.each(function () {
 					var $this = $(this),
@@ -129,23 +148,27 @@
 						scrollTop = base.$scrollableArea.scrollTop() + newTopOffset,
 						scrollLeft = base.$scrollableArea.scrollLeft(),
 
+						headerHeight,
+
 						scrolledPastTop = base.isWindowScrolling ?
 								scrollTop > offset.top :
 								newTopOffset > offset.top,
+						notScrolledPastBottom;
+
+					if (scrolledPastTop) {
+						headerHeight = base.options.cacheHeaderHeight ? base.cachedHeaderHeight : base.$clonedHeader.height();
 						notScrolledPastBottom = (base.isWindowScrolling ? scrollTop : 0) <
-								(offset.top + $this.height() - base.$clonedHeader.height() - (base.isWindowScrolling ? 0 : newTopOffset));
+							(offset.top + $this.height() - headerHeight - (base.isWindowScrolling ? 0 : newTopOffset));
+					}
 
 					if (scrolledPastTop && notScrolledPastBottom) {
 						newLeft = offset.left - scrollLeft + base.options.leftOffset;
-
-						var navBar = document.getElementById('navbar');
-						var marginTop = (navBar) ? navBar.clientHeight : 0;
-
 						base.$originalHeader.css({
 							'position': 'fixed',
-							'margin-top': marginTop,
+							'margin-top': base.options.marginTop,
+                                                        'top': 0,
 							'left': newLeft,
-							'z-index': 3 // #18: opacity bug
+							'z-index': base.options.zIndex
 						});
 						base.leftOffset = newLeft;
 						base.topOffset = newTopOffset;
@@ -154,6 +177,7 @@
 							base.isSticky = true;
 							// make sure the width is correct: the user might have resized the browser while in static mode
 							base.updateWidth();
+							$this.trigger('enabledStickiness.' + name);
 						}
 						base.setPositionValues();
 					} else if (base.isSticky) {
@@ -161,12 +185,13 @@
 						base.$clonedHeader.css('display', 'none');
 						base.isSticky = false;
 						base.resetWidth($('td,th', base.$clonedHeader), $('td,th', base.$originalHeader));
+						$this.trigger('disabledStickiness.' + name);
 					}
 				});
 			}
-		};
+		}, 0);
 
-		base.setPositionValues = function () {
+		base.setPositionValues = base.debounce(function () {
 			var winScrollTop = base.$window.scrollTop(),
 				winScrollLeft = base.$window.scrollLeft();
 			if (!base.isSticky ||
@@ -178,9 +203,9 @@
 				'top': base.topOffset - (base.isWindowScrolling ? 0 : winScrollTop),
 				'left': base.leftOffset - (base.isWindowScrolling ? 0 : winScrollLeft)
 			});
-		};
+		}, 0);
 
-		base.updateWidth = function () {
+		base.updateWidth = base.debounce(function () {
 			if (!base.isSticky) {
 				return;
 			}
@@ -196,7 +221,12 @@
 
 			// Copy row width from whole table
 			base.$originalHeader.css('width', base.$clonedHeader.width());
-		};
+
+			// If we're caching the height, we need to update the cached value when the width changes
+			if (base.options.cacheHeaderHeight) {
+				base.cachedHeaderHeight = base.$clonedHeader.height();
+			}
+		}, 0);
 
 		base.getWidth = function ($clonedHeaders) {
 			var widths = [];
@@ -255,8 +285,11 @@
 
 		base.setOptions = function (options) {
 			base.options = $.extend({}, defaults, options);
+			base.$window = $(base.options.objWindow);
+			base.$head = $(base.options.objHead);
+			base.$document = $(base.options.objDocument);
 			base.$scrollableArea = $(base.options.scrollableArea);
-			base.isWindowScrolling = base.$scrollableArea[0] === window;
+			base.isWindowScrolling = base.$scrollableArea[0] === base.$window[0];
 		};
 
 		base.updateOptions = function (options) {
@@ -291,8 +324,6 @@
 
 })(jQuery, window);
 
-trigger.register('bound',function(event,isbound) {
-	if (isbound) {
-		$('.table-sticky-header').stickyTableHeaders({fixedOffset: $('.page-header.navbar.navbar-fixed-top')});
-	}
+$('body').on('tiny-bind-bound',function() {
+	$('.table-sticky-header').stickyTableHeaders({fixedOffset: $('.page-header.navbar.navbar-fixed-top')});
 });

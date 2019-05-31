@@ -23,7 +23,7 @@ app.router
 		app.helpers.load('/layout/get/robot/index','/robot/index');
 	});
 
-app.response[404] = function(data,xhr) {
+app.response[404] = function(xhr,status,error) {
 	/* don't show the default alert() - instead show not found */
 	app.helpers.load('/layout/get/notfound');
 }
@@ -66,7 +66,7 @@ app.event
 			callback: function(confirm) {
 				if (confirm) {
 					/* accepted record - delete */
-					app.response[202] = function(data,xhr) {
+					app.response[202] = function(data,status,xhr) {
 						app.local.closest_tr.remove();
 					};
 
@@ -79,21 +79,21 @@ app.event
 		event.preventDefault();
 
 		/* created record - create */
-		app.response[201] = function(data,xhr) {
+		app.response[201] = function(data,status,xhr) {
 			/* good redirect */
 			app.router.navigate(app.page.path);
 		}
 
 		/* accepted record - update */
-		app.response[202] = function(data,xhr) {
+		app.response[202] = function(data,status,xhr) {
 			/* good redirect" */
 			app.router.navigate(app.page.path);
 		}
 
 		/* not accepted - show errors */
-		app.response[406] = function(data,xhr) {
+		app.response[406] = function(xhr,status,error) {
 			/* good show errors */
-			app.helpers.setData(data);
+			app.helpers.setData(xhr.responseJSON);
 
 			if (app.error) {
 				notify.removeAll();

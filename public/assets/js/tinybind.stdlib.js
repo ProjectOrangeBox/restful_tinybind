@@ -129,6 +129,16 @@ tinybind.formatters.toString = function(target) {
 		return target ? target.toString() : "";
 };
 
+tinybind.formatters.valuesToString = function(target) {
+	if (Array.isArray(target)) {
+		target.forEach(function(value,index) {
+			target[index] = value.toString();
+		});
+	}
+
+	return target;
+};
+
 tinybind.formatters.integer = {
 		read: function(target) {
 				return tinybind.formatters.toInteger(target);
@@ -473,7 +483,7 @@ tinybind.binders.intcheck = {
 	}
 }
 
-tinybind.formatters.enum = function (el, value) {
+tinybind.formatters.enum = function(el, value) {
 	return arguments[(parseInt(arguments[0]) + 1)];
 }
 

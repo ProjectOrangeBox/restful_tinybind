@@ -4,15 +4,13 @@
  *
  */
 $(window).scroll(function() {
-	storage.setItem(window.location.pathname+'.st',$(window).scrollTop());
+	storage.setItem(window.location.pathname+'.scroll_pos',$(window).scrollTop());
 });
 
-$('body').on('bound',function(event,isbound) {
-	if (isbound) {
-		var ypos = storage.getItem(window.location.pathname+'.st',null);
+$('body').on('tiny-bind-bound',function() {
+		var ypos = storage.getItem(window.location.pathname+'.scroll_pos',null);
 
 		if (ypos > 0) {
 			$(window).scrollTop(ypos);
 		}
-	}
 });

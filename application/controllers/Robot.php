@@ -9,6 +9,7 @@ class Robot extends MY_Controller {
 	protected function send(int $success,int $fail) : void
 	{
 		$this->Restful_model->form('select',$this->RobotCatalogs_model->all());
+		$this->Restful_model->form('mselect',$this->RobotCatalogs_model->all());
 
 		parent::send($success,$fail);
 	}

@@ -4,6 +4,7 @@ var tableSort = {
 	dir: 'desc',
 	index: 0,
 	iconsAdded: false,
+	storageKey: '.sort',
 	/* Do the actual sort */
 	sort: function(index,dir) {
 		if (index > 0) {
@@ -40,20 +41,19 @@ var tableSort = {
 	},
 	/* Load the last sort if any */
 	load: function() {
-		var saved = storage.getItem(window.location.pathname+'.ssc','');
+		var saved = storage.getItem(this.getKey(),{});
 
-		if (saved != '') {
-			parts = saved.split("\t");
-
-			this.index = parts[0];
-			this.dir = parts[1];
-		}
+		this.index = saved.index;
+		this.dir = saved.dir;
 
 		this.sort(this.index,this.dir);
 	},
 	/* Save the Last Sort */
 	save: function(index,dir) {
-		storage.setItem(window.location.pathname+'.ssc',index + "\t" + dir);
+		storage.setItem(this.getKey(),{index:index,dir:dir});
+	},
+	getKey: function() {
+		return window.location.pathname+this.storageKey;
 	},
 	init: function() {
 		var parent = this;
@@ -71,18 +71,23 @@ var tableSort = {
 		});
 
 		this.bound = true;
-	}
-};
-
-trigger.register('bound',function(event,isbound) {
-	if (isbound) {
-		if (!tableSort.bound) {
-			tableSort.init();
+	},
+	bind: function() {
+		if (!this.bound) {
+			this.init();
 		}
 
-		tableSort.load();
-	} else {
-		tableSort.bound = undefined;
-		tableSort.iconsAdded = false;
-	}
+		this.load();
+	},
+	unbind: function() {
+		this.bound = undefined;
+		this.iconsAdded = false;
+	},
+};
+
+$('body').on('tiny-bind-bound',function() {
+	tableSort.bind();
+});
+$('body').on('tiny-bind-unbound',function() {
+	tableSort.unbind();
 });
