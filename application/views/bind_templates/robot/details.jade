@@ -51,6 +51,6 @@ form(rv-method='form.method' rv-action='form.action')
 	.form-group
 		label Select Multiple
 		select.form-control(name='mselect' rv-value='record.mselect | valuesToString' multiple)
-			option(rv-each-row='form.mselect' rv-value='row.id') { row.value }
+			option(rv-each-row='form.select' rv-value='row.id') { row.value }
 
 	button.btn.btn-default(type='submit' rv-on-click='events.submit') Submit

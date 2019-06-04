@@ -6,7 +6,7 @@ var storage = {
 	config : {
 		dbPrefix:'{superStorge}', /* every key must start with this */
 		storage: 'localStorage', /* which storage to use localStorage or sessionStorage */
-		defaultSecondCache: 2629746, /* default seconds to cache a value before it expires (roughly 1 month) */
+		defaultSecondCache: 31622400, /* default seconds to cache a value before it expires (1 year) */
 	},
 	getItem : function(key,defaultValue) {
 		/* get the complete record regardless of the expiration */
@@ -64,14 +64,13 @@ var storage = {
 	/* Set a storage value */
 	setItem : function(key,data,seconds) {
 		if (this.capable()) {
-			var	now = Math.floor(new Date().getTime() / 1000);
-			var expiresSeconds = (seconds != undefined) ? now + seconds : now + this.config.defaultSecondCache;
-			var seconds = (seconds == undefined) ? 0 : parseInt(seconds);
+			var	timeStamp = Math.floor(new Date().getTime() / 1000);
+			var seconds = (seconds == undefined) ? this.config.defaultSecondCache : parseInt(seconds);
 
 			try {
 				var completeKey = this.config.dbPrefix + key;
 
-				this.storage.setItem(completeKey, JSON.stringify({data:data,created:now,expires:expiresSeconds,cacheFor:seconds}));
+				this.storage.setItem(completeKey, JSON.stringify({data:data,created:timeStamp,expires:timeStamp + seconds,life:seconds}));
 
 				return true;
 			} catch(e) {

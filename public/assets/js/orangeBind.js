@@ -21,8 +21,9 @@ var app = {
 		ajaxTimeout: 5000, /* ajax timeout in seconds */
 		routerRoot: '/', /* router url root */
 		storageCache: 2592000, /* about 1 month */
-		templateCache: 0, /* flush after */
+		templateCache: 0,
 		clearCache: false,
+		ajaxCacheBuster: false,
 	},
 	modelIsA: undefined,
 	local: {}, /* storage for local application variables */
@@ -57,13 +58,14 @@ var app = {
 		/* wrapper to add events like this.event.add('name',function(){}); */
 		add(name,handler) {
 			app.events[name] = handler;
-			return this;
+
+			return this; /* allow chaining */
 		}
 	},
 	route: function(path) {
 		this.router.run(path);
 
-		return this;
+		return this; /* allow chaining */
 	},
 	router: {
 		routes: [],
@@ -78,7 +80,7 @@ var app = {
 
 			this.check(path);
 
-			return this;
+			return this; /* allow chaining */
 		},
 		getFragment: function() {
 			var fragment = '';
@@ -100,7 +102,7 @@ var app = {
 
 			this.routes.push({ re: re, handler: handler});
 
-			return this;
+			return this; /* allow chaining */
 		},
 		remove: function(param) {
 			for (var i=0, r; i<this.routes.length, r = this.routes[i]; i++) {
@@ -111,12 +113,12 @@ var app = {
 				}
 			}
 
-			return this;
+			return this; /* allow chaining */
 		},
 		flush: function() {
 			this.routes = [];
 
-			return this;
+			return this; /* allow chaining */
 		},
 		check: function(f) {
 			/* multiple exists */
@@ -129,11 +131,11 @@ var app = {
 					match.shift();
 					this.routes[i].handler.apply({}, match);
 
-					return this;
+					return this; /* allow chaining */
 				}
 			}
 
-			return this;
+			return this; /* allow chaining */
 		},
 		listen: function() {
 			var self = this;
@@ -150,14 +152,14 @@ var app = {
 
 			this.interval = setInterval(fn, 50);
 
-			return this;
+			return this; /* allow chaining */
 		},
 		navigate: function(path) {
 			path = path || '';
 
 			history.pushState(null, null, app.config.routerRoot + this.clearSlashes(path));
 
-			return this;
+			return this; /* allow chaining */
 		}
 	},
 	response: {
@@ -184,7 +186,7 @@ var app = {
 			url: url,
 			data: data,
 			dataType: 'json',
-			cache: false,
+			cache: !this.config.ajaxCacheBuster, /* ajax cache buster? */
 			async: true,
 			timeout: this.config.ajaxTimeout, /* 5 seconds */
 			statusCode: jQuery.extend(this.response,handlers),
@@ -234,7 +236,7 @@ var app = {
 
 		this.cacheCleanUp(this.config);
 
-		return this;
+		return this; /* allow chaining */
 	},
 	getData: function() {
 		return {
@@ -242,7 +244,7 @@ var app = {
 			errors: this.errors,
 			model: this.getModel(),
 			page: this.page,
-			form: thisform,
+			form: this.form,
 		};
 	},
 	cacheCleanUp: function(config) {
@@ -257,6 +259,8 @@ var app = {
 		if (config.olderThanCache !== undefined) {
 			storage.removeOlderThan(config.olderThanCache);
 		}
+
+		return this; /* allow chaining */
 	},
 	modelIsA: function() {
 		return this.modelIsA;
@@ -278,7 +282,7 @@ var app = {
 			this._loadModel(modelEndPoint);
 		}
 
-		return this;
+		return this; /* allow chaining */
 	},
 	loadTemplate: function(templateEndPoint,then) {
 		var parent = this;
@@ -311,7 +315,7 @@ var app = {
 			parent.request('get',templateEndPoint);
 		}
 
-		return this;
+		return this; /* allow chaining */
 	},
 	/* actual model load */
 	_loadModel: function(modelEndPoint,then) {
@@ -338,7 +342,7 @@ var app = {
 		/* run the query */
 		parent.request('get',modelEndPoint);
 
-		return this;
+		return this; /* allow chaining */
 	},
 };
 
