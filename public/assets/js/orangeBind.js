@@ -81,7 +81,7 @@ parent.router.remove('foobar');
 		check: function(url) {
 			url = url || this.getUrl();
 
-			console.info('checking ' + url);
+			console.info('looking for route ' + url);
 
 			/* are we listening for changes? if not start listener */
 			if (!this.listening) {
@@ -94,7 +94,7 @@ parent.router.remove('foobar');
 				if (match) {
 					match.shift();
 
-					console.info('matched route ' + this.routes[i].re.toString());
+					console.info('found match of ' + this.routes[i].re.toString());
 
 					this.routes[i].handler.apply({}, match);
 
@@ -205,6 +205,8 @@ parent.router.remove('foobar');
 	request: {
 		/* any method */
 		send: function(method,url,data,handlers) {
+			console.info(method,url,data);
+
 			jQuery.ajax({
 				method: method,
 				url: url,

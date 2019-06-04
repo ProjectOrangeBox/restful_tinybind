@@ -1,7 +1,7 @@
 <?php
 
 class Layout extends CI_Controller {
-	protected $superStorageCacheSeconds = 600;
+	protected $superStorageCacheSeconds = 0;
 
 	/* default */
 	public function index() : void
@@ -24,6 +24,7 @@ class Layout extends CI_Controller {
 			->config('olderThanCache',$this->superStorageCacheSeconds)
 			->config('templateCache',$this->superStorageCacheSeconds)
 			->config('storageCache',$this->superStorageCacheSeconds)
+			->page('nav',$this->load->view('nav',[],true))
 			->send(200);
 	}
 

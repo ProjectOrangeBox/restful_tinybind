@@ -3,19 +3,28 @@ app.config.url = '/layout/configuration';
 
 /* Add Routes */
 app.router
+	.add(/people\/edit\/(.*)/, function(primary_id) {
+		app.loadModel('/people/edit/' + primary_id,'/layout/get/people/details');
+	})
+	.add(/people\/create/, function() {
+		app.loadModel('/people/create','/layout/get/people/details');
+	})
+	.add(/people/, function() {
+		app.loadModel('/people/index','/layout/get/people/index');
+	})
 	.add(/catalog\/edit\/(.*)/, function(primary_id) {
 		app.loadModel('/catalog/edit/' + primary_id,'/layout/get/catalog/details');
 	})
 	.add(/catalog\/create/, function() {
 		app.loadModel('/catalog/create','/layout/get/catalog/details');
 	})
-	.add(/catalog/, function(primary_id) {
+	.add(/catalog/, function() {
 		app.loadModel('/catalog/index','/layout/get/catalog/index');
 	})
 	.add(/robot\/edit\/(.*)/, function(primary_id) {
 		app.loadModel('/robot/edit/' + primary_id,'/layout/get/robot/details');
 	})
-	.add(/robot\/create/, function(primary_id) {
+	.add(/robot\/create/, function() {
 		app.loadModel('/robot/create','/layout/get/robot/details');
 	})
 	.add(function() {

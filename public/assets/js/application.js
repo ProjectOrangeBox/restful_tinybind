@@ -33,6 +33,10 @@ function debounce(func, wait, immediate) {
 	};
 }
 
-$('body').on('tiny-bind-bound',function() {
+$(document).on('click','[appNavigate]',function(){
+	app.router.navigate($(this).attr('appnavigate'));
+});
+
+$(document).on('tiny-bind-bound',function() {
 	$('select').selectpicker();
 });

@@ -63,6 +63,10 @@ if ($isAjax || $isJson) {
 	$route['catalog/edit/(:num)']['PATCH'] = 'catalog/editPatch/$1';
 	$route['catalog/delete/(:num)']['DELETE'] = 'catalog/deleteDelete/$1';
 
+	$route['people/create']['POST'] = 'people/createPost';
+	$route['people/edit/(:num)']['PATCH'] = 'people/editPatch/$1';
+	$route['people/delete/(:num)']['DELETE'] = 'people/deleteDelete/$1';
+
 	$route['default_controller'] = 'robot';
 } else {
 	/* everyone else get the empty application template */
