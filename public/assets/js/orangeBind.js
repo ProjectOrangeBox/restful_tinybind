@@ -16,12 +16,15 @@
  */
 var app = {
 	id: 'app', /* attach to this DOM selector */
-	configurationURL: '/', /* default location to call for the configuration */
 	config: { /* config options */
+		url: '/',
 		ajaxTimeout: 5000, /* ajax timeout in seconds */
 		routerRoot: '/', /* router url root */
+		storageCache: 2592000, /* about 1 month */
+		templateCache: 0, /* flush after */
+		clearCache: false,
 	},
-	_flags: {}, /* configuration/server flags */
+	modelIsA: undefined,
 	local: {}, /* storage for local application variables */
 	error: false, /* do we have an error - boolean true/false */
 	errors: {}, /* "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}} */
@@ -39,32 +42,16 @@ var app = {
 			jQuery('body').trigger('tiny-bind-unbound');
 		},
 	},
-	init(configurationURL) {
+	init() {
+		/* save a external scope reference */
 		var parent = this;
 
+		/* default init 200 handler */
 		this.response[200] = function(data, xhr) {
-			if (typeof data.config === 'object' && data.config !== null) {
-				parent.config = Object.assign(parent.config, data.config);
-			}
-
-			if (typeof data.flags === 'object' && data.flags !== null) {
-				parent._flags = Object.assign(parent._flags, data.flags);
-			}
-
-			if (parent.readFlag('cache') !== undefined) {
-				storage.removeOlderThan(parent.readFlag('cache'));
-			}
-
-			/* then call the router */
-			parent.helpers.route();
+			parent.setData(data).route();
 		};
 
-		configurationURL = configurationURL || this.configurationURL;
-
-		this.request('get',configurationURL);
-	},
-	readFlag: function(name) {
-		return this._flags[name];
+		this.request('get',this.config.url);
 	},
 	event: {
 		/* wrapper to add events like this.event.add('name',function(){}); */
@@ -73,8 +60,26 @@ var app = {
 			return this;
 		}
 	},
+	route: function(path) {
+		this.router.run(path);
+
+		return this;
+	},
 	router: {
 		routes: [],
+		isSetup: false,
+		run: function(path) {
+			path = path || window.location.pathname;
+
+			if (!this.isSetup) {
+				this.isSetup = true;
+				this.listen();
+			}
+
+			this.check(path);
+
+			return this;
+		},
 		getFragment: function() {
 			var fragment = '';
 
@@ -92,6 +97,7 @@ var app = {
 				handler = re;
 				re = '';
 			}
+
 			this.routes.push({ re: re, handler: handler});
 
 			return this;
@@ -173,128 +179,166 @@ var app = {
 		500: function(xhr,status,error){ console.log(arguments); alert('500 (server error) handler'); },
 	},
 	request: function(method,url,data,handlers) {
-		handlers = handlers ? Object.assign(this.response,handlers) : this.response;
-
 		jQuery.ajax({
 			method: method,
 			url: url,
 			data: data,
 			dataType: 'json',
-			cache: true,
+			cache: false,
 			async: true,
 			timeout: this.config.ajaxTimeout, /* 5 seconds */
-			statusCode: handlers,
+			statusCode: jQuery.extend(this.response,handlers),
 		});
 	},
-	helpers: {
-		modelIsA: undefined,
-		setData: function(data) {
-			/* overwrite */
-			if (data.error) {
-				app.error = data.error;
-			}
+	setData: function(data) {
+		console.info(data);
 
-			if (data.errors) {
-				app.errors = data.errors;
-			}
+		/* overwrite */
+		if (data.error) {
+			this.error = data.error;
+		}
 
-			/**
-			 * need to bind array and object separately
-			 * because if a array is bound and you send a object it chokes
-			 */
-			if (data.model) {
-				if (Array.isArray(data.model)) {
-					app.record = undefined;
-					app.records = data.model;
-					this.modelIsA = 'array';
-				} else {
-					app.record = data.model;
-					app.records = undefined;
-					this.modelIsA = 'object';
-				}
-			}
+		if (data.errors) {
+			this.errors = data.errors;
+		}
 
-			/* merge these values */
-			var params = ['page','form'];
-
-			for (var index in params) {
-				var key = params[index];
-				if (data[key] != undefined) {
-					for (var subkey in data[key]) {
-						app[key][subkey] = data[key][subkey];
-					}
-				}
-			}
-		},
-		getData: function() {
-			return {
-				error: app.error,
-				errors: app.errors,
-				model: app.helpers.getModel(),
-				page: app.page,
-				form: app.form,
-			};
-		},
-		modelIsA: function() {
-			return this.modelIsA;
-		},
-		getModel: function() {
-			return (this.modelIsA == 'object') ? app.record : app.records;
-		},
-		load: function(layoutEndPoint,modelEndPoint) {
-			/* unbind */
-			app.triggers.unbound();
-
-			/* load this layout then call this */
-			app.helpers.loadTemplate(layoutEndPoint,function(data, xhr) {
-				document.getElementById(app.id).innerHTML = data.source;
-
-				if (modelEndPoint) {
-					/* setup retrieve model - success */
-					app.response[200] = function(data,status,xhr) {
-						app.helpers.setData(data);
-						app.bound = tinybind.bind(document.getElementById(app.id),app);
-
-						/* rebound */
-						app.triggers.bound();
-					};
-
-					app.request('get',modelEndPoint);
-				} else {
-					app.triggers.bound();
-				}
-			});
-		},
-		route: function(path) {
-			path = path || window.location.pathname;
-
-			if (!app.router.isSetup) {
-				app.router.isSetup = true;
-				app.router.listen();
-			}
-
-			app.router.check(path);
-		},
-		loadTemplate: function(layoutEndPoint,then) {
-			var key = layoutEndPoint+'.template';
-
-			/* Get bind template from browser local session storage? */
-			var cachedTemplateData = storage.getItem(key);
-
-			/* have we already loaded the template? */
-			if (cachedTemplateData) {
-				then(cachedTemplateData, 'cached', undefined);
+		/**
+		 * overwrite
+		 * need to bind array and object separately
+		 * because if a array is bound and you send a object it chokes
+		 */
+		if (data.model) {
+			if (Array.isArray(data.model)) {
+				this.record = undefined;
+				this.records = data.model;
+				this.modelIsA = 'array';
 			} else {
-				/* setup retrieve model - success */
-				app.response[200] = function(data,status,xhr) {
-					storage.setItem(key,data.template,data.template.cache);
-
-					then(data.template, xhr);
-				};
-
-				app.request('get',layoutEndPoint);
+				this.record = data.model;
+				this.records = undefined;
+				this.modelIsA = 'object';
 			}
-		},
+		}
+
+		/* deep merge these values */
+		if (data.page) {
+			this.page = jQuery.extend(true,this.page,data.page);
+		}
+
+		if (data.form) {
+			this.form = jQuery.extend(true,this.form,data.form);
+		}
+
+		if (data.config) {
+			this.config = jQuery.extend(true,this.config,data.config);
+		}
+
+		this.cacheCleanUp(this.config);
+
+		return this;
+	},
+	getData: function() {
+		return {
+			error: this.error,
+			errors: this.errors,
+			model: this.getModel(),
+			page: this.page,
+			form: thisform,
+		};
+	},
+	cacheCleanUp: function(config) {
+		/* handle some caching cleanups */
+
+		/* if true flush all */
+		if (config.clearCache) {
+			storage.clear();
+		}
+
+		/* if older than cache seconds... */
+		if (config.olderThanCache !== undefined) {
+			storage.removeOlderThan(config.olderThanCache);
+		}
+	},
+	modelIsA: function() {
+		return this.modelIsA;
+	},
+	getModel: function() {
+		return (this.modelIsA == 'object') ? this.record : this.records;
+	},
+	/* load just a model or a template then a model */
+	loadModel: function(modelEndPoint,templateEndPoint) {
+		var parent = this;
+
+		if (templateEndPoint) {
+			/* load the template then the model */
+			this.loadTemplate(templateEndPoint,function(){
+				parent._loadModel(modelEndPoint);
+			});
+		} else {
+			/* just load the model */
+			this._loadModel(modelEndPoint);
+		}
+
+		return this;
+	},
+	loadTemplate: function(templateEndPoint,then) {
+		var parent = this;
+		var key = templateEndPoint+'.template';
+
+		/* Get bind template from browser local session storage? */
+		var template = storage.getItem(key,undefined);
+
+		/* have we already loaded the template? */
+		if (template) {
+			document.getElementById(this.id).innerHTML = template;
+
+			if (then) {
+				then();
+			}
+		} else {
+			/* setup retrieve model - success */
+			this.response[200] = function(data,status,xhr) {
+				var cacheSeconds = (data.template.cache) ? data.template.cache : parent.config.templateCache;
+
+				storage.setItem(key,data.template.source,cacheSeconds);
+
+				document.getElementById(parent.id).innerHTML = data.template.source;
+
+				if (then) {
+					then();
+				}
+			};
+
+			parent.request('get',templateEndPoint);
+		}
+
+		return this;
+	},
+	/* actual model load */
+	_loadModel: function(modelEndPoint,then) {
+		var parent = this;
+
+		this.response[200] = function(data,status,xhr) {
+			/* tell everyone we are unbinding the data */
+			parent.triggers.unbound();
+
+			/* update app data */
+			parent.setData(data);
+
+			/* rebind */
+			parent.bound = tinybind.bind(document.getElementById(parent.id),app);
+
+			/* tell everyone we now have new data */
+			parent.triggers.bound();
+
+			if (then) {
+				then();
+			}
+		};
+
+		/* run the query */
+		parent.request('get',modelEndPoint);
+
+		return this;
 	},
 };
 

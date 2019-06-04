@@ -392,11 +392,13 @@
     if (el.type === 'checkbox') {
       return el.checked;
     } else if (el.type === 'select-multiple') {
+
 			for (var i = 0; i < el.options.length; i++) {
 				if (el.options.item(i).selected) {
-          results.push(el.options.item(i).value);
+					results.push(el.options.item(i).value);
 				}
 			}
+
       return results;
     } else {
       return el.value;
@@ -1407,3 +1409,4 @@
   return tinybind;
 
 })));
+//# sourceMappingURL=tinybind.js.map

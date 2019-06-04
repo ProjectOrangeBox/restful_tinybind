@@ -10,7 +10,6 @@
 
 //@codekit-append "../assets/js/application.js"
 
-//@codekit-append "../assets/js/tinybind.js"
 //@codekit-append "../assets/js/tinybind.stdlib.js"
 //@codekit-append "../assets/js/orangeBind.js"
 

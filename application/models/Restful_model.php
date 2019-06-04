@@ -25,7 +25,6 @@ class Restful_model {
 	public $model = [];
 	public $page = [];
 	public $form = [];
-	public $flags = [];
 	public $config = [];
 	public $status = 200; /* int */
 	public $statusMsg = ''; /* string */
@@ -116,7 +115,7 @@ class Restful_model {
 	 */
 	public function flag(string $name, $value) : Restful_model
 	{
-		$this->flags[$name] = $value;
+		$this->config['flags'][$name] = $value;
 
 		return $this;
 	}
@@ -136,24 +135,14 @@ class Restful_model {
 	}
 
 	/**
-	 * merge
+	 * page
 	 *
-	 * @param mixed &$array
-	 * @param mixed $name
-	 * @param mixed $value
+	 * @param array $array
 	 * @return void
 	 */
-	protected function merge(&$array,$name,$value) : Restful_model
+	public function page(string $name,$value) : Restful_model
 	{
-		if ($value) {
-			$array[$name] = $value;
-		} elseif(is_array($name)) {
-			foreach ($name as $n=>$v) {
-				$this->merge($array,$n,$v);
-			}
-		} else {
-			$array = $array;
-		}
+		$this->page[$name] = $value;
 
 		return $this;
 	}
@@ -164,20 +153,11 @@ class Restful_model {
 	 * @param array $array
 	 * @return void
 	 */
-	public function page($name,$value=null) : Restful_model
+	public function form(string $name,$value) : Restful_model
 	{
-		return $this->merge($this->page,$name,$value);
-	}
+		$this->form[$name] = $value;
 
-	/**
-	 * page
-	 *
-	 * @param array $array
-	 * @return void
-	 */
-	public function form($name,$value=null) : Restful_model
-	{
-		return $this->merge($this->form,$name,$value);
+		return $this;
 	}
 
 	/**

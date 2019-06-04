@@ -62,17 +62,16 @@ var storage = {
 		}
 	},
 	/* Set a storage value */
-	setItem : function(key,data,expireSeconds) {
+	setItem : function(key,data,seconds) {
 		if (this.capable()) {
 			var	now = Math.floor(new Date().getTime() / 1000);
-			var expireSeconds = (expireSeconds) ? now + expireSeconds : now + this.config.defaultSecondCache;
+			var expiresSeconds = (seconds != undefined) ? now + seconds : now + this.config.defaultSecondCache;
+			var seconds = (seconds == undefined) ? 0 : parseInt(seconds);
 
 			try {
 				var completeKey = this.config.dbPrefix + key;
 
-				console.debug('setting',completeKey);
-
-				this.storage.setItem(completeKey, JSON.stringify({data:data,created:now,expires:expireSeconds}));
+				this.storage.setItem(completeKey, JSON.stringify({data:data,created:now,expires:expiresSeconds,cacheFor:seconds}));
 
 				return true;
 			} catch(e) {
@@ -80,7 +79,7 @@ var storage = {
 				this.removeItem(this._findOldest(),true);
 
 				/* ...then try the save again! */
-				this.setItem(key,data,expireSeconds);
+				this.setItem(key,data,seconds);
 
 				return false;
 			}

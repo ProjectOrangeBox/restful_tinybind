@@ -1,31 +1,31 @@
 /* where to request configuration from */
-app.configurationURL = '/layout/configuration';
+app.config.url = '/layout/configuration';
 
 /* Add Routes */
 app.router
 	.add(/catalog\/edit\/(.*)/, function(primary_id) {
-		app.helpers.load('/layout/get/catalog/details','/catalog/edit/' + primary_id);
+		app.loadModel('/catalog/edit/' + primary_id,'/layout/get/catalog/details');
 	})
 	.add(/catalog\/create/, function() {
-		app.helpers.load('/layout/get/catalog/details','/catalog/create');
+		app.loadModel('/catalog/create','/layout/get/catalog/details');
 	})
 	.add(/catalog/, function(primary_id) {
-		app.helpers.load('/layout/get/catalog/index','/catalog/index');
+		app.loadModel('/catalog/index','/layout/get/catalog/index');
 	})
 	.add(/edit\/(.*)/, function(primary_id) {
-		app.helpers.load('/layout/get/robot/details','/robot/edit/' + primary_id);
+		app.loadModel('/robot/edit/' + primary_id,'/layout/get/robot/details');
 	})
 	.add(/create/, function(primary_id) {
-		app.helpers.load('/layout/get/robot/details','/robot/create');
+		app.loadModel('/robot/create','/layout/get/robot/details');
 	})
 	.add(function() {
 		/* default */
-		app.helpers.load('/layout/get/robot/index','/robot/index');
+		app.loadModel('/robot/index','/layout/get/robot/index');
 	});
 
 app.response[404] = function(xhr,status,error) {
 	/* don't show the default alert() - instead show not found */
-	app.helpers.load('/layout/get/notfound');
+	app.loadTemplate('/layout/get/notfound');
 }
 
 /* Button Events */
@@ -93,7 +93,7 @@ app.event
 		/* not accepted - show errors */
 		app.response[406] = function(xhr,status,error) {
 			/* good show errors */
-			app.helpers.setData(xhr.responseJSON);
+			app.setData(xhr.responseJSON);
 
 			if (app.error) {
 				notify.removeAll();
@@ -105,5 +105,5 @@ app.event
 			}
 		}
 
-		app.request(app.form.method,app.form.action,app.helpers.getData());
+		app.request(app.form.method,app.form.action,app.getData());
 	});

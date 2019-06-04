@@ -1,7 +1,7 @@
 <?php
 
 class Layout extends CI_Controller {
-	protected $cachePagesForSeconds = 0;
+	protected $superStorageCacheSeconds = 600;
 
 	/* default */
 	public function index() : void
@@ -13,14 +13,17 @@ class Layout extends CI_Controller {
 	public function get() : void
 	{
 		$this->Restful_model
-			->template($this->load->view('/bind_templates/'.preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/',func_get_args())).'.html',[],true),$this->cachePagesForSeconds)
+			->template($this->load->view('/bind_templates/'.preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/',func_get_args())).'.html',[],true),$this->superStorageCacheSeconds)
 			->send(200);
 	}
 
 	public function configuration() : void
 	{
 		$this->Restful_model
-			->flag('cache',$this->cachePagesForSeconds)
+			->config('clearCache',false)
+			->config('olderThanCache',$this->superStorageCacheSeconds)
+			->config('templateCache',$this->superStorageCacheSeconds)
+			->config('storageCache',$this->superStorageCacheSeconds)
 			->send(200);
 	}
 
