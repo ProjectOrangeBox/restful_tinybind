@@ -86,7 +86,7 @@ var notify = {
 	},
 	redirect: function(redirect) {
 		if (redirect) {
-			if (redirect == '@back') {
+			if (redirect === '@back') {
 				window.history.back();
 			} else {
 				window.location.href = redirect;
@@ -165,11 +165,11 @@ var notify = {
 
 		noticeItemClose	= jQuery('<div></div>').addClass('close').prependTo(noticeItemInner).html('&times;').click(function(event) {
 			event.stopPropagation();
-			parent._remove(noticeItemInner)
+			parent._remove(noticeItemInner);
 		});
 
 		/* if it's NOT in the stay array set the timer to hide it */
-		if (this.stay.indexOf(msgObj.style) == -1) {
+		if (this.stay.indexOf(msgObj.style) === -1) {
 			setTimeout(function() {
 				parent._remove(noticeItemInner);
 			}, this.stayTime  * 1000 /* convert to milliseconds */ );

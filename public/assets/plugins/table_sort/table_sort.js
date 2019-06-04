@@ -1,8 +1,6 @@
 /* Create the object to hold the properties and methods */
 var tableSort = {
 	/* Default direction */
-	dir: 'desc',
-	index: 0,
 	iconsAdded: false,
 	storageKey: '.sort',
 	bound: false,
@@ -20,7 +18,7 @@ var tableSort = {
 			/* handle clicks */
 			$(this.class + ' thead tr th:not(.nosort)').on('click',function() {
 				/* which direction are we going now? */
-				parent.dir = (parent.dir == 'asc') ? 'desc' : 'asc';
+				parent.dir = (parent.dir === 'asc') ? 'desc' : 'asc';
 				parent.index = $(parent.class + ' thead tr th').index(this) + 1;
 
 				/* find out which column we clicked and send in the dir */

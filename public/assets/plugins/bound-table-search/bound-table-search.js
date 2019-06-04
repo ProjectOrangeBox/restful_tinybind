@@ -73,7 +73,7 @@ var BoundTableSearch = {
 	updateCount: function(searchTerm) {
 		var vis = $(this.element.table + ':visible').length;
 		var all = $(this.element.table).length;
-		var shown = (vis != all) ? vis + ' of ' + all : all;
+		var shown = (vis !== all) ? vis + ' of ' + all : all;
 
 		$(this.countSelector).html(shown);
 

@@ -12,14 +12,14 @@ app.router
 	.add(/catalog/, function(primary_id) {
 		app.loadModel('/catalog/index','/layout/get/catalog/index');
 	})
-	.add(/edit\/(.*)/, function(primary_id) {
+	.add(/robot\/edit\/(.*)/, function(primary_id) {
 		app.loadModel('/robot/edit/' + primary_id,'/layout/get/robot/details');
 	})
-	.add(/create/, function(primary_id) {
+	.add(/robot\/create/, function(primary_id) {
 		app.loadModel('/robot/create','/layout/get/robot/details');
 	})
-	/* default */
 	.add(function() {
+		/* default */
 		app.loadModel('/robot/index','/layout/get/robot/index');
 	});
 
@@ -70,7 +70,7 @@ app.event
 						app.local.closest_tr.remove();
 					});
 
-					app.request('delete',url + '/delete/' + primaryId);
+					app.request.delete(url + '/delete/' + primaryId);
 				}
 			},
 		});
@@ -107,5 +107,5 @@ app.event
 			}
 		});
 
-		app.request(app.form.method,app.form.action,app.getData());
+		app.request[app.form.method](app.form.action,app.getData());
 	});

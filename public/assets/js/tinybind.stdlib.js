@@ -40,7 +40,7 @@ tinybind.formatters.map = function(target, obj, prop) {
 /* check JS types */
 
 tinybind.formatters.isBoolean = function(target) {
-		return typeof target == "boolean";
+		return typeof target === "boolean";
 };
 
 tinybind.formatters.isNumeric = function(target) {
@@ -48,8 +48,10 @@ tinybind.formatters.isNumeric = function(target) {
 };
 
 tinybind.formatters.isNaN = function(target) {
-		if(tinybind.formatters.isArray(target))
-				return true;
+		if (tinybind.formatters.isArray(target)) {
+			return true;
+		}
+
 		return isNaN(target);
 };
 
@@ -74,11 +76,11 @@ tinybind.formatters.isNumber = function(target) {
 };
 
 tinybind.formatters.isObject = function(target) {
-		return tinybind.formatters.toBoolean(target) && typeof target == "object" && !tinybind.formatters.isArray(target);
+		return tinybind.formatters.toBoolean(target) && typeof target === "object" && !tinybind.formatters.isArray(target);
 };
 
 tinybind.formatters.isFunction = function(target) {
-		return typeof target == "function";
+		return typeof target === "function";
 };
 
 tinybind.formatters.isArray = function(target) {
@@ -86,7 +88,7 @@ tinybind.formatters.isArray = function(target) {
 };
 
 tinybind.formatters.isString = function(target) {
-		return typeof target == "string" || target instanceof String;
+		return typeof target === "string" || target instanceof String;
 };
 
 tinybind.formatters.isInfinity = function(target) {
@@ -112,7 +114,7 @@ tinybind.formatters.toFloat = function(target) {
 tinybind.formatters.toDecimal = function(target) {
 		var retI = tinybind.formatters.toInteger(target*1);
 		var retF = tinybind.formatters.toFloat(target);
-		return retI == retF ? retI : retF;
+		return retI === retF ? retI : retF;
 };
 
 tinybind.formatters.toArray = function(target) {
@@ -243,27 +245,34 @@ tinybind.formatters.if = function(target, trueCase, falseCase) {
 tinybind.formatters.numberFormat = function(target, precision, decimalSeparator, thousandSeparator) {
 		target = tinybind.formatters.isNumber(target) ? target : tinybind.formatters.toDecimal(target);
 
-		if(!tinybind.formatters.isInteger(precision))
-				precision = tinybind.stdlib.defaultPrecision;
-		if(!decimalSeparator)
-				decimalSeparator = tinybind.stdlib.defaultDecimalSeparator;
-		if(!thousandSeparator)
-				thousandSeparator = tinybind.stdlib.defaultThousandSeparator;
+		if(!tinybind.formatters.isInteger(precision)) {
+			precision = tinybind.stdlib.defaultPrecision;
+		}
+
+		if(!decimalSeparator) {
+			decimalSeparator = tinybind.stdlib.defaultDecimalSeparator;
+		}
+
+		if(!thousandSeparator) {
+			thousandSeparator = tinybind.stdlib.defaultThousandSeparator;
+		}
 
 		/*
 			*thanks to user2823670
 			* http://stackoverflow.com/questions/10015027/javascript-tofixed-not-rounding
 			*/
-		var ret = (+(Math.round(+(Math.abs(target) + 'e' + precision)) + 'e' + -precision)).toFixed(precision)
-		if(target < 0)
-				ret = '-' + ret;
+		var ret = (+(Math.round(+(Math.abs(target) + 'e' + precision)) + 'e' + -precision)).toFixed(precision);
+
+		if(target < 0) {
+			ret = '-' + ret;
+		}
 
 		/**
 		 * thanks to Elias Zamaria
 		 * http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
 		 */
 		ret = ret.split(".");
-		if(ret.length==2) {
+		if(ret.length ===2) {
 				return ret[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator) + decimalSeparator + ret[1];
 		}
 
@@ -356,7 +365,7 @@ tinybind.formatters.stringFormat = function(target) {
 		}
 
 		return target;
-}
+};
 
 
 tinybind.formatters.split = function(target, val) {
@@ -405,11 +414,11 @@ tinybind.formatters.isEmpty = function(target) {
 
 tinybind.formatters.length = function(target) {
 	if (tinybind.formatters.isString(target)) {
-		return target.length
+		return target.length;
 	}
 
 	return tinybind.formatters.toArray(target).length;
-}
+};
 
 tinybind.formatters.join = function(target, val) {
 	return tinybind.formatters.toArray(target).join(val);
@@ -468,24 +477,24 @@ tinybind.binders.intcheck = {
 		if (!this.callback) {
 			this.callback = function () {
 				self.publish();
-			}
+			};
 		}
-		el.addEventListener('change', this.callback)
+		el.addEventListener('change', this.callback);
 	},
 	unbind: function(el) {
-		el.removeEventListener('change', this.callback)
+		el.removeEventListener('change', this.callback);
 	},
 	routine: function(el, value) {
-		el.checked = (el.value == value);
+		el.checked = (el.value === value);
 	},
 	getValue: function(t) {
 		return (t.checked) ? t.value : 0;
 	}
-}
+};
 
 tinybind.formatters.enum = function(el, value) {
 	return arguments[(parseInt(arguments[0]) + 1)];
-}
+};
 
 /* formatter shortcuts */
 tinybind.formatters.eq = tinybind.formatters.isEqual;

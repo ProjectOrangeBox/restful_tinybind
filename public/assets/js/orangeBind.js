@@ -28,19 +28,19 @@ var app = {
 			prefix: 'rv',
 			preloadData: true,
 			rootInterface: '.',
-			templateDelimiters: ['{', '}'],
+			templateDelimiters: ['{','}'],
 		},
 	},
-	modelIsA: undefined,
+	bound: undefined, /* are we attached to the DOM */
 	local: {}, /* storage for local application variables */
 	error: false, /* do we have an error - boolean true/false */
 	errors: {}, /* "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}} */
+	model: {}, /* actual model storage */
 	record: {}, /* when model is single records */
 	records: [], /* when model is multiple records */
 	page: {}, /* page variables */
 	form: {}, /* form variables */
 	events: {}, /* store actual events */
-	bound: undefined, /* are we attached to the DOM */
 	triggers: {
 		bound: function(){
 			jQuery('body').trigger('tiny-bind-bound');
@@ -55,12 +55,16 @@ var app = {
 
 		/* default init 200 handler */
 		this.response.change(200,function(data, xhr) {
-			parent.setData(data).route();
+			parent.setData(data);
 
 			tinybind.configure(parent.config.tinyBind);
+
+parent.router.remove('foobar');
+
+			parent.router.check();
 		});
 
-		this.request('get',this.config.url);
+		this.request.get(this.config.url);
 	},
 	event: {
 		/* wrapper to add events like this.event.add('name',function(){}); */
@@ -70,56 +74,63 @@ var app = {
 			return this; /* allow chaining */
 		}
 	},
-	route: function(path) {
-		this.router.run(path);
-
-		return this; /* allow chaining */
-	},
 	router: {
 		routes: [],
-		isSetup: false,
-		run: function(path) {
-			path = path || window.location.pathname;
+		interval: undefined,
+		listening: undefined,
+		check: function(url) {
+			url = url || this.getUrl();
 
-			if (!this.isSetup) {
-				this.isSetup = true;
-				this.listen();
+			console.info('checking ' + url);
+
+			/* are we listening for changes? if not start listener */
+			if (!this.listening) {
+				this.listening = this.listen();
 			}
 
-			this.check(path);
+			for (var i = 0; i < this.routes.length; i++) {
+				var match = url.match(this.routes[i].re);
+
+				if (match) {
+					match.shift();
+
+					console.info('matched route ' + this.routes[i].re.toString());
+
+					this.routes[i].handler.apply({}, match);
+
+					break; /* break from for loop */
+				}
+			}
 
 			return this; /* allow chaining */
 		},
-		getFragment: function() {
-			var fragment = '';
+		getUrl: function() {
+			var url = '';
 
-			fragment = this.clearSlashes(decodeURI(location.pathname + location.search));
-			fragment = fragment.replace(/\?(.*)$/, '');
-			fragment = app.config.routerRoot != '/' ? fragment.replace(app.config.routerRoot, '') : fragment;
+			url = this._clearSlashes(decodeURI(location.pathname + location.search));
+			url = url.replace(/\?(.*)$/, '');
+			url = app.config.routerRoot !== '/' ? url.replace(app.config.routerRoot, '') : url;
 
-			return this.clearSlashes(fragment);
+			return this._clearSlashes(url);
 		},
-		clearSlashes: function(path) {
-			return path.toString().replace(/\/$/, '').replace(/^\//, '');
-		},
-		add: function(re, handler) {
-			if (typeof re == 'function') {
-				handler = re;
-				re = '';
+		add: function(regularExpression, handler) {
+			if (typeof regularExpression === 'function') {
+				handler = regularExpression;
+				regularExpression = '';
 			}
 
-			this.routes.push({ re: re, handler: handler});
+			this.routes.push({ re: regularExpression, handler: handler});
 
 			return this; /* allow chaining */
 		},
 		remove: function(param) {
-			for (var i=0, r; i<this.routes.length, r = this.routes[i]; i++) {
-				if (r.handler === param || r.re.toString() === param.toString()) {
-					this.routes.splice(i, 1);
+			var parent = this;
 
-					return this;
+			this.routes.forEach(function(value,index) {
+				if (value.handler === param || value.re.toString() === param.toString()) {
+					parent.routes.splice(index, 1);
 				}
-			}
+			});
 
 			return this; /* allow chaining */
 		},
@@ -128,47 +139,34 @@ var app = {
 
 			return this; /* allow chaining */
 		},
-		check: function(f) {
-			/* multiple exists */
-			var fragment = f || this.getFragment();
-
-			for (var i=0; i<this.routes.length; i++) {
-				var match = fragment.match(this.routes[i].re);
-
-				if (match) {
-					match.shift();
-					this.routes[i].handler.apply({}, match);
-
-					return this; /* allow chaining */
-				}
-			}
-
-			return this; /* allow chaining */
-		},
 		listen: function() {
-			var self = this;
-			var current = self.getFragment();
-
-			var fn = function() {
-				if (current !== self.getFragment()) {
-					current = self.getFragment();
-					self.check(current);
-				}
-			}
+			var parent = this;
+			var current = this.getUrl();
 
 			clearInterval(this.interval);
 
-			this.interval = setInterval(fn, 50);
+			/* we are now listening for url changes */
+			this.interval = setInterval(function() {
+				if (current !== parent.getUrl()) {
+					current = parent.getUrl();
+					parent.check(current);
+				}
+			}, 50);
 
 			return this; /* allow chaining */
 		},
-		navigate: function(path) {
-			path = path || '';
+		navigate: function(url) {
+			url = (url) ? app.config.routerRoot + this._clearSlashes(url) : '';
 
-			history.pushState(null, null, app.config.routerRoot + this.clearSlashes(path));
+			console.info('navigate to ' + url);
+
+			history.pushState(null, null, url);
 
 			return this; /* allow chaining */
-		}
+		},
+		_clearSlashes: function(url) {
+			return url.toString().replace(/\/$/, '').replace(/^\//, '');
+		},
 	},
 	response: {
 		_handlers: {
@@ -190,25 +188,68 @@ var app = {
 			500: function(xhr,status,error){ console.log(arguments); alert('500 (server error) handler'); },
 		},
 		change: function(code,handler) {
+			/* change the responds handler based on the returned http status code */
 			this._handlers[code] = handler;
 
 			return this;
 		},
+		add: function(code,handler) {
+			/* wrapper */
+			return this.change(code,handler);
+		},
 		handlers: function(handlers) {
+			/* get the handlers */
 			return jQuery.extend(this._handlers,handlers);
 		}
 	},
-	request: function(method,url,data,handlers) {
-		jQuery.ajax({
-			method: method,
-			url: url,
-			data: data,
-			dataType: 'json',
-			cache: !this.config.ajaxCacheBuster, /* ajax cache buster? */
-			async: true, /* always! */
-			timeout: this.config.ajaxTimeout, /* 5 seconds */
-			statusCode: this.response.handlers(handlers),
-		});
+	request: {
+		/* any method */
+		send: function(method,url,data,handlers) {
+			jQuery.ajax({
+				method: method,
+				url: url,
+				data: data,
+				dataType: 'json',
+				cache: !app.config.ajaxCacheBuster, /* ajax cache buster? */
+				async: true, /* always! */
+				timeout: app.config.ajaxTimeout, /* 5 seconds */
+				statusCode: app.response.handlers(handlers),
+			});
+
+			return this;
+		},
+		/* REST / HTTP - get */
+		get: function(url,data,handlers) {
+			return this.send('get',url,data,handlers);
+		},
+		/* REST / HTTP  - post */
+		post: function(url,data,handlers) {
+			return this.send('post',url,data,handlers);
+		},
+		/* REST / HTTP  - patch */
+		patch: function(url,data,handlers) {
+			return this.send('patch',url,data,handlers);
+		},
+		/* CRUD / SQL / REST / HTTP  - delete */
+		delete: function(url,data,handlers) {
+			return this.send('delete',url,data,handlers);
+		},
+		/* CRUD - create */
+		create: function(url,data,handlers) {
+			return this.send('post',url,data,handlers);
+		},
+		/* CRUD - read */
+		read: function(url,data,handlers) {
+			return this.send('get',url,data,handlers);
+		},
+		/* CRUD / SQL - update */
+		update: function(url,data,handlers) {
+			return this.send('patch',url,data,handlers);
+		},
+		/* SQL - insert */
+		insert: function(url,data,handlers) {
+			return this.send('post',url,data,handlers);
+		},
 	},
 	setData: function(data) {
 		var parent = this;
@@ -216,7 +257,7 @@ var app = {
 		console.info(data);
 
 		/* overwrite */
-		['error','errors'].forEach(function(element) {
+		['error','errors','model'].forEach(function(element) {
 			if (data[element]) {
 				parent[element] = data[element];
 			}
@@ -230,22 +271,12 @@ var app = {
 		});
 
 		/**
-		 * setup the correct kind of model object
-		 * either a array or object
-		 * these need to bind separately
-		 * because if a array is bound and you send a object in tinybind chokes
+		 * these are references to the actual model
+		 * so the view can use records or record
+		 * or you can still use model
 		 */
-		if (data.model) {
-			if (Array.isArray(data.model)) {
-				this.record = undefined;
-				this.records = data.model;
-				this.modelIsA = 'array';
-			} else {
-				this.record = data.model;
-				this.records = undefined;
-				this.modelIsA = 'object';
-			}
-		}
+		this.records = this.model;
+		this.record = this.model;
 
 		/* do any cache cleaning based on the sent in data */
 		this.cacheCleanUp(this.config);
@@ -256,7 +287,7 @@ var app = {
 		return {
 			error: this.error,
 			errors: this.errors,
-			model: this.getModel(),
+			model: this.model,
 			page: this.page,
 			form: this.form,
 		};
@@ -275,12 +306,6 @@ var app = {
 		}
 
 		return this; /* allow chaining */
-	},
-	modelIsA: function() {
-		return this.modelIsA;
-	},
-	getModel: function() {
-		return (this.modelIsA == 'object') ? this.record : this.records;
 	},
 	/* load just a model or a template then a model */
 	loadModel: function(modelEndPoint,templateEndPoint) {
@@ -326,7 +351,7 @@ var app = {
 				}
 			});
 
-			parent.request('get',templateEndPoint);
+			parent.request.get(templateEndPoint);
 		}
 
 		return this; /* allow chaining */
@@ -359,7 +384,7 @@ var app = {
 		});
 
 		/* run the query */
-		parent.request('get',modelEndPoint);
+		parent.request.get(modelEndPoint);
 
 		return this; /* allow chaining */
 	},

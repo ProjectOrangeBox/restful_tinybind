@@ -65,7 +65,7 @@ var storage = {
 	setItem : function(key,data,seconds) {
 		if (this.capable()) {
 			var	timeStamp = Math.floor(new Date().getTime() / 1000);
-			var seconds = (seconds == undefined) ? this.config.defaultSecondCache : parseInt(seconds);
+			seconds = (seconds === undefined) ? this.config.defaultSecondCache : parseInt(seconds);
 
 			try {
 				var completeKey = this.config.dbPrefix + key;
@@ -125,7 +125,7 @@ var storage = {
 	},
 	/* is storage supported? */
 	capable : function(type) {
-		if (this.storage == undefined) {
+		if (this.storage === undefined) {
 			type = (type) ? type : this.config.storage;
 
 			try {
