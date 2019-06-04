@@ -18,15 +18,15 @@ app.router
 	.add(/create/, function(primary_id) {
 		app.loadModel('/robot/create','/layout/get/robot/details');
 	})
+	/* default */
 	.add(function() {
-		/* default */
 		app.loadModel('/robot/index','/layout/get/robot/index');
 	});
 
-app.response[404] = function(xhr,status,error) {
+app.response.change(404,function(xhr,status,error) {
 	/* don't show the default alert() - instead show not found */
 	app.loadTemplate('/layout/get/notfound');
-}
+});
 
 /* Button Events */
 app.event
@@ -66,9 +66,9 @@ app.event
 			callback: function(confirm) {
 				if (confirm) {
 					/* accepted record - delete */
-					app.response[202] = function(data,status,xhr) {
+					app.response.change(202,function(data,status,xhr) {
 						app.local.closest_tr.remove();
-					};
+					});
 
 					app.request('delete',url + '/delete/' + primaryId);
 				}
@@ -79,19 +79,21 @@ app.event
 		event.preventDefault();
 
 		/* created record - create */
-		app.response[201] = function(data,status,xhr) {
+		app.response.change(201,function(data,status,xhr) {
 			/* good redirect */
+			notify.removeAll();
 			app.router.navigate(app.page.path);
-		}
+		});
 
 		/* accepted record - update */
-		app.response[202] = function(data,status,xhr) {
+		app.response.change(202,function(data,status,xhr) {
 			/* good redirect" */
+			notify.removeAll();
 			app.router.navigate(app.page.path);
-		}
+		});
 
 		/* not accepted - show errors */
-		app.response[406] = function(xhr,status,error) {
+		app.response.change(406,function(xhr,status,error) {
 			/* good show errors */
 			app.setData(xhr.responseJSON);
 
@@ -103,7 +105,7 @@ app.event
 					}
 				}
 			}
-		}
+		});
 
 		app.request(app.form.method,app.form.action,app.getData());
 	});

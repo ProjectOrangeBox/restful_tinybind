@@ -24,6 +24,12 @@ var app = {
 		templateCache: 0,
 		clearCache: false,
 		ajaxCacheBuster: false,
+		tinyBind: {
+			prefix: 'rv',
+			preloadData: true,
+			rootInterface: '.',
+			templateDelimiters: ['{', '}'],
+		},
 	},
 	modelIsA: undefined,
 	local: {}, /* storage for local application variables */
@@ -48,15 +54,17 @@ var app = {
 		var parent = this;
 
 		/* default init 200 handler */
-		this.response[200] = function(data, xhr) {
+		this.response.change(200,function(data, xhr) {
 			parent.setData(data).route();
-		};
+
+			tinybind.configure(parent.config.tinyBind);
+		});
 
 		this.request('get',this.config.url);
 	},
 	event: {
 		/* wrapper to add events like this.event.add('name',function(){}); */
-		add(name,handler) {
+		add: function(name,handler) {
 			app.events[name] = handler;
 
 			return this; /* allow chaining */
@@ -163,22 +171,32 @@ var app = {
 		}
 	},
 	response: {
-		/* standard get layout or get model */
-		200: function(data,status,xhr){ console.log(arguments); alert('200 (ok) handler'); },
-		/* success on create */
-		201: function(data,status,xhr){ console.log(arguments); alert('201 (created) handler'); },
-		/* success on edit */
-		202: function(data,status,xhr){ console.log(arguments); alert('202 (accepted) handler'); },
-		/* access to resource not allowed */
-		401: function(xhr,status,error){ console.log(arguments); alert('401 (unauthorized) handler'); },
-		/* resource not found */
-		404: function(xhr,status,error){ console.log(arguments); alert('404 (not found) handler'); },
-		/* error submitting resource (create, edit, delete) */
-		406: function(xhr,status,error){ console.log(arguments); alert('406 (not accepted) handler'); },
-		/* resource conflict ie. trying to create a new resource with the same primary id */
-		409: function(xhr,status,error){ console.log(arguments); alert('409 (conflict) handler'); },
-		/* internal server error */
-		500: function(xhr,status,error){ console.log(arguments); alert('500 (server error) handler'); },
+		_handlers: {
+			/* standard get layout or get model */
+			200: function(data,status,xhr){ console.log(arguments); alert('200 (ok) handler'); },
+			/* success on create */
+			201: function(data,status,xhr){ console.log(arguments); alert('201 (created) handler'); },
+			/* success on edit */
+			202: function(data,status,xhr){ console.log(arguments); alert('202 (accepted) handler'); },
+			/* access to resource not allowed */
+			401: function(xhr,status,error){ console.log(arguments); alert('401 (unauthorized) handler'); },
+			/* resource not found */
+			404: function(xhr,status,error){ console.log(arguments); alert('404 (not found) handler'); },
+			/* error submitting resource (create, edit, delete) */
+			406: function(xhr,status,error){ console.log(arguments); alert('406 (not accepted) handler'); },
+			/* resource conflict ie. trying to create a new resource with the same primary id */
+			409: function(xhr,status,error){ console.log(arguments); alert('409 (conflict) handler'); },
+			/* internal server error */
+			500: function(xhr,status,error){ console.log(arguments); alert('500 (server error) handler'); },
+		},
+		change: function(code,handler) {
+			this._handlers[code] = handler;
+
+			return this;
+		},
+		handlers: function(handlers) {
+			return jQuery.extend(this._handlers,handlers);
+		}
 	},
 	request: function(method,url,data,handlers) {
 		jQuery.ajax({
@@ -187,27 +205,35 @@ var app = {
 			data: data,
 			dataType: 'json',
 			cache: !this.config.ajaxCacheBuster, /* ajax cache buster? */
-			async: true,
+			async: true, /* always! */
 			timeout: this.config.ajaxTimeout, /* 5 seconds */
-			statusCode: jQuery.extend(this.response,handlers),
+			statusCode: this.response.handlers(handlers),
 		});
 	},
 	setData: function(data) {
+		var parent = this;
+
 		console.info(data);
 
 		/* overwrite */
-		if (data.error) {
-			this.error = data.error;
-		}
+		['error','errors'].forEach(function(element) {
+			if (data[element]) {
+				parent[element] = data[element];
+			}
+		});
 
-		if (data.errors) {
-			this.errors = data.errors;
-		}
+		/* deep merge these values */
+		['page','form','config'].forEach(function(element) {
+			if (data[element]) {
+				parent[element] = jQuery.extend(true,parent[element],data[element]);
+			}
+		});
 
 		/**
-		 * overwrite
-		 * need to bind array and object separately
-		 * because if a array is bound and you send a object it chokes
+		 * setup the correct kind of model object
+		 * either a array or object
+		 * these need to bind separately
+		 * because if a array is bound and you send a object in tinybind chokes
 		 */
 		if (data.model) {
 			if (Array.isArray(data.model)) {
@@ -221,19 +247,7 @@ var app = {
 			}
 		}
 
-		/* deep merge these values */
-		if (data.page) {
-			this.page = jQuery.extend(true,this.page,data.page);
-		}
-
-		if (data.form) {
-			this.form = jQuery.extend(true,this.form,data.form);
-		}
-
-		if (data.config) {
-			this.config = jQuery.extend(true,this.config,data.config);
-		}
-
+		/* do any cache cleaning based on the sent in data */
 		this.cacheCleanUp(this.config);
 
 		return this; /* allow chaining */
@@ -300,7 +314,7 @@ var app = {
 			}
 		} else {
 			/* setup retrieve model - success */
-			this.response[200] = function(data,status,xhr) {
+			this.response.change(200,function(data,status,xhr) {
 				var cacheSeconds = (data.template.cache) ? data.template.cache : parent.config.templateCache;
 
 				storage.setItem(key,data.template.source,cacheSeconds);
@@ -310,7 +324,7 @@ var app = {
 				if (then) {
 					then();
 				}
-			};
+			});
 
 			parent.request('get',templateEndPoint);
 		}
@@ -321,9 +335,14 @@ var app = {
 	_loadModel: function(modelEndPoint,then) {
 		var parent = this;
 
-		this.response[200] = function(data,status,xhr) {
+		this.response.change(200,function(data,status,xhr) {
 			/* tell everyone we are unbinding the data */
 			parent.triggers.unbound();
+
+			/* unbind tinybind */
+			if (parent.bound) {
+				parent.bound.unbind();
+			}
 
 			/* update app data */
 			parent.setData(data);
@@ -337,7 +356,7 @@ var app = {
 			if (then) {
 				then();
 			}
-		};
+		});
 
 		/* run the query */
 		parent.request('get',modelEndPoint);
@@ -345,8 +364,3 @@ var app = {
 		return this; /* allow chaining */
 	},
 };
-
-/* bootstrap once the DOM is loaded */
-document.addEventListener('DOMContentLoaded',function(){
-	app.init();
-});
