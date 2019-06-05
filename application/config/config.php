@@ -234,7 +234,7 @@ $config['log_threshold'] = 0;
 | application/logs/ directory. Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = '';
+$config['log_path'] = '../var/log/';
 
 /*
 |--------------------------------------------------------------------------
@@ -248,7 +248,7 @@ $config['log_path'] = '';
 | Note: Leaving it blank will default to 'php'.
 |
 */
-$config['log_file_extension'] = '';
+$config['log_file_extension'] = 'txt';
 
 /*
 |--------------------------------------------------------------------------

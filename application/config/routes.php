@@ -50,6 +50,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
+$route['default_controller'] = 'get';
+
 $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 $isJson = (!empty($_SERVER['HTTP_ACCEPT']) && strpos(strtolower($_SERVER['HTTP_ACCEPT']),'application/json') !== false);
 
@@ -69,10 +71,9 @@ if ($isAjax || $isJson) {
 
 	$route['default_controller'] = 'robot';
 } else {
-	/* everyone else get the empty application template */
-	$route['(.*)'] = 'layout';
+	/* reguardless of the URL use the default */
+	$route['(.*)'] = $route['default_controller'];
 }
 
-$route['default_controller'] = 'layout';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

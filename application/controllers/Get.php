@@ -1,6 +1,6 @@
 <?php
 
-class Layout extends CI_Controller {
+class Get extends CI_Controller {
 	protected $superStorageCacheSeconds = 0;
 
 	/* default */
@@ -10,10 +10,16 @@ class Layout extends CI_Controller {
 	}
 
 	/* get bind templates */
-	public function get() : void
+	public function layout() : void
 	{
+		/* simple clean up */
+		$file = preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/',func_get_args()));
+
+		/* location */
+		$template = '/bind_templates/'.$file.'.html';
+
 		$this->Restful_model
-			->template($this->load->view('/bind_templates/'.preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/',func_get_args())).'.html',[],true),$this->superStorageCacheSeconds)
+			->template($this->load->view($template,[],true),$this->superStorageCacheSeconds)
 			->send(200);
 	}
 

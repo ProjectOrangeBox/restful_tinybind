@@ -1,40 +1,41 @@
 /* where to request configuration from */
-app.config.url = '/layout/configuration';
+app.config.url = '/get/configuration';
+app.config.layoutUrl = '/get/layout';
 
 /* Add Routes */
 app.router
 	.add(/people\/edit\/(.*)/, function(primary_id) {
-		app.loadModel('/people/edit/' + primary_id,'/layout/get/people/details');
+		app.loadModel('/people/edit/' + primary_id,app.config.layoutUrl + '/people/details');
 	})
 	.add(/people\/create/, function() {
-		app.loadModel('/people/create','/layout/get/people/details');
+		app.loadModel('/people/create',app.config.layoutUrl + '/people/details');
 	})
 	.add(/people/, function() {
-		app.loadModel('/people/index','/layout/get/people/index');
+		app.loadModel('/people/index',app.config.layoutUrl + '/people/index');
 	})
 	.add(/catalog\/edit\/(.*)/, function(primary_id) {
-		app.loadModel('/catalog/edit/' + primary_id,'/layout/get/catalog/details');
+		app.loadModel('/catalog/edit/' + primary_id,app.config.layoutUrl + '/catalog/details');
 	})
 	.add(/catalog\/create/, function() {
-		app.loadModel('/catalog/create','/layout/get/catalog/details');
+		app.loadModel('/catalog/create',app.config.layoutUrl + '/catalog/details');
 	})
 	.add(/catalog/, function() {
-		app.loadModel('/catalog/index','/layout/get/catalog/index');
+		app.loadModel('/catalog/index',app.config.layoutUrl + '/catalog/index');
 	})
 	.add(/robot\/edit\/(.*)/, function(primary_id) {
-		app.loadModel('/robot/edit/' + primary_id,'/layout/get/robot/details');
+		app.loadModel('/robot/edit/' + primary_id,app.config.layoutUrl + '/robot/details');
 	})
 	.add(/robot\/create/, function() {
-		app.loadModel('/robot/create','/layout/get/robot/details');
+		app.loadModel('/robot/create',app.config.layoutUrl + '/robot/details');
 	})
 	.add(function() {
 		/* default */
-		app.loadModel('/robot/index','/layout/get/robot/index');
+		app.loadModel('/robot/index',app.config.layoutUrl + '/robot/index');
 	});
 
 app.response.change(404,function(xhr,status,error) {
 	/* don't show the default alert() - instead show not found */
-	app.loadTemplate('/layout/get/notfound');
+	app.loadTemplate(app.config.layoutUrl + '/notfound');
 });
 
 /* Button Events */
