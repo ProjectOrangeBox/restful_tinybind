@@ -71,6 +71,8 @@ if ($isAjax || $isJson) {
 
 	$route['default_controller'] = 'robot';
 } else {
+	$route['test'] = 'test/index';
+
 	/* reguardless of the URL use the default */
 	$route['(.*)'] = $route['default_controller'];
 }

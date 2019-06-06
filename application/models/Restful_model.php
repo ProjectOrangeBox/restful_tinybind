@@ -26,6 +26,7 @@ class Restful_model {
 	public $page = [];
 	public $form = [];
 	public $config = [];
+	public $nav = [];
 	public $status = 200; /* int */
 	public $statusMsg = ''; /* string */
 	public $template = []; /* string */

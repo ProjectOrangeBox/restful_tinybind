@@ -65,6 +65,10 @@ body {
   width: 98% !important;
 }
 
+div.heading {
+	margin-top: 38px;
+}
+
 input:focus,
 select:focus,
 textarea:focus,

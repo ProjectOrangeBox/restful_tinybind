@@ -496,6 +496,82 @@ tinybind.formatters.enum = function(el, value) {
 	return arguments[(parseInt(arguments[0]) + 1)];
 };
 
+tinybind.formatters.bootstrap_nav = function(records) {
+	if (!tinybind.formatters.bootstrap_navINIT) {
+		setInterval(function(){
+			var json = JSON.stringify(app.page.nav);
+
+			if (json !== tinybind.formatters.app_page_nav) {
+				var saved = app.page.nav;
+				app.page.nav = {};
+				app.page.nav = saved;
+			}
+
+			tinybind.formatters.app_page_nav = json;
+		},300);
+		tinybind.formatters.bootstrap_navINIT = true;
+	}
+
+	var html = '';
+
+	html += '<div class="container">';
+	html += '<div class="navbar-header">';
+	html += '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">';
+	html += '<span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>';
+	html += '</button>';
+	html += '<a class="navbar-brand" href="/">O</a>';
+	html += '</div>';
+	html += '<div id="navbar" class="navbar-collapse collapse">';
+	html += '<ul class="nav navbar-nav">';
+
+	var submenu = function(record,depth) {
+		var html = '';
+
+		if (record.children) {
+			if (depth == 1) {
+				html += '<li class="dropdown">';
+			} else {
+				html += '<li class="dropdown dropdown-submenu">';
+			}
+
+			html += '<a href="' + record.url + '" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">' + record.text + '</a>';
+
+			html += '<ul class="dropdown-menu" role="menu">';
+
+			for (var idx in record.children) {
+				if (record.children[idx]) {
+					html += submenu(record.children[idx],depth + 1);
+				}
+			}
+
+			html += '</ul>';
+			html += '</li>';
+		} else {
+			if (record.text == '{hr}') {
+				html += '<li role="separator" class="divider"></li>';
+			} else {
+				html += '<li>';
+				html += '<a href="' + record.url + '">' + record.text + '</a>';
+				html += '</li>';
+			}
+		}
+
+		return html;
+	};
+
+	for (var idx in records) {
+		if (records[idx]) {
+			html += submenu(records[idx],1);
+		}
+	};
+
+	html += '</ul';
+	html += '</div>';
+	html += '</div>';
+
+	return html;
+};
+
 /* formatter shortcuts */
 tinybind.formatters.eq = tinybind.formatters.isEqual;
 tinybind.formatters.ne = function(target, val) {
