@@ -497,21 +497,6 @@ tinybind.formatters.enum = function(el, value) {
 };
 
 tinybind.formatters.bootstrap_nav = function(records) {
-	if (!tinybind.formatters.bootstrap_navINIT) {
-		setInterval(function(){
-			var json = JSON.stringify(app.page.nav);
-
-			if (json !== tinybind.formatters.app_page_nav) {
-				var saved = app.page.nav;
-				app.page.nav = {};
-				app.page.nav = saved;
-			}
-
-			tinybind.formatters.app_page_nav = json;
-		},300);
-		tinybind.formatters.bootstrap_navINIT = true;
-	}
-
 	var html = '';
 
 	html += '<div class="container">';
@@ -519,7 +504,7 @@ tinybind.formatters.bootstrap_nav = function(records) {
 	html += '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">';
 	html += '<span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>';
 	html += '</button>';
-	html += '<a class="navbar-brand" href="/">O</a>';
+	html += '<a appNavigate class="navbar-brand" href="/">O</a>';
 	html += '</div>';
 	html += '<div id="navbar" class="navbar-collapse collapse">';
 	html += '<ul class="nav navbar-nav">';
@@ -534,7 +519,7 @@ tinybind.formatters.bootstrap_nav = function(records) {
 				html += '<li class="dropdown dropdown-submenu">';
 			}
 
-			html += '<a href="' + record.url + '" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">' + record.text + '</a>';
+			html += '<a appNavigate href="' + record.url + '" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">' + record.text + '</a>';
 
 			html += '<ul class="dropdown-menu" role="menu">';
 
@@ -550,9 +535,11 @@ tinybind.formatters.bootstrap_nav = function(records) {
 			if (record.text == '{hr}') {
 				html += '<li role="separator" class="divider"></li>';
 			} else {
-				html += '<li>';
-				html += '<a href="' + record.url + '">' + record.text + '</a>';
-				html += '</li>';
+				if (record.text) {
+					html += '<li>';
+					html += '<a appNavigate href="' + record.url + '">' + record.text + '</a>';
+					html += '</li>';
+				}
 			}
 		}
 
@@ -568,6 +555,21 @@ tinybind.formatters.bootstrap_nav = function(records) {
 	html += '</ul';
 	html += '</div>';
 	html += '</div>';
+
+	if (!tinybind.formatters.bootstrap_navINIT) {
+		setInterval(function(){
+			var json = JSON.stringify(app.page.nav);
+
+			if (json !== tinybind.formatters.app_page_nav) {
+				var saved = app.page.nav;
+				app.page.nav = {};
+				app.page.nav = saved;
+			}
+
+			tinybind.formatters.app_page_nav = json;
+		},300);
+		tinybind.formatters.bootstrap_navINIT = true;
+	}
 
 	return html;
 };

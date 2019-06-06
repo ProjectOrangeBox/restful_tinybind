@@ -33,8 +33,9 @@ function debounce(func, wait, immediate) {
 	};
 }
 
-$(document).on('click','[appNavigate]',function(){
-	app.router.navigate($(this).attr('appnavigate'));
+$(document).on('click','[appNavigate]',function(event){
+	event.preventDefault();
+	app.router.navigate($(this).attr('href'));
 });
 
 $(document).on('tiny-bind-bound',function() {

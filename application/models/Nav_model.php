@@ -16,10 +16,10 @@ class Nav_model extends MY_Model {
 
 			if ($removeEmptyParents) {
 				if (!(empty($record['url']) && !is_array($record['children']))) {
-					$navigationMenu[$record['id']] = $record;
+					$navigationMenu[] = $record;
 				}
 			} else {
-				$navigationMenu[$record['id']] = $record;
+				$navigationMenu[] = $record;
 			}
 		}
 

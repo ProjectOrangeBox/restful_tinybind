@@ -137,11 +137,7 @@
 				base.$el.each(function () {
 					var $this = $(this),
 						newLeft,
-						newTopOffset = base.isWindowScrolling ? (
-									isNaN(base.options.fixedOffset) ?
-									base.options.fixedOffset.outerHeight() :
-									base.options.fixedOffset
-								) :
+						newTopOffset = base.isWindowScrolling ? (isNaN(base.options.fixedOffset) ? base.options.fixedOffset.outerHeight() : base.options.fixedOffset) :
 								base.$scrollableArea.offset().top + (!isNaN(base.options.fixedOffset) ? base.options.fixedOffset : 0),
 						offset = $this.offset(),
 
@@ -163,10 +159,14 @@
 
 					if (scrolledPastTop && notScrolledPastBottom) {
 						newLeft = offset.left - scrollLeft + base.options.leftOffset;
+
+						var nav = document.getElementsByTagName('nav')[0];
+						var navHeight = (nav) ? nav.offsetHeight : base.options.marginTop;
+
 						base.$originalHeader.css({
 							'position': 'fixed',
-							'margin-top': base.options.marginTop,
-                                                        'top': 0,
+							'margin-top': navHeight,
+              'top': 0,
 							'left': newLeft,
 							'z-index': base.options.zIndex
 						});
