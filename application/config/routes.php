@@ -69,7 +69,11 @@ if ($isAjax || $isJson) {
 	$route['people/edit/(:num)']['PATCH'] = 'people/editPatch/$1';
 	$route['people/delete/(:num)']['DELETE'] = 'people/deleteDelete/$1';
 
-	$route['default_controller'] = 'robot';
+	$route['multi/create']['POST'] = 'multi/createPost';
+	$route['multi/edit/(:num)']['PATCH'] = 'multi/editPatch/$1';
+	$route['multi/delete/(:num)']['DELETE'] = 'multi/deleteDelete/$1';
+
+	$route['(:any)'] = 'robot';
 } else {
 	$route['test'] = 'test/index';
 
@@ -78,4 +82,5 @@ if ($isAjax || $isJson) {
 }
 
 $route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+
+$route['translate_uri_dashes'] = TRUE;

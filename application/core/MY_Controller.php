@@ -1,6 +1,13 @@
 <?php
 
 class MY_Controller extends CI_Controller {
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->load->model($this->controller_model);
+	}
+
 	/**
 	 * index
 	 *
@@ -61,7 +68,9 @@ class MY_Controller extends CI_Controller {
 			->form('action',$this->controller_path.'/edit/'.$id);
 
 		if (!$this->Restful_model->model = $this->{$this->controller_model}->get($id)) {
-			$this->Errors_model->add('Record not Found.');
+			if (!$this->Errors_model->has_error()) {
+				$this->Errors_model->add('Record not Found.');
+			}
 		}
 
 		$this->send(200,404);
@@ -79,6 +88,10 @@ class MY_Controller extends CI_Controller {
 		if ($request = $this->input->request('model')) {
 			if ($id = $this->{$this->controller_model}->insert($request)) {
 				$this->Restful_model->model['id'] = $id;
+			} else {
+				if (!$this->Errors_model->has_error()) {
+					$this->Errors_model->add('Error on Insert.');
+				}
 			}
 		}
 
@@ -96,6 +109,10 @@ class MY_Controller extends CI_Controller {
 	{
 		if ($request = $this->input->request('model')) {
 			$this->{$this->controller_model}->update($request);
+		} else {
+			if (!$this->Errors_model->has_error()) {
+				$this->Errors_model->add('Error on Update.');
+			}
 		}
 
 		$this->send(202,406);
@@ -111,7 +128,11 @@ class MY_Controller extends CI_Controller {
 	 */
 	public function deleteDelete($id=null) : void
 	{
-		$this->{$this->controller_model}->delete($id);
+		if ($this->{$this->controller_model}->delete($id)) {
+			if (!$this->Errors_model->has_error()) {
+				$this->Errors_model->add('Error on Delete.');
+			}
+		}
 
 		$this->send(202,406);
 	}

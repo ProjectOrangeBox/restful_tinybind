@@ -20,16 +20,17 @@
  *
  */
 class Restful_model {
-	public $error = false;
-	public $errors = [];
-	public $model = [];
-	public $page = [];
-	public $form = [];
-	public $config = [];
-	public $nav = [];
 	public $status = 200; /* int */
 	public $statusMsg = ''; /* string */
-	public $template = []; /* string */
+
+	public $error = false;
+	public $errors = null;
+	public $model = null;
+	public $page = null;
+	public $form = null;
+	public $config = null;
+	public $nav = null;
+	public $template = null;
 
 	protected $statusMap = [
     100 => 'Continue',
@@ -251,7 +252,7 @@ class Restful_model {
 
 		/* send out only the ones that aren't empty to keep the payload small */
 		foreach ($public as $key=>$value) {
-			if (!empty($value)) {
+			if ($value !== null) {
 				$object->$key = $value;
 			}
 		}
