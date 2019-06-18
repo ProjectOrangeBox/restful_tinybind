@@ -4,6 +4,7 @@ class MY_Model extends CI_Model {
 	public $primary_key = 'id';
 	public $empty = [];
 	public $required = '';
+	public $limit = 3000;
 
 	/**
 	 * all
@@ -12,7 +13,7 @@ class MY_Model extends CI_Model {
 	 */
 	public function all()
 	{
-		return $this->db->get($this->table)->result();
+		return $this->db->limit($this->limit)->get($this->table)->result();
 	}
 
 	/**

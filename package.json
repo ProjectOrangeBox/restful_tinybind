@@ -1,0 +1,28 @@
+{
+  "name": "sf_Shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "develop": "webpack --mode development --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "webpack --watch --watch-poll --mode development --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "build": "export NODE_ENV=production;webpack --mode production --config=node_modules/laravel-mix/setup/webpack.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "laravel-mix": "^4.0.16",
+    "resolve-url-loader": "^2.3.1",
+    "sass": "^1.21.0",
+    "sass-loader": "^7.1.0"
+  },
+  "dependencies": {
+    "bootstrap-select": "^1.13.10",
+    "bootstrap3": "^3.3.5",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.4.1",
+    "roboto-fontface": "^0.10.0",
+    "tinysort": "^3.2.5"
+  }
+}
