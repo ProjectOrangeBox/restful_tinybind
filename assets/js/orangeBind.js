@@ -49,7 +49,7 @@ var app = {
 			jQuery('body').trigger('tiny-bind-unbound');
 		},
 	},
-	init() {
+	init: function(){
 		/* save a external scope reference */
 		var parent = this;
 

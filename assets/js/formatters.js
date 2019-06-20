@@ -306,7 +306,7 @@ tinybind.formatters.catalog = function(input,object,id,value) {
 	id = (id) ? id : 'id';
 	value = (value) ? value : 'value';
 
-	for (const key in object) {
+	for (var key in object) {
 		if (object[key][id] == input) {
 			return object[key][value];
 		}

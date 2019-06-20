@@ -3,7 +3,7 @@
 class Get extends CI_Controller {
 	protected $superStorageCacheSeconds = 600;
 
-	/* default */
+	/* default empty */
 	public function index() : void
 	{
 		$this->load->view('index.html');
@@ -15,8 +15,8 @@ class Get extends CI_Controller {
 		/* simple clean up */
 		$file = preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/',func_get_args()));
 
-		/* location */
-		$template = '/bind_templates/'.$file.'.html';
+		/* file location */
+		$template = '/'.$file.'.html';
 
 		$this->Restful_model
 			->template($this->load->view($template,[],true),$this->superStorageCacheSeconds)

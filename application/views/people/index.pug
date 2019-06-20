@@ -1,4 +1,4 @@
-include ../../includes/nav.pug
+include ../includes/nav.pug
 div.container
 	.row.heading
 		.col-md-6
@@ -11,7 +11,7 @@ div.container
 				.form-group.has-feedback(style='display:inline-block')
 					input#bound-table-search-field.form-control.input-sm(type='text' style='width:222px;' placeholder='search')
 					i.fa.fa-search.form-control-feedback
-				a.btn.btn-default.btn-sm(rv-on-click='events.create | wrap page.path')
+				a.btn.btn-default.btn-sm.js-new(rv-on-click='events.create | wrap page.path')
 					i.fa.fa-magic
 					|  New {page.title}
 	.row
@@ -19,21 +19,16 @@ div.container
 			thead
 				tr.panel-default
 					th.panel-heading.text-center Id
-					th.panel-heading Name
-					th.panel-heading Type
-					th.panel-heading.text-center Year
-					th.panel-heading.text-center Select
-					th.panel-heading.text-center Enabled
+					th.panel-heading First Name
+					th.panel-heading Last Name
+					th.panel-heading Price
 					th.panel-heading.text-center.nosort Actions
 			tbody
-				tr(rv-each-record='records' rv-data-id='record.id')
+				tr(rv-each-record='model' rv-data-id='record.id')
 					td.text-center(rv-text='record.id')
-					td(rv-text='record.name')
-					td(rv-text='record.type')
-					td.text-center(rv-text='record.year')
-					td.text-center(rv-text='record.select | catalog form.select \'id\' \'value\'')
-					td.text-center(rv-data-value='record.enabled')
-						i(rv-class='record.enabled | enum \'fa fa-lg fa-circle-o\' \'fa fa-lg fa-check-circle-o\'')
+					td(rv-text='record.firstname')
+					td(rv-text='record.lastname')
+					td(rv-text='record.price')
 					td.text-center.actions
 						a(rv-on-click='events.edit | wrap page.path record.id')
 							i.fa.fa-edit.fa-lg
