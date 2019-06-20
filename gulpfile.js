@@ -5,10 +5,8 @@ const babel = require('gulp-babel');
 const pug = require('gulp-pug');
 const concat = require('gulp-concat');
 const cleanCSS = require('gulp-clean-css');
-const copy = require('recursive-copy');
-const del = require('delete');
 const sourcemaps = require('gulp-sourcemaps');
-const rename = require('gulp-rename');
+const del = require('del');
 
 /* attach the sass compiler to the sass class */
 sass.compiler = require('node-sass');
@@ -67,8 +65,9 @@ let js = {
 };
 
 let copyDir = {
-	'node_modules/font-awesome/fonts': 'public/fonts',
-	'node_modules/roboto-fontface/fonts/roboto': 'public/fonts/roboto',
+	'node_modules/font-awesome/fonts/*': 'public/fonts',
+	'node_modules/roboto-fontface/fonts/roboto/*': 'public/fonts/roboto',
+	'assets/fav/favicon.ico': 'public',
 };
 
 /* all config finished */
@@ -79,90 +78,92 @@ let watchFilesJs = Array.prototype.concat(js.user);
 let watchFilesCss = Array.prototype.concat(css.user,css.vendor,css.scss);
 let watchFilesPug = pugViews;
 
-function compilePug() {
-	return src(pugViews)
-		.pipe(pug({pretty:false}))
-		.pipe(dest('application/views'));
-}
+var tasks = {
+	compilePug: function() {
+		return src(pugViews)
+			.pipe(pug({pretty:false}))
+			.pipe(dest('application/views'));
+	},
+	compileJsVendor: function() {
+		return src(js.vendor)
+			.pipe(concat('1_vendor.js'))
+			.pipe(dest(tempFolder));
+	},
+	compileJsUser: function() {
+		/*
+		.pipe(sourcemaps.init())
+		.pipe(sourcemaps.write('.'))
+		*/
 
-function compileJsVendor() {
-	return src(js.vendor)
-		.pipe(concat('1_vendor.js'))
-		.pipe(dest(tempFolder));
-}
+		return src(js.user)
+			.pipe(babel())
+			.pipe(uglify())
+			.pipe(concat('2_user.js'))
+			.pipe(dest(tempFolder));
+	},
+	combinedJs: function() {
+		return src(tempFolder + '/*.js')
+			.pipe(concat('bundle.js'))
+			.pipe(dest(distFolder));
+	},
+	compileSass: function() {
+		return src(css.scss)
+			.pipe(sass())
+			.pipe(concat('2_sass.css'))
+			.pipe(dest(tempFolder));
+	},
+	compileCss: function() {
+		return src(css.vendor)
+			.pipe(src(css.user))
+			.pipe(concat('1_css.css'))
+			.pipe(dest(tempFolder));
+	},
+	combinedCss: function() {
+		return src(tempFolder + '/*.css')
+			.pipe(cleanCSS({compatibility: 'ie9'}))
+			.pipe(concat('bundle.css'))
+			.pipe(dest(distFolder));
+	},
+	copyDirectories: function() {
+		for (let idx in copyDir) {
+			var callback = src(idx).pipe(dest(copyDir[idx]));
+		};
 
-function compileJsUser() {
-	/*
-	.pipe(sourcemaps.init())
-	.pipe(sourcemaps.write('.'))
-	*/
-
-	return src(js.user)
-		.pipe(babel())
-		.pipe(uglify())
-		.pipe(concat('2_user.js'))
-		.pipe(dest(tempFolder));
-}
-
-function combinedJs() {
-	return src(tempFolder + '/*.js')
-		.pipe(concat('bundle.js'))
-		.pipe(dest(distFolder));
-}
-
-function compileSass() {
-	return src(css.scss)
-		.pipe(sass())
-		.pipe(concat('2_sass.css'))
-		.pipe(dest(tempFolder));
-}
-
-function compileCss() {
-	return src(css.vendor)
-		.pipe(src(css.user))
-		.pipe(concat('1_css.css'))
-		.pipe(dest(tempFolder));
-}
-
-function combinedCss() {
-	return src(tempFolder + '/*.css')
- 		.pipe(cleanCSS({compatibility: 'ie9'}))
-		.pipe(concat('bundle.css'))
-		.pipe(dest(distFolder));
-}
-
-function copyDirectories(cb) {
-	/* as long as the others finish after this... */
-	for (var idx in copyDir) {
-		copy(__dirname + '/' + idx,__dirname + '/' + copyDir[idx],function(error, results) {});
-	};
-
-	return cb();
-}
+		return callback;
+	},
+	cleanUp: function(cb) {
+		return del([tempFolder + '/*',distFolder + '/*'],cb);
+	}
+};
 
 exports.watch = ()=>{
 	exports.default();
-	watch(watchFiles,parallel(series(compileJsUser,combinedJs),series(compileSass,compileCss,combinedCss),compilePug));
+	watch(watchFiles,parallel(series(tasks.compileJsUser,tasks.combinedJs),series(tasks.compileSass,tasks.compileCss,tasks.combinedCss),tasks.compilePug));
 }
 
-exports['watch.js'] = ()=>{
+exports['watch:js'] = ()=>{
 	exports.default();
-	watch(watchFilesJs,series(compileJsUser,combinedJs));
+	watch(watchFilesJs,series(tasks.compileJsUser,tasks.combinedJs));
 }
 
-exports['watch.css'] = ()=>{
+exports['watch:css'] = ()=>{
 	exports.default();
-	watch(watchFilesCss,series(parallel(compileSass,compileCss),combinedCss));
+	watch(watchFilesCss,series(parallel(tasks.compileSass,tasks.compileCss),tasks.combinedCss));
 }
 
 exports['watch:pug'] = ()=>{
 	exports.default();
-	watch(watchFilesPug,parallel(compilePug));
+	watch(watchFilesPug,parallel(tasks.compilePug));
 }
 
-exports.default = parallel(
-	copyDirectories,
-	series(parallel(compileJsVendor,compileJsUser),combinedJs),
-	series(parallel(compileSass,compileCss),combinedCss),
-	compilePug,
+exports.clean = series(tasks.cleanUp);
+
+exports.default = series(
+	tasks.cleanUp,
+	parallel(
+		tasks.copyDirectories,
+		series(parallel(tasks.compileJsVendor,tasks.compileJsUser),tasks.combinedJs),
+		series(parallel(tasks.compileSass,tasks.compileCss),tasks.combinedCss),
+		tasks.compilePug,
+	)
 );
