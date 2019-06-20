@@ -33,12 +33,10 @@
     "jquery": "^3.4.1",
     "jstorage": "^0.4.8",
     "keymaster": "^1.6.2",
-    "laravel-mix": "^4.0.16",
     "popper.js": "^1.15.0",
     "recursive-copy": "^2.0.10",
     "roboto-fontface": "^0.10.0",
-    "tinysort": "^3.2.5",
-    "vue-template-compiler": "^2.6.10"
+    "tinysort": "^3.2.5"
   },
   "devDependencies": {
     "gulp-clean-css": "^4.2.0"
