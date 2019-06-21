@@ -77,26 +77,31 @@ var app = {
 		interval: undefined,
 		listening: undefined,
 		check: function(url) {
-			url = url || this.getUrl();
+			/* Do we have any routes to listen for? */
+			if (this.routes.length) {
+				/* turn on listening */
+				url = url || this.getUrl();
 
-			console.info('router::check',url);
+				console.info('router::check',url);
 
-			/* are we listening for changes? if not start listener */
-			if (!this.listening) {
-				this.listening = this.listen();
-			}
+				/* are we listening for changes? if not start listener */
+				if (!this.listening) {
+					this.listening = this.listen();
+				}
 
-			for (var i = 0; i < this.routes.length; i++) {
-				var match = url.match(this.routes[i].re);
+				for (var i = 0; i < this.routes.length; i++) {
+					var match = url.match(this.routes[i].re);
 
-				if (match) {
-					match.shift();
+					if (match) {
+						match.shift();
 
-					console.info('router::check::match',this.routes[i].re.toString());
+						console.info('router::check::match',this.routes[i].re.toString());
 
-					this.routes[i].handler.apply({}, match);
+						/* call the route callback */
+						this.routes[i].callback.apply({}, match);
 
-					break; /* break from for loop */
+						break; /* break from for loop */
+					}
 				}
 			}
 
@@ -111,10 +116,10 @@ var app = {
 
 			return this._clearSlashes(url);
 		},
-		add: function(regularExpression, handler) {
-			/* handle the default when a handlers is sent in for the regular expression */
+		add: function(regularExpression, callback) {
+			/* handle the default when a callback is sent in for the regular expression */
 			if (typeof regularExpression === 'function') {
-				handler = regularExpression;
+				callback = regularExpression;
 				regularExpression = '';
 			}
 
@@ -127,10 +132,11 @@ var app = {
 			/* add CodeIgniter matches */
 			regularExpression = regularExpression.replace(new RegExp(":any","g"),'[^/]+'); /* anything */
 			regularExpression = regularExpression.replace(new RegExp(":num","g"),'[0-9]+'); /* number only */
-			regularExpression = regularExpression.replace(new RegExp(":md5","g"),'[0-9a-f]+'); /* hex values */
+			regularExpression = regularExpression.replace(new RegExp(":hex","g"),'[0-9a-f]+'); /* hex values */
+			regularExpression = regularExpression.replace(new RegExp(":str","g"),'[0-9a-zA-Z]+'); /* str values */
 
 			/* add to the routes array */
-			this.routes.push({ re: new RegExp(regularExpression), handler: handler});
+			this.routes.push({ re: new RegExp(regularExpression), callback: callback});
 
 			return this; /* allow chaining */
 		},
@@ -138,7 +144,7 @@ var app = {
 			var parent = this;
 
 			this.routes.forEach(function(value,index) {
-				if (value.handler === param || value.re.toString() === param.toString()) {
+				if (value.callback === param || value.re.toString() === param.toString()) {
 					parent.routes.splice(index, 1);
 				}
 			});
@@ -154,15 +160,18 @@ var app = {
 			var parent = this;
 			var current = this.getUrl();
 
-			clearInterval(this.interval);
+			/* Do we have any routes to listen for? */
+			if (this.routes.length) {
+				clearInterval(this.interval);
 
-			/* we are now listening for url changes */
-			this.interval = setInterval(function() {
-				if (current !== parent.getUrl()) {
-					current = parent.getUrl();
-					parent.check(current);
-				}
-			}, 50);
+				/* we are now listening for url changes */
+				this.interval = setInterval(function() {
+					if (current !== parent.getUrl()) {
+						current = parent.getUrl();
+						parent.check(current);
+					}
+				}, 50);
+			}
 
 			return this; /* allow chaining */
 		},

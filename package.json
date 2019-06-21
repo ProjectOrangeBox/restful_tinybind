@@ -2,13 +2,6 @@
   "name": "mvvmbind",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "develop": "webpack --mode development --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "webpack --watch --watch-poll --mode development --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "build": "export NODE_ENV=production;webpack --mode production --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "pug": "webpack --mode=production"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
