@@ -53,7 +53,7 @@ var app = {
 		/* save a external scope reference */
 		var parent = this;
 
-		/* default init 200 handler */
+		/* default init 200 callback */
 		this.response.change(200,function(data, xhr) {
 			parent.setData(data);
 
@@ -66,8 +66,8 @@ var app = {
 	},
 	event: {
 		/* wrapper to add events like this.event.add('name',function(){}); */
-		add: function(name,handler) {
-			app.events[name] = handler;
+		add: function(name,callback) {
+			app.events[name] = callback;
 
 			return this; /* allow chaining */
 		}
@@ -189,42 +189,42 @@ var app = {
 		},
 	},
 	response: {
-		_handlers: {
+		_callbacks: {
 			/* standard get layout or get model */
-			200: function(data,status,xhr){ console.log(arguments); alert('200 (ok) handler'); },
+			200: function(data,status,xhr){ console.log(arguments); alert('200 (ok) callback'); },
 			/* success on create */
-			201: function(data,status,xhr){ console.log(arguments); alert('201 (created) handler'); },
+			201: function(data,status,xhr){ console.log(arguments); alert('201 (created) callback'); },
 			/* success on edit */
-			202: function(data,status,xhr){ console.log(arguments); alert('202 (accepted) handler'); },
+			202: function(data,status,xhr){ console.log(arguments); alert('202 (accepted) callback'); },
 			/* access to resource not allowed */
-			401: function(xhr,status,error){ console.log(arguments); alert('401 (unauthorized) handler'); },
+			401: function(xhr,status,error){ console.log(arguments); alert('401 (unauthorized) callback'); },
 			/* resource not found */
-			404: function(xhr,status,error){ console.log(arguments); alert('404 (not found) handler'); },
+			404: function(xhr,status,error){ console.log(arguments); alert('404 (not found) callback'); },
 			/* error submitting resource (create, edit, delete) */
-			406: function(xhr,status,error){ console.log(arguments); alert('406 (not accepted) handler'); },
+			406: function(xhr,status,error){ console.log(arguments); alert('406 (not accepted) callback'); },
 			/* resource conflict ie. trying to create a new resource with the same primary id */
-			409: function(xhr,status,error){ console.log(arguments); alert('409 (conflict) handler'); },
+			409: function(xhr,status,error){ console.log(arguments); alert('409 (conflict) callback'); },
 			/* internal server error */
-			500: function(xhr,status,error){ console.log(arguments); alert('500 (server error) handler'); },
+			500: function(xhr,status,error){ console.log(arguments); alert('500 (server error) callback'); },
 		},
-		change: function(code,handler) {
-			/* change the responds handler based on the returned http status code */
-			this._handlers[code] = handler;
+		change: function(code,callback) {
+			/* change the responds callback based on the returned http status code */
+			this._callbacks[code] = callback;
 
 			return this;
 		},
-		add: function(code,handler) {
+		add: function(code,callback) {
 			/* wrapper */
-			return this.change(code,handler);
+			return this.change(code,callback);
 		},
-		handlers: function(handlers) {
-			/* get the handlers */
-			return jQuery.extend(this._handlers,handlers);
+		callbacks: function(callbacks) {
+			/* get the callbacks */
+			return jQuery.extend(this._callbacks,callbacks);
 		}
 	},
 	request: {
 		/* any method */
-		send: function(method,url,data,handlers) {
+		send: function(method,url,data,callbacks) {
 			console.info('request::send',method,url,data);
 
 			jQuery.ajax({
@@ -235,42 +235,42 @@ var app = {
 				cache: !app.config.ajaxCacheBuster, /* ajax cache buster? */
 				async: true, /* always! */
 				timeout: app.config.ajaxTimeout, /* 5 seconds */
-				statusCode: app.response.handlers(handlers),
+				statusCode: app.response.callbacks(callbacks),
 			});
 
 			return this;
 		},
 		/* REST / HTTP - get */
-		get: function(url,data,handlers) {
-			return this.send('get',url,data,handlers);
+		get: function(url,data,callbacks) {
+			return this.send('get',url,data,callbacks);
 		},
 		/* REST / HTTP  - post */
-		post: function(url,data,handlers) {
-			return this.send('post',url,data,handlers);
+		post: function(url,data,callbacks) {
+			return this.send('post',url,data,callbacks);
 		},
 		/* REST / HTTP  - patch */
-		patch: function(url,data,handlers) {
-			return this.send('patch',url,data,handlers);
+		patch: function(url,data,callbacks) {
+			return this.send('patch',url,data,callbacks);
 		},
 		/* CRUD / SQL / REST / HTTP  - delete */
-		delete: function(url,data,handlers) {
-			return this.send('delete',url,data,handlers);
+		delete: function(url,data,callbacks) {
+			return this.send('delete',url,data,callbacks);
 		},
 		/* CRUD - create */
-		create: function(url,data,handlers) {
-			return this.send('post',url,data,handlers);
+		create: function(url,data,callbacks) {
+			return this.send('post',url,data,callbacks);
 		},
 		/* CRUD - read */
-		read: function(url,data,handlers) {
-			return this.send('get',url,data,handlers);
+		read: function(url,data,callbacks) {
+			return this.send('get',url,data,callbacks);
 		},
 		/* CRUD / SQL - update */
-		update: function(url,data,handlers) {
-			return this.send('patch',url,data,handlers);
+		update: function(url,data,callbacks) {
+			return this.send('patch',url,data,callbacks);
 		},
 		/* SQL - insert */
-		insert: function(url,data,handlers) {
-			return this.send('post',url,data,handlers);
+		insert: function(url,data,callbacks) {
+			return this.send('post',url,data,callbacks);
 		},
 	},
 	setData: function(data) {
