@@ -1,10 +1,8 @@
 /* Create the object to hold the properties and methods */
 var tableSort = {
 	/* Default direction */
-	iconsAdded: false,
 	storageKey: '.sort',
 	bound: false,
-	has: false,
 	class: 'table.table-sort',
 	triggerOnSort: 'tableSort',
 	dir: undefined,
@@ -32,7 +30,8 @@ var tableSort = {
 	},
 	uninit: function() {
 		this.bound = false;
-		this.iconsAdded = false;
+
+		$('.tablesorticon').remove();
 	},
 	/* Do the actual sort */
 	sort: function(index,dir) {
@@ -51,9 +50,8 @@ var tableSort = {
 		this.save(index,dir);
 	},
 	addSortIcons: function() {
-		if (!this.iconsAdded) {
-			$(this.class + ' thead tr th:not(.nosort)').prepend('<i class="fa fa-sort"></i> ');
-			this.iconsAdded = true;
+		if (!$('.tablesorticon').length) {
+			$(this.class + ' thead tr th:not(.nosort)').prepend('<i class="fa fa-sort tablesorticon"></i> ');
 		}
 	},
 	determineIcons: function(index,dir) {

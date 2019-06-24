@@ -18,6 +18,7 @@ var app = {
 	id: 'app', /* attach to this DOM selector */
 	config: { /* config options */
 		url: '/',
+		redirect: false,
 		ajaxTimeout: 5000, /* ajax timeout in seconds */
 		routerRoot: '/', /* router url root */
 		storageCache: 2592000, /* about 1 month */
@@ -77,7 +78,9 @@ var app = {
 		interval: undefined,
 		listening: undefined,
 		check: function(url) {
-			/* Do we have any routes to listen for? */
+			/**
+			 * Do we have any routes to listen for?
+			 */
 			if (this.routes.length) {
 				/* turn on listening */
 				url = url || this.getUrl();
@@ -89,6 +92,7 @@ var app = {
 					this.listening = this.listen();
 				}
 
+				/* check for a match */
 				for (var i = 0; i < this.routes.length; i++) {
 					var match = url.match(this.routes[i].re);
 
@@ -175,14 +179,22 @@ var app = {
 
 			return this; /* allow chaining */
 		},
-		navigate: function(url) {
+		navigate: function(url,redirect) {
 			url = (url) ? app.config.routerRoot + this._clearSlashes(url) : '';
+			redirect = (redirect) ? redirect : app.config.redirect;
 
 			console.info('router::navigate',url);
 
-			history.pushState(null, null, url);
+			if (redirect) {
+				this.redirect(url);
+			} else {
+				history.pushState(null, null, url);
+			}
 
 			return this; /* allow chaining */
+		},
+		redirect: function(url) {
+			window.location.href = url;
 		},
 		_clearSlashes: function(url) {
 			return url.toString().replace(/\/$/, '').replace(/^\//, '');

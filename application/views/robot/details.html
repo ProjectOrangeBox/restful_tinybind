@@ -1,1 +1,65 @@
-<nav class="navbar navbar-inverse navbar-fixed-top" rv-html="page.nav | bootstrap_nav"></nav><div class="container"><div class="row heading"><div class="col-md-6"><h3><i class="fa fa-tags"></i><span rv-text="page.action"></span><span rv-text="page.title"></span></h3></div><div class="col-md-6"><div class="pull-right"><a class="btn btn-default btn-sm js-esc" rv-on-click="events.goto | wrap page.path"><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a></div></div></div><hr/><form rv-method="form.method" rv-action="form.action"><div class="form-group" rv-if="record.id"><label for="id">Id</label><input class="form-control" id="id" type="id" name="id" placeholder="Id" rv-value="record.id"/></div><div class="form-group"><label for="name">Name</label><input class="form-control" id="name" type="name" name="name" placeholder="Name" rv-value="record.name"/></div><div class="form-group"><label for="type">Type</label><input class="form-control" id="type" type="type" name="type" placeholder="Type" rv-value="record.type"/></div><div class="form-group"><label for="year">Year</label><input class="form-control" type="year" name="year" placeholder="Year" rv-value="record.year"/></div><div class="form-group"><input type="checkbox" name="enabled" value="1" rv-intcheck="record.enabled"/><label for="checkbox">Enabled</label></div><div class="form-group"><div class="radio"><label><input type="radio" name="options" value="11" rv-checked="record.options"/>Option one is this and that—be sure to include why it's great</label></div><div class="radio"><label><input type="radio" name="options" value="22" rv-checked="record.options"/>Option two can be something else and selecting it will deselect option one</label></div><div class="radio"><label><input type="radio" name="options" value="33" rv-checked="record.options"/>Option three is disabled</label></div></div><div class="form-group"><label>Select</label><select class="form-control" name="select" rv-value="record.select"><option rv-each-row="form.select" rv-value="row.id">{ row.value }</option></select></div><div class="form-group"><label>Select Multiple</label><select class="form-control" name="mselect" rv-value="record.mselect | valuesToString" multiple="multiple"><option rv-each-row="form.select" rv-value="row.id">{ row.value }</option></select></div><button class="btn btn-default" type="submit" rv-on-click="events.submit">Submit</button></form></div>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" rv-html="page.nav | bootstrap_nav"></nav>
+<div class="container">
+  <div class="row heading">
+    <div class="col-md-6">
+      <h3><i class="fa fa-tags"></i><span rv-text="page.action"></span><span rv-text="page.title"></span></h3>
+    </div>
+    <div class="col-md-6">
+      <div class="pull-right"><a class="btn btn-default btn-sm js-esc" rv-on-click="events.goto | wrap page.path"><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a></div>
+    </div>
+  </div>
+  <hr/>
+  <form rv-method="form.method" rv-action="form.action">
+    <div class="form-group" rv-if="record.id">
+      <label for="id">Id</label>
+      <input class="form-control" id="id" type="id" name="id" placeholder="Id" rv-value="record.id"/>
+    </div>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input class="form-control" id="name" type="name" name="name" placeholder="Name" rv-value="record.name"/>
+    </div>
+    <div class="form-group">
+      <label for="type">Type</label>
+      <input class="form-control" id="type" type="type" name="type" placeholder="Type" rv-value="record.type"/>
+    </div>
+    <div class="form-group">
+      <label for="year">Year</label>
+      <input class="form-control" type="year" name="year" placeholder="Year" rv-value="record.year"/>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" name="enabled" value="1" rv-intcheck="record.enabled"/>
+      <label for="checkbox">Enabled</label>
+    </div>
+    <div class="form-group">
+      <div class="radio">
+        <label>
+          <input type="radio" name="options" value="11" rv-checked="record.options"/>Option one is this and that—be sure to include why it's great
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="options" value="22" rv-checked="record.options"/>Option two can be something else and selecting it will deselect option one
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="options" value="33" rv-checked="record.options"/>Option three is disabled
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Select</label>
+      <select class="form-control" name="select" rv-value="record.select">
+        <option rv-each-row="form.select" rv-value="row.id">{ row.value }</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Select Multiple</label>
+      <select class="form-control" name="mselect" rv-value="record.mselect | valuesToString" multiple="multiple">
+        <option rv-each-row="form.select" rv-value="row.id">{ row.value }</option>
+      </select>
+    </div>
+    <button class="btn btn-default" type="submit" rv-on-click="events.submit">Submit</button>
+  </form>
+</div>

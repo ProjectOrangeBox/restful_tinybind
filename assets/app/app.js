@@ -46,9 +46,24 @@ app.router
 	.add('robot/create', function() {
 		app.loadModel('/robot/create',app.config.layoutUrl + '/robot/details');
 	})
-	.add(function() {
-		/* default */
+	.add('robot/index', function() {
 		app.loadModel('/robot/index',app.config.layoutUrl + '/robot/index');
+	})
+	.add('food/edit/(:num)', function(primary_id) {
+		app.config.redirect = true;
+		app.loadModel('/food/edit/' + primary_id);
+	})
+	.add('food/create', function() {
+		app.config.redirect = true;
+		app.loadModel('/food/create');
+	})
+	.add('food', function() {
+		app.config.redirect = true;
+		app.loadModel('/food/index');
+	})
+	.add(function() {
+		/* leave empty to allow for standard web page loads */
+		/* default route */
 	});
 
 app.response.change(404,function(xhr,status,error) {
@@ -67,9 +82,17 @@ app.event
 		event.preventDefault();
 		app.router.navigate(url + '/create');
 	})
-	.add('edit',function(url, primaryId, event) {
+	.add('redirect',function() {
+		var args = [].slice.call(arguments);
+		var that = args.pop();
+		var event = args.pop();
+
 		event.preventDefault();
-		app.router.navigate(url + '/edit/' + primaryId);
+
+		var format = args[0];
+		var url = sprintf.apply(format,args);
+
+		app.router.redirect(url);
 	})
 	.add('delete',function(url, primaryId, event) {
 		event.preventDefault();
