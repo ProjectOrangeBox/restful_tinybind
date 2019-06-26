@@ -8,7 +8,7 @@ tinybind.config = {
 	defaultTimeFormat: "HH:mm:ss",
 	defaultDatetimeFormat: "YYYY-MM-DD HH:mm:ss",
 	nav: {
-		open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
+		open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/" target="_top">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
 		close: '</ul></div></div>',
 		item: {
 			open: '<li class="dropdown">',

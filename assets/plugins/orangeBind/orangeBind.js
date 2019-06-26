@@ -415,26 +415,7 @@ var app = {
 		var parent = this;
 
 		this.response.change(200,function(data,status,xhr) {
-			/* tell everyone we are unbinding the data */
-			parent.triggers.unbound();
-
-			/* unbind tinybind */
-			if (parent.bound) {
-				parent.bound.unbind();
-			}
-
-			/* update app data */
-			parent.setData(data);
-
-			/* rebind */
-			parent.bound = tinybind.bind(document.getElementById(parent.id),app);
-
-			/* tell everyone we now have new data */
-			parent.triggers.bound();
-
-			if (then) {
-				then();
-			}
+			parent.refresh(data,then);
 		});
 
 		/* run the query */

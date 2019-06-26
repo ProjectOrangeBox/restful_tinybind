@@ -42,20 +42,21 @@ let js = {
 		'node_modules/tinysort/dist/tinysort.min.js',
 	],
 	'user': [
-		'assets/js/superStorage.js',
-		'assets/js/tinybind.js',
-		'assets/js/sprintf.js',
-		'assets/js/application.js',
-		'assets/js/config.js',
-		'assets/js/binders.js',
-		'assets/js/formatters.js',
-		'assets/js/orangeBind.js',
+		'assets/plugins/orangeBind/superStorage.js',
+		'assets/plugins/orangeBind/tinybind.js',
+		'assets/plugins/orangeBind/sprintf.js',
+		'assets/plugins/orangeBind/orangeBind.js',
 
 		'assets/plugins/notify/notify.js',
 		'assets/plugins/bound-table-search/bound-table-search.js',
 		'assets/plugins/table_remember_position/table_remember_position.js',
 		'assets/plugins/table_sort/table_sort.js',
 		'assets/plugins/table_sticky_header/jquery.stickytableheaders.js',
+
+		'assets/js/application.js',
+		'assets/js/config.js',
+		'assets/js/binders.js',
+		'assets/js/formatters.js',
 
 		'assets/app/app.js',
 
