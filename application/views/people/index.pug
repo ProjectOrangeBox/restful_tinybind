@@ -11,7 +11,7 @@ div.container
 				.form-group.has-feedback(style='display:inline-block')
 					input#bound-table-search-field.form-control.input-sm(type='text' style='width:222px;' placeholder='search')
 					i.fa.fa-search.form-control-feedback
-				a.btn.btn-default.btn-sm.js-new(rv-on-click='events.create | wrap page.path')
+				a.btn.btn-default.btn-sm.js-new(rv-on-click='events.naviagte | wrap "%s/create" page.path')
 					i.fa.fa-magic
 					|  New {page.title}
 	.row
@@ -30,7 +30,7 @@ div.container
 					td(rv-text='record.lastname')
 					td(rv-text='record.price')
 					td.text-center.actions
-						a(rv-on-click='events.edit | wrap page.path record.id')
+						a(rv-on-click='events.navigate | wrap "%s/edit/%s" page.path record.id')
 							i.fa.fa-edit.fa-lg
 						a(rv-on-click='events.delete | wrap page.path record.id')
 							i.fa.fa-trash.fa-lg

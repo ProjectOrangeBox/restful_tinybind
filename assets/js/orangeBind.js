@@ -18,7 +18,7 @@ var app = {
 	id: 'app', /* attach to this DOM selector */
 	config: { /* config options */
 		url: '/',
-		redirect: false,
+		redirect: false, /* default to not redirect to new urls */
 		ajaxTimeout: 5000, /* ajax timeout in seconds */
 		routerRoot: '/', /* router url root */
 		storageCache: 2592000, /* about 1 month */
@@ -183,18 +183,15 @@ var app = {
 			url = (url) ? app.config.routerRoot + this._clearSlashes(url) : '';
 			redirect = (redirect) ? redirect : app.config.redirect;
 
-			console.info('router::navigate',url);
+			console.info('router::navigate',url,redirect);
 
 			if (redirect) {
-				this.redirect(url);
+				window.location.href = url;
 			} else {
 				history.pushState(null, null, url);
 			}
 
 			return this; /* allow chaining */
-		},
-		redirect: function(url) {
-			window.location.href = url;
 		},
 		_clearSlashes: function(url) {
 			return url.toString().replace(/\/$/, '').replace(/^\//, '');

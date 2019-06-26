@@ -439,7 +439,8 @@ tinybind.formatters.bootstrap_nav = function(records) {
 		} else {
 			/* item */
 			if (record.text) {
-				html += (record.text == '{hr}') ? tinybind.config.nav.item.hr : sprintf(tinybind.config.nav.item.rowSingle,record.url,record.text);
+				record.target = (record.target != null) ? record.target : '';
+				html += (record.text == '{hr}') ? tinybind.config.nav.item.hr : sprintf(tinybind.config.nav.item.rowSingle,record.url,record.text,record.target);
 			}
 		}
 

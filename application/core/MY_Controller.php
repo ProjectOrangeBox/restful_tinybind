@@ -1,21 +1,40 @@
 <?php
 
 class MY_Controller extends CI_Controller {
-	public function __construct()
-	{
-		parent::__construct();
-
-		$this->load->model($this->controller_model);
-	}
+	public $controller_path;
+	public $controller_title;
+	public $controller_titles;
+	public $controller_model;
+	public $default_view = 'index.html';
+	public $data = [];
 
 	/**
-	 * index
+	 * _remap
 	 *
-	 * HTTP Method Get
-	 *
+	 * @param mixed $method
+	 * @param mixed $params=[]
 	 * @return void
 	 */
-	public function index() : void
+	public function _remap($method,$params=[]) {
+		if ($this->controller_model) {
+			$this->load->model($this->controller_model);
+		}
+
+		$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+		$isJson = (!empty($_SERVER['HTTP_ACCEPT']) && strpos(strtolower($_SERVER['HTTP_ACCEPT']),'application/json') !== false);
+		$action = ucwords(strtolower($_SERVER['REQUEST_METHOD']));
+		$ajax = ($isAjax || $isJson) ? 'Ajax' : '';
+		$method = $method.$action.$ajax;
+
+		$this->$method(...$params);
+	}
+
+	public function indexGet() : void
+	{
+		$this->load->view($this->default_view);
+	}
+
+	public function indexGetAjax() : void
 	{
 		$this->Restful_model
 			->page('title',$this->controller_title)
@@ -26,14 +45,7 @@ class MY_Controller extends CI_Controller {
 		$this->send(200,406);
 	}
 
-	/**
-	 * create
-	 *
-	 * HTTP Method Get
-	 *
-	 * @return void
-	 */
-	public function create() : void
+	public function createGetAjax() : void
 	{
 		/* new */
 		$this->Restful_model
@@ -48,15 +60,22 @@ class MY_Controller extends CI_Controller {
 		$this->send(200,404);
 	}
 
-	/**
-	 * edit
-	 *
-	 * HTTP Method Get
-	 *
-	 * @param string $id
-	 * @return void
-	 */
-	public function edit(string $id) : void
+	public function createPostAjax() : void
+	{
+		if ($request = $this->input->request('model')) {
+			if ($id = $this->{$this->controller_model}->insert($request)) {
+				$this->Restful_model->model['id'] = $id;
+			} else {
+				if (!$this->Errors_model->has_error()) {
+					$this->Errors_model->add('Error on Insert.');
+				}
+			}
+		}
+
+		$this->send(201,406);
+	}
+
+	public function editGetAjax($id=null) : void
 	{
 		/* edit */
 		$this->Restful_model
@@ -76,36 +95,7 @@ class MY_Controller extends CI_Controller {
 		$this->send(200,404);
 	}
 
-	/**
-	 * createPost
-	 *
-	 * HTTP Method Post
-	 *
-	 * @return void
-	 */
-	public function createPost() : void
-	{
-		if ($request = $this->input->request('model')) {
-			if ($id = $this->{$this->controller_model}->insert($request)) {
-				$this->Restful_model->model['id'] = $id;
-			} else {
-				if (!$this->Errors_model->has_error()) {
-					$this->Errors_model->add('Error on Insert.');
-				}
-			}
-		}
-
-		$this->send(201,406);
-	}
-
-	/**
-	 * editPatch
-	 *
-	 * HTTP Method Patch
-	 *
-	 * @return void
-	 */
-	public function editPatch() : void
+	public function editPatchAjax() : void
 	{
 		if ($request = $this->input->request('model')) {
 			$this->{$this->controller_model}->update($request);
@@ -118,15 +108,7 @@ class MY_Controller extends CI_Controller {
 		$this->send(202,406);
 	}
 
-	/**
-	 * deleteDelete
-	 *
-	 * HTTP Method Delete
-	 *
-	 * @param mixed $id=null
-	 * @return void
-	 */
-	public function deleteDelete($id=null) : void
+	public function deleteDeleteAjax($id=null) : void
 	{
 		if ($this->{$this->controller_model}->delete($id)) {
 			if (!$this->Errors_model->has_error()) {

@@ -18,7 +18,8 @@
 						<div class="pull-right">
 							<div class="form-group has-feedback" style="display:inline-block">
 								<input class="form-control input-sm" id="bound-table-search-field" type="text" style="width:222px;" placeholder="search"/><i class="fa fa-search form-control-feedback"></i>
-							</div><a class="btn btn-default btn-sm js-new" rv-on-click="events.create | wrap page.path"><i class="fa fa-magic"></i> New {page.title}</a>
+							</div>
+							<a class="btn btn-default btn-sm js-new" rv-on-click="events.redirect | wrap '%s/create' page.path"><i class="fa fa-magic"></i> New {page.title}</a>
 						</div>
 					</div>
 				</div>

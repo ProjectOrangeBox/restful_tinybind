@@ -13,8 +13,8 @@ tinybind.config = {
 		item: {
 			open: '<li class="dropdown">',
 			openSub: '<li class="dropdown dropdown-submenu">',
-			rowSub: '<a appNavigate href="%1$s" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">%2$s</a><ul class="dropdown-menu" role="menu">',
-			rowSingle: '<li><a appNavigate href="%1$s">%2$s</a></li>',
+			rowSub: '<a appNavigate target="%3$s" href="%1$s" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">%2$s</a><ul class="dropdown-menu" role="menu">',
+			rowSingle: '<li><a appNavigate target="%3$s" href="%1$s">%2$s</a></li>',
 			hr: '<li role="separator" class="divider"></li>',
 			close: '</ul></li>',
 		},
