@@ -22,9 +22,8 @@ class MY_Controller extends CI_Controller {
 
 		$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 		$isJson = (!empty($_SERVER['HTTP_ACCEPT']) && strpos(strtolower($_SERVER['HTTP_ACCEPT']),'application/json') !== false);
-		$action = ucwords(strtolower($_SERVER['REQUEST_METHOD']));
-		$ajax = ($isAjax || $isJson) ? 'Ajax' : '';
-		$method = $method.$action.$ajax;
+
+		$method = $method.ucwords($this->input->method()).(($isAjax || $isJson) ? 'Ajax' : '');
 
 		$this->$method(...$params);
 	}
