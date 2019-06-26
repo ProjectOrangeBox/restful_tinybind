@@ -22,7 +22,6 @@ let css = {
 	'vendor': [
 		'node_modules/font-awesome/css/font-awesome.css',
 		'node_modules/bootstrap3/dist/css/bootstrap.css',
-		'node_modules/bootstrap3/dist/css/bootstrap-theme.css',
 		'node_modules/bootstrap-select/dist/css/bootstrap-select.css',
 		'node_modules/roboto-fontface/css/roboto/roboto-fontface.css',
 	],
@@ -81,7 +80,7 @@ let watchFilesPug = pugViews;
 var tasks = {
 	compilePug: function() {
 		return src(pugViews)
-			.pipe(pug({pretty:false}))
+			.pipe(pug({pretty:true}))
 			.pipe(dest('application/views'));
 	},
 	compileJsVendor: function() {

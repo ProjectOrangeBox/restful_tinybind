@@ -46,9 +46,24 @@ app.router
 	.add('robot/create', function() {
 		app.loadModel('/robot/create',app.config.layoutUrl + '/robot/details');
 	})
-	.add(function() {
-		/* default */
+	.add('robot', function() {
 		app.loadModel('/robot/index',app.config.layoutUrl + '/robot/index');
+	})
+	/* mpa example page */
+	.add('food/edit/(:num)', function(primary_id) {
+		app.loadModel('/food/edit/' + primary_id);
+	})
+	.add('food/create', function() {
+		app.loadModel('/food/create');
+	})
+	.add('food', function() {
+		app.loadModel('/food/index');
+	})
+	.add(function() {
+		/* leave empty to allow for standard web page loads */
+		/* default route */
+		/* redirect */
+		console.log('default: ' + app.router.getUrl());
 	});
 
 app.response.change(404,function(xhr,status,error) {
@@ -56,13 +71,53 @@ app.response.change(404,function(xhr,status,error) {
 	app.loadTemplate(app.config.layoutUrl + '/notfound');
 });
 
+app._buildUrl = function(args) {
+	var that = args.pop();
+	var event = args.pop();
+
+	event.preventDefault();
+
+	return sprintf.apply(args[0],args);
+}
+
+app._submit = function(redirect) {
+	/* created record - create */
+	app.response.change(201,function(data,status,xhr) {
+		/* good redirect */
+		notify.removeAll();
+
+		app.router.navigate(app.page.path,redirect);
+	});
+
+	/* accepted record - update */
+	app.response.change(202,function(data,status,xhr) {
+		/* good redirect" */
+		notify.removeAll();
+
+		app.router.navigate(app.page.path,redirect);
+	});
+
+	/* not accepted - show errors */
+	app.response.change(406,function(xhr,status,error) {
+		/* good show errors */
+		app.setData(xhr.responseJSON);
+
+		if (app.error) {
+			notify.removeAll();
+			for (var key in app.errors) {
+				for (var key2 in app.errors[key]) {
+					console.log(app.errors[key][key2]);
+					notify.error(app.errors[key][key2]);
+				}
+			}
+		}
+	});
+
+	app.request[app.form.method](app.form.action,app.getData());
+}
+
 /* Button Events */
 app.event
-	.add('goto',function(url, event) {
-		event.preventDefault();
-		notify.removeAll();
-		app.router.navigate(url);
-	})
 	.add('create',function(url, event) {
 		event.preventDefault();
 		app.router.navigate(url + '/create');
@@ -70,6 +125,14 @@ app.event
 	.add('edit',function(url, primaryId, event) {
 		event.preventDefault();
 		app.router.navigate(url + '/edit/' + primaryId);
+	})
+	.add('navigate',function() {
+		/* spa navigate */
+		app.router.navigate(app._buildUrl([].slice.call(arguments)),false);
+	})
+	.add('redirect',function() {
+		/* mpa redirect */
+		app.router.navigate(app._buildUrl([].slice.call(arguments)),true);
 	})
 	.add('delete',function(url, primaryId, event) {
 		event.preventDefault();
@@ -105,36 +168,9 @@ app.event
 	})
 	.add('submit',function(event) {
 		event.preventDefault();
-
-		/* created record - create */
-		app.response.change(201,function(data,status,xhr) {
-			/* good redirect */
-			notify.removeAll();
-			app.router.navigate(app.page.path);
-		});
-
-		/* accepted record - update */
-		app.response.change(202,function(data,status,xhr) {
-			/* good redirect" */
-			notify.removeAll();
-			app.router.navigate(app.page.path);
-		});
-
-		/* not accepted - show errors */
-		app.response.change(406,function(xhr,status,error) {
-			/* good show errors */
-			app.setData(xhr.responseJSON);
-
-			if (app.error) {
-				notify.removeAll();
-				for (var key in app.errors) {
-					for (var key2 in app.errors[key]) {
-						console.log(app.errors[key][key2]);
-						notify.error(app.errors[key][key2]);
-					}
-				}
-			}
-		});
-
-		app.request[app.form.method](app.form.action,app.getData());
+		app._submit(false);
+	})
+	.add('submitRedirect',function(event) {
+		event.preventDefault();
+		app._submit(true);
 	});

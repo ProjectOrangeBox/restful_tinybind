@@ -35,9 +35,12 @@ function debounce(func, wait, immediate) {
 
 $(document).on('click','[appNavigate]',function(event){
 	event.preventDefault();
+
 	var href = $(this).attr('href');
+	var redirect = ($(this).attr('target') == '_top');
+
 	if (href) {
-		app.router.navigate(href);
+		app.router.navigate(href,redirect);
 	}
 });
 
