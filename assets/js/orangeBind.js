@@ -387,6 +387,29 @@ var app = {
 
 		return this; /* allow chaining */
 	},
+	refresh: function(data,then) {
+		this.triggers.unbound();
+
+		/* unbind tinybind */
+		if (this.bound) {
+			this.bound.unbind();
+		}
+
+		/* update app data */
+		if (data) {
+			this.setData(data);
+		}
+
+		/* rebind */
+		this.bound = tinybind.bind(document.getElementById(this.id),app);
+
+		/* tell everyone we now have new data */
+		this.triggers.bound();
+
+		if (then) {
+			then();
+		}
+	},
 	/* actual model load */
 	_loadModel: function(modelEndPoint,then) {
 		var parent = this;
