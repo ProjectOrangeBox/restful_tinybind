@@ -19,15 +19,12 @@ var app = {
 	id: 'app',
 	/* default config */
 	config: {
-		add: function (name, value) {
-			/* wrapper */
-			return this.change(name, value);
-		},
-		change: function (name, value) {
+		alter: function (name, value) {
 			this[name] = value;
 
 			return this;
 		},
+		defaults: {},
 		/* config options */
 		url: '/',
 		redirect: false,
@@ -68,8 +65,6 @@ var app = {
 	page: {},
 	/* form variables */
 	form: {},
-	/* store actual events */
-	events: {},
 	/* user methods */
 	method: {},
 	/* default application trigger and storage */
@@ -79,6 +74,10 @@ var app = {
 		},
 		unbound: function () {
 			jQuery('body').trigger('tiny-bind-unbound');
+		},
+		alter: function (name, callback) {
+			this[name] = callback;
+			return this;
 		}
 	},
 	/* initialization function */
@@ -87,7 +86,7 @@ var app = {
 		var parent = this;
 
 		/* default init 200 callback */
-		this.response.change(200, function (data, xhr) {
+		this.response.alter(200, function (data, xhr) {
 			/**
 			 * try to application (app) variables
 			 * replace: error, errors, model
@@ -111,28 +110,19 @@ var app = {
 		/* Make a Request for the configuration url using the default 200 responds we just setup above */
 		this.request.get(this.config.url);
 	},
+	/* store actual events */
+	events: {},
 	/* default events and event storage */
 	event: {
-		/* wrapper to add events like this.event.add('name',function(){}); */
-		add: function (name, callback) {
-			/* wrapper */
-			return this.change(name, callback);
-		},
-		change: function (name, callback) {
+		alter: function (name, callback) {
 			app.events[name] = callback;
-
 			return this; /* allow chaining */
 		}
 	},
 	method: {
 		/* wrapper to add events like this.event.add('name',function(){}); */
-		add: function (name, callback) {
-			/* wrapper */
-			return this.change(name, callback);
-		},
-		change: function (name, callback) {
-			app.method[name] = callback;
-
+		alter: function (name, callback) {
+			this[name] = callback;
 			return this; /* allow chaining */
 		}
 	},
@@ -187,11 +177,7 @@ var app = {
 
 			return this._clearSlashes(url);
 		},
-		add: function (regularExpression, callback) {
-			/* wrapper */
-			return this.change(regularExpression, callback);
-		},
-		change: function (regularExpression, callback) {
+		alter: function (regularExpression, callback) {
 			/* handle the default when a callback is sent in for the regular expression */
 			if (typeof regularExpression === 'function') {
 				callback = regularExpression;
@@ -319,11 +305,7 @@ var app = {
 				alert('500 (server error) callback');
 			},
 		},
-		add: function (code, callback) {
-			/* wrapper */
-			return this.change(code, callback);
-		},
-		change: function (code, callback) {
+		alter: function (code, callback) {
 			/* change the responds callback based on the returned http status code */
 			this._callbacks[code] = callback;
 
@@ -476,7 +458,7 @@ var app = {
 			}
 		} else {
 			/* setup retrieve model - success */
-			this.response.change(200, function (data, status, xhr) {
+			this.response.alter(200, function (data, status, xhr) {
 				var cacheSeconds = (data.template.cache) ? data.template.cache : parent.config.templateCache;
 
 				storage.setItem(key, data.template.source, cacheSeconds);
@@ -520,7 +502,7 @@ var app = {
 	_loadModel: function (modelEndPoint, then) {
 		var parent = this;
 
-		this.response.change(200, function (data, status, xhr) {
+		this.response.alter(200, function (data, status, xhr) {
 			parent.refresh(data, then);
 		});
 
@@ -528,5 +510,5 @@ var app = {
 		parent.request.get(modelEndPoint);
 
 		return this; /* allow chaining */
-	},
+	}
 };

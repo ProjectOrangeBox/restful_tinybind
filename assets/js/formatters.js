@@ -1,5 +1,8 @@
 /**
  * These are attached directly to tinybind
+ *
+ * popular https://github.com/matthieuriolo/rivetsjs-stdlib
+ *
  */
 
 /* general */
@@ -389,6 +392,9 @@ tinybind.formatters.join = function (target, val) {
 
 /* functions formatters */
 
+/* https://github.com/matthieuriolo/rivetsjs-stdlib */
+
+/* Returns a new function which will call target with the arguments given to wrap and with the arguments used in the event caller. The arguments passed to wrap can be accessed as the first arguments */
 tinybind.formatters.wrap = function (target) {
 	var args = Array.prototype.slice.call(arguments);
 	args.splice(0, 1);
@@ -400,6 +406,7 @@ tinybind.formatters.wrap = function (target) {
 	};
 };
 
+/* Returns a anonym functions which calls target with a delay */
 tinybind.formatters.delay = function (target, ts) {
 	var self = this;
 
@@ -410,6 +417,7 @@ tinybind.formatters.delay = function (target, ts) {
 	};
 };
 
+/* Returns a anonym functions which calls preventDefault and afterwards target */
 tinybind.formatters.preventDefault = function (target) {
 	var self = this;
 	return function (evt) {

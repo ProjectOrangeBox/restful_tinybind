@@ -54,37 +54,62 @@ In you `javascript` `app` is declared as a global variable in `orangeBind/orange
 
 ### The Model <-> View Binder with support for a URL Router
 
-orangeBind properties and methods
+#### orangeBind properties and methods
 
 ---
 
 `id` the applications div wrapper id (default is app)
 
-`config: {}` storage for default a additional configuration
+`init()` application init
 
 `local: {}` local app storage (not saved between full page refreshes)
 
-`error: {}` storage for a single error
+---
 
-`errors: {}` storage for multiple errors
+`error: boolean` storage for bound has error
 
-`model: {}` storage for the current bound model
+`errors: {}` storage for bound errors
 
-`records: {}` storage for multiple records
+`model: {}` storage for the currently bound model (record OR records)
 
-`record: []` storage for a single records
+`records: []` storage for currently bound records
 
-`page: {}` storage for page variables
+`record: {}` storage for a currently bound record
 
-`form: {}` storage for form variables
+`page: {}` storage for page bound variables
+
+`form: {}` storage for form bound variables
+
+---
+
+`config: {}` storage for application configuration
+
+`config.alter(name,value)` add or change a configuration value
+
+---
+`trigger: {}` storage for application specific DOM triggers
+
+`trigger.bound` trigger DOM bound event
+
+`trigger.unbound` trigger DOM unbound event
+
+`trigger.alter(name, callback)` add or change a trigger
+
+---
 
 `events: {}` storage for tinybind events
 
-`triggers: {}` storage for tinybind triggers - defaults bound / unbound which trigger a jquery event on the document body
+`event.alter(name, callback)` add or change a tinybind event
 
-`init()` application init
+`<a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>`
 
-`event.add(name, callback)` add additional events to app.events
+https://blikblum.github.io/tinybind/docs/reference/#on-[event]
+
+---
+
+`method: {}` storage for user methods
+
+`method.alter(name, callback)` add or change a user method
 
 ---
 
@@ -92,9 +117,7 @@ orangeBind properties and methods
 
 `router.getUrl()` get the current url
 
-`router.change(regularExpression, callback)` change a route
-
-`router.add(regularExpression, callback)` (wrapper for change for syntax completeness)
+`router.alter(regularExpression, callback)` add or change a route
 
 `router.remove(param)` remove a route based on the regular expression
 
@@ -106,9 +129,7 @@ orangeBind properties and methods
 
 ---
 
-`response.change(code, callback)` change a response codes action
-
-`response.add(code, callback)` (wrapper for change for syntax completeness)
+`response.alter(code, callback)` add or change a response codes action
 
 `response.merge(callbacks)` add multiple callbacks at once
 
@@ -134,11 +155,31 @@ orangeBind properties and methods
 
 ---
 
-`setData(data)` merge passed data with the current application data (error, errors, model, page, form, config, record, records, config)
+`setData(data)` merge passed data with the current application data
 
-`getData(data)` return the current application error, errors, models, page, form values
+* error
+* errors
+* model
+* page
+* form
+* config
+* record
+* records
+* config
 
-`cacheCleanUp(config)` clean up the cached based on passed class clearCache = [t/f] olderThanCache [integer]
+`getData(data)` return the current application data
+
+* error
+* errors
+* models
+* page
+* form
+* values
+
+`cacheCleanUp(config)` clean up the cached based on passed class
+
+* clearCache = boolean
+* olderThanCache seconds (integer)
 
 `loadModel(modelEndPoint, templateEndPoint)` load a model from the server or load a template then a model from the server
 
@@ -190,6 +231,10 @@ The espiritual sucessor of Rivets.js
 
 https://blikblum.github.io/tinybind/
 
+
+---
+
+
 # /assets/app/app.js
 
 Setup the application
@@ -197,28 +242,26 @@ Setup the application
 Then the following methods are called to add additional values
 
 _required_
-`app.config.add('url','/get/config')`
-the url to call to get the applications configuration from the server
+The url to call to get the applications configuration from the server
+`app.config.alter('url','/get/config')`
 
-`app.config.add('layoutUrl','/get/layout')`
-the url to call to get a layout
+The url to call to get a layout
+`app.config.alter('layoutUrl','/get/layout')`
 
 _optional_
-`app.config.add(name,value)`
-`app.config.change(name,value)`
-add or change application configuration values (add is a wrapper for change to make the syntax read better)
+Add or change an application configuration value
+`app.config.alter(name,value)`
 
-`app.router.add(name,callback)`
-your application routes and actions (callbacks) to take when a route is encountered
+Routers and there callbacks
+`app.router.alter(name,callback)`
 
-`app.events.add(name,callback)`
-these are attached using tinybind
+Tinybind events
+`app.event.alter(name,callback)`
 
-#### Note: the last app.router.add(function() {...}) is the default route
+#### Note: the last app.router.alter(function() {...}) is the default route
 
-We also declare our "user methods"
-`app.userMethods{}`
-a place to attach user methods to the globally available app
+User methods
+`app.method.alter('open',function()...)`
 
 # /assets/js/\*
 
@@ -243,4 +286,5 @@ https://blikblum.github.io/tinybind/docs/guide/#formatters
 ## onReady.js
 
 File to put all of your on DOM ready javascript
+This is also what calls app.init() once the DOM is Ready
 

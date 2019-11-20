@@ -1,16 +1,21 @@
 /**
  * These are attached directly to tinybind
+ *
+ * thanks to https://github.com/matthieuriolo/rivetsjs-stdlib
+ *
  */
 
+/* Resets the css width value with the target */
 tinybind.binders.width = function (el, value) {
 	el.style.width = value;
 };
 
+/* Resets the css height value with the target */
 tinybind.binders.height = function (el, value) {
 	el.style.height = value;
 };
 
-/* tiny integer 0/1 checkbox */
+/* dmyers - tiny integer 0/1 checkbox */
 tinybind.binders.intcheck = {
 	publishes: true,
 	priority: 2000,

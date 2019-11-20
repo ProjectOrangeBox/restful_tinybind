@@ -1,9 +1,9 @@
 /* Setup the Application */
 
 app.config
-	.add('url', '/get/configuration') /* the url to call to get the applications configuration from the server */
-	.add('layoutUrl', '/get/layout') /* the url to call to get a layout ie. /get/layout/{name} */
-	.add('default', {
+	.alter('url', '/get/configuration') /* the url to call to get the applications configuration from the server */
+	.alter('layoutUrl', '/get/layout') /* the url to call to get a layout ie. /get/layout/{name} */
+	.alter('default', {
 		Precision: 2,
 		ThousandSeparator: ',',
 		DecimalSeparator: '.',
@@ -11,7 +11,7 @@ app.config
 		TimeFormat: 'HH:mm:ss',
 		DatetimeFormat: 'YYYY-MM-DD HH:mm:ss'
 	})
-	.add('nav', {
+	.alter('nav', {
 		open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/" target="_top">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
 		close: '</ul></div></div>',
 		item: {
@@ -26,64 +26,64 @@ app.config
 
 /* Add Routes */
 app.router
-	.add('multi/edit/(:num)', function (primary_id) {
+	.alter('multi/edit/(:num)', function (primary_id) {
 		app.loadModel('/multi/edit/' + primary_id, app.config.layoutUrl + '/multi/details');
 	})
-	.add('multi/create', function () {
+	.alter('multi/create', function () {
 		app.loadModel('/multi/create', app.config.layoutUrl + '/multi/details');
 	})
-	.add('multi', function () {
+	.alter('multi', function () {
 		app.loadModel('/multi/index', app.config.layoutUrl + '/multi/index');
 	})
-	.add('people/edit/(:num)', function (primary_id) {
+	.alter('people/edit/(:num)', function (primary_id) {
 		app.loadModel('/people/edit/' + primary_id, app.config.layoutUrl + '/people/details');
 	})
-	.add('people/create', function () {
+	.alter('people/create', function () {
 		app.loadModel('/people/create', app.config.layoutUrl + '/people/details');
 	})
-	.add('people', function () {
+	.alter('people', function () {
 		app.loadModel('/people/index', app.config.layoutUrl + '/people/index');
 	})
-	.add('zipcodes/edit/(:num)', function (primary_id) {
+	.alter('zipcodes/edit/(:num)', function (primary_id) {
 		app.loadModel('/zipcodes/edit/' + primary_id, app.config.layoutUrl + '/zipcodes/details');
 	})
-	.add('zipcodes/create', function () {
+	.alter('zipcodes/create', function () {
 		app.loadModel('/zipcodes/create', app.config.layoutUrl + '/zipcodes/details');
 	})
-	.add('zipcodes', function () {
+	.alter('zipcodes', function () {
 		app.loadModel('/zipcodes/index', app.config.layoutUrl + '/zipcodes/index');
 	})
-	.add('catalog/edit/(:num)', function (primary_id) {
+	.alter('catalog/edit/(:num)', function (primary_id) {
 		app.loadModel('/catalog/edit/' + primary_id, app.config.layoutUrl + '/catalog/details');
 	})
-	.add('catalog/create', function () {
+	.alter('catalog/create', function () {
 		app.loadModel('/catalog/create', app.config.layoutUrl + '/catalog/details');
 	})
-	.add('catalog', function () {
+	.alter('catalog', function () {
 		app.loadModel('/catalog/index', app.config.layoutUrl + '/catalog/index');
 	})
-	.add('robot/edit/(:num)', function (primary_id) {
+	.alter('robot/edit/(:num)', function (primary_id) {
 		app.loadModel('/robot/edit/' + primary_id, app.config.layoutUrl + '/robot/details');
 	})
-	.add('robot/create', function () {
+	.alter('robot/create', function () {
 		app.loadModel('/robot/create', app.config.layoutUrl + '/robot/details');
 	})
-	.add('robot', function () {
+	.alter('robot', function () {
 		app.loadModel('/robot/index', app.config.layoutUrl + '/robot/index');
 	})
 	/* mpa example page - when this page loads load this model */
-	.add('food/edit/(:num)', function (primary_id) {
+	.alter('food/edit/(:num)', function (primary_id) {
 		app.loadModel('/food/edit/' + primary_id);
 	})
 	/* mpa example page - when this page loads load this model */
-	.add('food/create', function () {
+	.alter('food/create', function () {
 		app.loadModel('/food/create');
 	})
 	/* mpa example page - when this page loads load this model */
-	.add('food', function () {
+	.alter('food', function () {
 		app.loadModel('/food/index');
 	})
-	.add(function () {
+	.alter(function () {
 		/* leave empty to allow for standard web page loads */
 		/* default route */
 		/* redirect */
@@ -91,75 +91,75 @@ app.router
 		app.refresh();
 	});
 
-app.response.change(404, function (xhr, status, error) {
+app.response.alter(404, function (xhr, status, error) {
 	/* don't show the default alert() - instead show not found */
 	app.loadTemplate(app.config.layoutUrl + '/notfound');
 });
 
-app.method.add('buildUrl', function (args) {
-	var that = args.pop();
-	var event = args.pop();
+app.method
+	.alter('buildUrl', function (args) {
+		var that = args.pop();
+		var event = args.pop();
 
-	event.preventDefault();
+		event.preventDefault();
 
-	return sprintf.apply(args[0], args);
-});
-
-app.method.add('submit', function (redirect) {
-	/* created record - create */
-	app.response.change(201, function (data, status, xhr) {
-		/* good redirect */
-		notify.removeAll();
-
-		app.router.navigate(app.page.path, redirect);
-	});
-
-	/* accepted record - update */
-	app.response.change(202, function (data, status, xhr) {
-		/* good redirect" */
-		notify.removeAll();
-
-		app.router.navigate(app.page.path, redirect);
-	});
-
-	/* not accepted - show errors */
-	app.response.change(406, function (xhr, status, error) {
-		/* good show errors */
-		app.setData(xhr.responseJSON);
-
-		if (app.error) {
+		return sprintf.apply(args[0], args);
+	})
+	.alter('submit', function (redirect) {
+		/* created record - create */
+		app.response.alter(201, function (data, status, xhr) {
+			/* good redirect */
 			notify.removeAll();
-			for (var key in app.errors) {
-				for (var key2 in app.errors[key]) {
-					console.log(app.errors[key][key2]);
-					notify.error(app.errors[key][key2]);
+
+			app.router.navigate(app.page.path, redirect);
+		});
+
+		/* accepted record - update */
+		app.response.alter(202, function (data, status, xhr) {
+			/* good redirect" */
+			notify.removeAll();
+
+			app.router.navigate(app.page.path, redirect);
+		});
+
+		/* not accepted - show errors */
+		app.response.alter(406, function (xhr, status, error) {
+			/* good show errors */
+			app.setData(xhr.responseJSON);
+
+			if (app.error) {
+				notify.removeAll();
+				for (var key in app.errors) {
+					for (var key2 in app.errors[key]) {
+						console.log(app.errors[key][key2]);
+						notify.error(app.errors[key][key2]);
+					}
 				}
 			}
-		}
-	});
+		});
 
-	app.request[app.form.method](app.form.action, app.getData());
-});
+		app.request[app.form.method](app.form.action, app.getData());
+	});
 
 /* Button Events */
 app.event
-	.add('create', function (url, event) {
+	.alter('create', function (url, event) {
 		event.preventDefault();
 		app.router.navigate(url + '/create');
 	})
-	.add('edit', function (url, primaryId, event) {
+	.alter('edit', function (url, primaryId, event) {
 		event.preventDefault();
 		app.router.navigate(url + '/edit/' + primaryId);
 	})
-	.add('navigate', function () {
-		/* spa navigate */
+	.alter('navigate', function () {
+		/* spa navigate - to the first argument passed */
 		app.router.navigate(app.method.buildUrl([].slice.call(arguments)), false);
 	})
-	.add('redirect', function () {
-		/* mpa redirect */
+	.alter('redirect', function () {
+		/* mpa redirect - to the first argument passed */
 		app.router.navigate(app.method.buildUrl([].slice.call(arguments)), true);
 	})
-	.add('delete', function (url, primaryId, event) {
+	.alter('delete', function (url, primaryId, event) {
 		event.preventDefault();
 		/* we need to save this for the 202 responds */
 		app.local.closest_tr = jQuery(this).closest('tr');
@@ -191,11 +191,11 @@ app.event
 			},
 		});
 	})
-	.add('submit', function (event) {
+	.alter('submit', function (event) {
 		event.preventDefault();
 		app.method.submit(false);
 	})
-	.add('submitRedirect', function (event) {
+	.alter('submitRedirect', function (event) {
 		event.preventDefault();
 		app.method.submit(true);
 	});
