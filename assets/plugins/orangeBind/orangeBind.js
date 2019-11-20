@@ -19,14 +19,14 @@ var app = {
 	id: 'app',
 	/* default config */
 	config: {
+		add: function (name, value) {
+			/* wrapper */
+			return this.change(name, value);
+		},
 		change: function (name, value) {
 			this[name] = value;
 
 			return this;
-		},
-		add: function (name, value) {
-			/* wrapper */
-			return this.change(name, value);
 		},
 		/* config options */
 		url: '/',
@@ -70,6 +70,8 @@ var app = {
 	form: {},
 	/* store actual events */
 	events: {},
+	/* user methods */
+	method: {},
 	/* default application trigger and storage */
 	trigger: {
 		bound: function () {
@@ -112,14 +114,26 @@ var app = {
 	/* default events and event storage */
 	event: {
 		/* wrapper to add events like this.event.add('name',function(){}); */
+		add: function (name, callback) {
+			/* wrapper */
+			return this.change(name, callback);
+		},
 		change: function (name, callback) {
 			app.events[name] = callback;
 
 			return this; /* allow chaining */
-		},
+		}
+	},
+	method: {
+		/* wrapper to add events like this.event.add('name',function(){}); */
 		add: function (name, callback) {
 			/* wrapper */
 			return this.change(name, callback);
+		},
+		change: function (name, callback) {
+			app.method[name] = callback;
+
+			return this; /* allow chaining */
 		}
 	},
 	/* our default router */
@@ -305,15 +319,15 @@ var app = {
 				alert('500 (server error) callback');
 			},
 		},
+		add: function (code, callback) {
+			/* wrapper */
+			return this.change(code, callback);
+		},
 		change: function (code, callback) {
 			/* change the responds callback based on the returned http status code */
 			this._callbacks[code] = callback;
 
 			return this;
-		},
-		add: function (code, callback) {
-			/* wrapper */
-			return this.change(code, callback);
 		},
 		merge: function (callbacks) {
 			/* get the callbacks */

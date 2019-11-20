@@ -96,16 +96,16 @@ app.response.change(404, function (xhr, status, error) {
 	app.loadTemplate(app.config.layoutUrl + '/notfound');
 });
 
-app.trigger.buildUrl = function (args) {
+app.method.add('buildUrl', function (args) {
 	var that = args.pop();
 	var event = args.pop();
 
 	event.preventDefault();
 
 	return sprintf.apply(args[0], args);
-}
+});
 
-app.trigger.submit = function (redirect) {
+app.method.add('submit', function (redirect) {
 	/* created record - create */
 	app.response.change(201, function (data, status, xhr) {
 		/* good redirect */
@@ -139,7 +139,7 @@ app.trigger.submit = function (redirect) {
 	});
 
 	app.request[app.form.method](app.form.action, app.getData());
-}
+});
 
 /* Button Events */
 app.event
@@ -153,11 +153,11 @@ app.event
 	})
 	.add('navigate', function () {
 		/* spa navigate */
-		app.router.navigate(app.trigger.buildUrl([].slice.call(arguments)), false);
+		app.router.navigate(app.method.buildUrl([].slice.call(arguments)), false);
 	})
 	.add('redirect', function () {
 		/* mpa redirect */
-		app.router.navigate(app.trigger.buildUrl([].slice.call(arguments)), true);
+		app.router.navigate(app.method.buildUrl([].slice.call(arguments)), true);
 	})
 	.add('delete', function (url, primaryId, event) {
 		event.preventDefault();
@@ -193,9 +193,9 @@ app.event
 	})
 	.add('submit', function (event) {
 		event.preventDefault();
-		app.trigger.submit(false);
+		app.method.submit(false);
 	})
 	.add('submitRedirect', function (event) {
 		event.preventDefault();
-		app.trigger.submit(true);
+		app.method.submit(true);
 	});

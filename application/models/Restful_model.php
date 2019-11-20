@@ -100,6 +100,7 @@ class Restful_model
 	 */
 	public function __construct()
 	{
+		/* send back the same stuff sent to us */
 		$request = get_instance()->input->request();
 
 		/* make sure we send back what ever they gave us */
