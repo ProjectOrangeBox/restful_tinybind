@@ -4,30 +4,30 @@ Download the standard CodeIgniter 3 Package and install
 
 Then to your application folder add the `MY_Controller`, `MY_Input`, `MY_Model` files to your core folder.
 
-MY_Controller provides some really basic routing using the CodeIgniter Controller \_remap method.
+MY_Controller provides some really basic routing using the CodeIgniter Controller _remap method.
 
-- indexGet\*(
-- indexGetAjax()
-- createGetAjax()
-- createPostAjax()
-- editGetAjax()
-- editPatchAjax()
-- deleteDeleteAjax()
-- send
+* indexGet()
+* indexGetAjax()
+* createGetAjax()
+* createPostAjax()
+* editGetAjax()
+* editPatchAjax()
+* deleteDeleteAjax()
+* send(success,fail)
 
 MY_Input provides a wrapper around the raw input stream
 
-- request(key) get a value from the raw input
+* request(key) get a value from the raw input
 
 MY_Model provides a some simple database functions for:
 
-- all() return all records
-- empty() return a empty record
-- get(primary id) get a record based on it's primary id
-- insert(data array) insert a record
-- update(data array) update a record
-- delete(primary id) delete a record based on it primary id
-- check(data array, primary key required) simple validation that only checks for required fields
+* all() return all records
+* empty() return a empty record
+* get(primary id) get a record based on it's primary id
+* insert(data array) insert a record
+* update(data array) update a record
+* delete(primary id) delete a record based on it primary id
+* check(data array, primary key required) simple validation that only checks for required fields
 
 Create a `/assets` folder
 
@@ -64,7 +64,7 @@ orangeBind properties and methods
 
 `local: {}` local app storage (not saved between full page refreshes)
 
-`error: boolean` storage to specify if there are any errors
+`error: {}` storage for a single error
 
 `errors: {}` storage for multiple errors
 
@@ -100,7 +100,7 @@ orangeBind properties and methods
 
 `router.flush()` remove ALL routes
 
-`router.listen()` turn on the route listener
+`router.listen()` turn on the route listener 
 
 `router.navigate(url, redirect)` navigate to a different url
 
@@ -243,3 +243,4 @@ https://blikblum.github.io/tinybind/docs/guide/#formatters
 ## onReady.js
 
 File to put all of your on DOM ready javascript
+
