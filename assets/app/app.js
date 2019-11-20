@@ -194,9 +194,9 @@ app.event
 	})
 	.add('submit', function (event) {
 		event.preventDefault();
-		app.user.submit(false);
+		app.userMethods.submit(false);
 	})
 	.add('submitRedirect', function (event) {
 		event.preventDefault();
-		app.user.submit(true);
+		app.userMethods.submit(true);
 	});
