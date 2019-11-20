@@ -96,50 +96,49 @@ app.response.change(404, function (xhr, status, error) {
 	app.loadTemplate(app.config.layoutUrl + '/notfound');
 });
 
-app.userMethods = {
-	buildUrl: function (args) {
-		var that = args.pop();
-		var event = args.pop();
+app.trigger.buildUrl = function (args) {
+	var that = args.pop();
+	var event = args.pop();
 
-		event.preventDefault();
+	event.preventDefault();
 
-		return sprintf.apply(args[0], args);
-	},
-	submit: function (redirect) {
-		/* created record - create */
-		app.response.change(201, function (data, status, xhr) {
-			/* good redirect */
+	return sprintf.apply(args[0], args);
+}
+
+app.trigger.submit = function (redirect) {
+	/* created record - create */
+	app.response.change(201, function (data, status, xhr) {
+		/* good redirect */
+		notify.removeAll();
+
+		app.router.navigate(app.page.path, redirect);
+	});
+
+	/* accepted record - update */
+	app.response.change(202, function (data, status, xhr) {
+		/* good redirect" */
+		notify.removeAll();
+
+		app.router.navigate(app.page.path, redirect);
+	});
+
+	/* not accepted - show errors */
+	app.response.change(406, function (xhr, status, error) {
+		/* good show errors */
+		app.setData(xhr.responseJSON);
+
+		if (app.error) {
 			notify.removeAll();
-
-			app.router.navigate(app.page.path, redirect);
-		});
-
-		/* accepted record - update */
-		app.response.change(202, function (data, status, xhr) {
-			/* good redirect" */
-			notify.removeAll();
-
-			app.router.navigate(app.page.path, redirect);
-		});
-
-		/* not accepted - show errors */
-		app.response.change(406, function (xhr, status, error) {
-			/* good show errors */
-			app.setData(xhr.responseJSON);
-
-			if (app.error) {
-				notify.removeAll();
-				for (var key in app.errors) {
-					for (var key2 in app.errors[key]) {
-						console.log(app.errors[key][key2]);
-						notify.error(app.errors[key][key2]);
-					}
+			for (var key in app.errors) {
+				for (var key2 in app.errors[key]) {
+					console.log(app.errors[key][key2]);
+					notify.error(app.errors[key][key2]);
 				}
 			}
-		});
+		}
+	});
 
-		app.request[app.form.method](app.form.action, app.getData());
-	}
+	app.request[app.form.method](app.form.action, app.getData());
 }
 
 /* Button Events */
@@ -154,11 +153,11 @@ app.event
 	})
 	.add('navigate', function () {
 		/* spa navigate */
-		app.router.navigate(app.userMethods.buildUrl([].slice.call(arguments)), false);
+		app.router.navigate(app.trigger.buildUrl([].slice.call(arguments)), false);
 	})
 	.add('redirect', function () {
 		/* mpa redirect */
-		app.router.navigate(app.userMethods.buildUrl([].slice.call(arguments)), true);
+		app.router.navigate(app.trigger.buildUrl([].slice.call(arguments)), true);
 	})
 	.add('delete', function (url, primaryId, event) {
 		event.preventDefault();
@@ -194,9 +193,9 @@ app.event
 	})
 	.add('submit', function (event) {
 		event.preventDefault();
-		app.userMethods.submit(false);
+		app.trigger.submit(false);
 	})
 	.add('submitRedirect', function (event) {
 		event.preventDefault();
-		app.userMethods.submit(true);
+		app.trigger.submit(true);
 	});

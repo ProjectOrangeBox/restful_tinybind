@@ -70,14 +70,14 @@ var app = {
 	form: {},
 	/* store actual events */
 	events: {},
-	/* default application triggers and storage */
-	triggers: {
+	/* default application trigger and storage */
+	trigger: {
 		bound: function () {
 			jQuery('body').trigger('tiny-bind-bound');
 		},
 		unbound: function () {
 			jQuery('body').trigger('tiny-bind-unbound');
-		},
+		}
 	},
 	/* initialization function */
 	init: function () {
@@ -480,7 +480,7 @@ var app = {
 		return this; /* allow chaining */
 	},
 	refresh: function (data, then) {
-		this.triggers.unbound();
+		this.trigger.unbound();
 
 		/* unbind tinybind */
 		if (this.bound) {
@@ -496,7 +496,7 @@ var app = {
 		this.bound = tinybind.bind(document.getElementById(this.id), app);
 
 		/* tell everyone we now have new data */
-		this.triggers.bound();
+		this.trigger.bound();
 
 		if (then) {
 			then();
