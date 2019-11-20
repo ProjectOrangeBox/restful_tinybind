@@ -27,18 +27,12 @@ class MY_Controller extends CI_Controller
 
 		$method = $method . ucwords($this->input->method()) . (($isAjax || $isJson) ? 'Ajax' : '');
 
-		call_user_func_array([$this, $method], $params);
-	}
-
-	/**
-	 * indexGet
-	 * Get the Index Layout
-	 *
-	 * @return void
-	 */
-	public function indexGet(): void
-	{
-		$this->load->view($this->default_view);
+		if (method_exists($this, $method)) {
+			call_user_func_array([$this, $method], $params);
+		} else {
+			/* if the method isn't there then default to the raw layout and let the orangeBind router try to load the template */
+			$this->load->view($this->default_view);
+		}
 	}
 
 	/**
