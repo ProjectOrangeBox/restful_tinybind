@@ -24,15 +24,7 @@ class Restful_model
 {
 	public $status = 200; /* int */
 	public $statusMsg = ''; /* string */
-
-	public $error = false;
-	public $errors = null;
-	public $model = null;
-	public $page = null;
-	public $form = null;
-	public $config = null;
-	public $nav = null;
-	public $template = null;
+	public $payload = [];
 
 	protected $statusMap = [
 		100 => 'Continue',
@@ -101,18 +93,11 @@ class Restful_model
 	public function __construct()
 	{
 		/* send back the same stuff sent to us */
-		$request = get_instance()->input->request();
-
-		/* make sure we send back what ever they gave us */
-		if (is_array($request)) {
-			foreach ($request as $key => $val) {
-				$this->$key = $val;
-			}
-		}
+		$this->payload = get_instance()->input->request();
 	}
 
 	/**
-	 * flag
+	 * Config Flag - special flags from the server which come over in the config object
 	 *
 	 * @param mixed $name
 	 * @param mixed $value
@@ -120,73 +105,26 @@ class Restful_model
 	 */
 	public function flag(string $name, $value): Restful_model
 	{
-		$this->config['flags'][$name] = $value;
+		$this->payload['config']['flags'][$name] = $value;
 
 		return $this;
 	}
 
-	/**
-	 * config
-	 *
-	 * @param mixed $name
-	 * @param mixed $value
-	 * @return void
-	 */
-	public function config(string $name, $value): Restful_model
+	public function __call($name, $arguments)
 	{
-		$this->config[$name] = $value;
+		//var_dump($name, $arguments, count($arguments));
 
-		return $this;
-	}
-
-	/**
-	 * page
-	 *
-	 * @param array $array
-	 * @return void
-	 */
-	public function page(string $name, $value): Restful_model
-	{
-		$this->page[$name] = $value;
-
-		return $this;
-	}
-
-	/**
-	 * page
-	 *
-	 * @param array $array
-	 * @return void
-	 */
-	public function form(string $name, $value): Restful_model
-	{
-		$this->form[$name] = $value;
-
-		return $this;
-	}
-
-	/**
-	 * errors
-	 *
-	 * @param mixed $errors
-	 * @return void
-	 */
-	public function errors(array $array): Restful_model
-	{
-		$this->errors = $array;
-
-		return $this;
-	}
-
-	/**
-	 * model
-	 *
-	 * @param array $array
-	 * @return void
-	 */
-	public function model(array $array): Restful_model
-	{
-		$this->model = $array;
+		switch (count($arguments)) {
+			case 0:
+				unset($this->payload[$name]);
+				break;
+			case 1:
+				$this->payload[$name] = $arguments[0];
+				break;
+			case 2:
+				$this->payload[$name][$arguments[0]] = $arguments[1];
+				break;
+		}
 
 		return $this;
 	}
@@ -199,7 +137,7 @@ class Restful_model
 	 */
 	public function template(string $template, int $cache_seconds = 0): Restful_model
 	{
-		$this->template = ['source' => $template, 'cache' => $cache_seconds];
+		$this->payload['template'] = ['source' => $template, 'cache' => $cache_seconds];
 
 		return $this;
 	}
@@ -213,19 +151,19 @@ class Restful_model
 	 */
 	public function send(int $success = 200, int $fail = null): void
 	{
-		$this->error = false;
+		$this->payload['error'] = false;
 
 		/* test for a fail */
 		if ($fail) {
-			$this->error = get_instance()->Errors_model->has_error();
+			$this->payload['error'] = get_instance()->Errors_model->has_error();
 
-			if ($this->error) {
-				$this->errors = get_instance()->Errors_model->errors();
+			if ($this->payload['error']) {
+				$this->payload['errors'] = get_instance()->Errors_model->errors();
 			}
 		}
 
-		$this->status = ($this->error) ? $fail : $success;
-		$this->statusMsg = $this->statusMap[$this->status];
+		$this->payload['status'] = ($this->payload['error']) ? $fail : $success;
+		$this->payload['statusMsg'] = $this->statusMap[$this->payload['status']];
 
 		get_instance()->output
 			->enable_profiler(false)
@@ -234,32 +172,7 @@ class Restful_model
 			->set_header('Cache-Control: post-check=0,pre-check=0', false)
 			->set_header('Pragma: no-cache')
 			->set_content_type('application/json', 'utf-8')
-			->set_status_header($this->status)
-			->set_output($this->asJson());
-	}
-
-	/**
-	 * asJson
-	 *
-	 * @return string
-	 */
-	public function asJson(): string
-	{
-		$object = new StdClass;
-
-		/* get the properties */
-		$public = get_object_vars($this);
-
-		/* remove http status map */
-		unset($public['statusMap']);
-
-		/* send out only the ones that aren't empty to keep the payload small */
-		foreach ($public as $key => $value) {
-			if ($value !== null) {
-				$object->$key = $value;
-			}
-		}
-
-		return json_encode($object);
+			->set_status_header($this->payload['status'])
+			->set_output(json_encode((object) $this->payload));
 	}
 } /* end class */
