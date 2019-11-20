@@ -1,6 +1,7 @@
 <?php
 
-class Errors_model {
+class Errors_model
+{
 	public $errors = [];
 
 	/**
@@ -10,7 +11,7 @@ class Errors_model {
 	 * @param mixed $group='default'
 	 * @return void
 	 */
-	public function add($text,$group='default')
+	public function add($text, $group = 'default')
 	{
 		$this->errors[$group][] = $text;
 
@@ -22,9 +23,9 @@ class Errors_model {
 	 *
 	 * @return void
 	 */
-	public function has_error() : bool
+	public function has_error(): bool
 	{
-		return (bool)count($this->errors);
+		return (bool) count($this->errors);
 	}
 
 	/**
@@ -32,9 +33,8 @@ class Errors_model {
 	 *
 	 * @return void
 	 */
-	public function errors() : array
+	public function errors(): array
 	{
 		return $this->errors;
 	}
-
 } /* end class */

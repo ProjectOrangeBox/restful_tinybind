@@ -2,18 +2,49 @@
 
 Download the standard CodeIgniter 3 Package and install
 
-Add the core `MY_Controller`, `MY_Input`, `MY_Model`.
+Then to your application folder add the `MY_Controller`, `MY_Input`, `MY_Model` files to your core folder.
 
-Create a `/assets` folder which is combined into the public dist (distribution) folder
+MY_Controller provides some really basic routing using the CodeIgniter Controller \_remap method.
 
-ie. `/public/dist/bundle.js`
+- indexGet\*(
+- indexGetAjax()
+- createGetAjax()
+- createPostAjax()
+- editGetAjax()
+- editPatchAjax()
+- deleteDeleteAjax()
+- send
+
+MY_Input provides a wrapper around the raw input stream
+
+- request(key) get a value from the raw input
+
+MY_Model provides a some simple database functions for:
+
+- all() return all records
+- empty() return a empty record
+- get(primary id) get a record based on it's primary id
+- insert(data array) insert a record
+- update(data array) update a record
+- delete(primary id) delete a record based on it primary id
+- check(data array, primary key required) simple validation that only checks for required fields
+
+Create a `/assets` folder
+
+These are combined by gulp into your distro in `/public/dist/bundle.js`
 
 npm install for all of the gulp packages
 
-`gulp watch`
-`gulp watch:js`
-`gulp watch:css`
-`gulp watch:pug`
+Use the following to create the distro files
+
+`gulp watch` run once
+`gulp watch:js` run once and continue to watch javascript
+`gulp watch:css` run once and continue to watch css
+`gulp watch:pug` run once and continue to watch pug template
+
+---
+
+# Orange Bind
 
 In you `javascript` `app` is declared as a global variable in `orangeBind/orangeBind.js`
 
@@ -33,7 +64,7 @@ orangeBind properties and methods
 
 `local: {}` local app storage (not saved between full page refreshes)
 
-`error: {}` storage for a single error
+`error: boolean` storage to specify if there are any errors
 
 `errors: {}` storage for multiple errors
 
@@ -69,7 +100,7 @@ orangeBind properties and methods
 
 `router.flush()` remove ALL routes
 
-`router.listen()` turn on the route listener 
+`router.listen()` turn on the route listener
 
 `router.navigate(url, redirect)` navigate to a different url
 
@@ -212,4 +243,3 @@ https://blikblum.github.io/tinybind/docs/guide/#formatters
 ## onReady.js
 
 File to put all of your on DOM ready javascript
-

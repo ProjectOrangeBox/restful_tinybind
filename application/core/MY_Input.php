@@ -1,6 +1,7 @@
 <?php
 
-class MY_Input extends CI_Input {
+class MY_Input extends CI_Input
+{
 	protected $_request = null;
 
 	/**
@@ -11,7 +12,8 @@ class MY_Input extends CI_Input {
 	 * @param mixed $key=null
 	 * @return mixed
 	 */
-	public function request($key=null) {
+	public function request($key = null)
+	{
 		if (!$this->_request) {
 			/* try to parse the input */
 			parse_str($this->raw_input_stream, $this->_request);
@@ -24,5 +26,4 @@ class MY_Input extends CI_Input {
 
 		return ($key) ? (isset($this->_request[$key])) ? $this->_request[$key] : '' : $this->_request;
 	}
-
 } /* end class */

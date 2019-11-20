@@ -1,6 +1,7 @@
 <?php
 
-class MY_Model extends CI_Model {
+class MY_Model extends CI_Model
+{
 	public $primary_key = 'id';
 	public $empty = [];
 	public $required = '';
@@ -34,7 +35,7 @@ class MY_Model extends CI_Model {
 	 */
 	public function get(int $primary_id)
 	{
-		$row = $this->db->get_where($this->table,[$this->primary_key=>$primary_id])->row();
+		$row = $this->db->get_where($this->table, [$this->primary_key => $primary_id])->row();
 
 		return (isset($row)) ? $row : false;
 	}
@@ -47,7 +48,7 @@ class MY_Model extends CI_Model {
 	 */
 	public function insert(array $data)
 	{
-		if ($success = $this->check($data,false)) {
+		if ($success = $this->check($data, false)) {
 			$this->db->insert($this->table, $data);
 
 			$success = $this->db->insert_id();
@@ -64,8 +65,8 @@ class MY_Model extends CI_Model {
 	 */
 	public function update(array $data)
 	{
-		if ($success = $this->check($data,true)) {
-			$this->db->update($this->table, $data,[$this->primary_key=>$data[$this->primary_key]]);
+		if ($success = $this->check($data, true)) {
+			$this->db->update($this->table, $data, [$this->primary_key => $data[$this->primary_key]]);
 
 			$success = $this->db->affected_rows();
 		}
@@ -81,7 +82,7 @@ class MY_Model extends CI_Model {
 	 */
 	public function delete(int $primary_id)
 	{
-		$this->db->delete($this->table,[$this->primary_key=>$primary_id]);
+		$this->db->delete($this->table, [$this->primary_key => $primary_id]);
 
 		return $this->db->affected_rows();
 	}
@@ -93,23 +94,22 @@ class MY_Model extends CI_Model {
 	 * @param bool $primaryKeyRequired
 	 * @return void
 	 */
-	public function check(array $data,bool $primaryKeyRequired) : bool
+	public function check(array $data, bool $primaryKeyRequired): bool
 	{
 		$ci = get_instance();
 
-		$columns = explode(',',$this->required);
+		$columns = explode(',', $this->required);
 
 		if (!$primaryKeyRequired) {
-			$columns = array_diff($columns,[$this->primary_key]);
+			$columns = array_diff($columns, [$this->primary_key]);
 		}
 
 		foreach ($columns as $c) {
 			if (empty($data[$c])) {
-				$ci->Errors_model->add(ucfirst($c).' is required.');
+				$ci->Errors_model->add(ucfirst($c) . ' is required.');
 			}
 		}
 
 		return !$ci->Errors_model->has_error();
 	}
-
 } /* end class */
