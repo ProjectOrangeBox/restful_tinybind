@@ -5,8 +5,8 @@
  * https://github.com/matthieuriolo/rivetsjs-stdlib
  *
  * Relies on jQuery for:
- * .ajax(url,{settings as object}) - ajax calls
- * .extend() - object merge
+ * .ajax(url,{settings as object}) - request.send() ajax calls
+ * .extend() - setData() object merge
  * .trigger() - calling custom DOM triggers others can pick up
  *		jQuery('body').trigger('something-happened');
  *		$('body').on('something-happened', function() {
@@ -28,7 +28,9 @@ var app = {
 	config: {
 		alter: function (name, value) {
 			if (typeof name === 'object') {
-				jQuery.extend(this, name);
+				for (var property in name) {
+					this.alter(property, name[property]);
+				}
 			} else {
 				this[name] = value;
 			}
@@ -124,7 +126,9 @@ var app = {
 		},
 		alter: function (name, callback) {
 			if (typeof name === 'object') {
-				jQuery.extend(this, name);
+				for (var property in name) {
+					this.alter(property, name[property]);
+				}
 			} else if (typeof callback === 'function') {
 				this[name] = callback;
 			}
@@ -138,7 +142,9 @@ var app = {
 	event: {
 		alter: function (name, callback) {
 			if (typeof name === 'object') {
-				jQuery.extend(app.events, name);
+				for (var property in name) {
+					this.alter(property, name[property]);
+				}
 			} else if (typeof callback === 'function') {
 				app.events[name] = callback;
 			}
@@ -150,7 +156,9 @@ var app = {
 		/* wrapper to add events like this.event.add('name',function(){}); */
 		alter: function (name, callback) {
 			if (typeof name === 'object') {
-				jQuery.extend(this, name);
+				for (var property in name) {
+					this.alter(property, name[property]);
+				}
 			} else if (typeof callback === 'function') {
 				this[name] = callback;
 			}
@@ -339,7 +347,9 @@ var app = {
 		},
 		alter: function (code, callback) {
 			if (typeof code === 'object') {
-				jQuery.extend(this.callbacks, code);
+				for (var property in code) {
+					this.alter(property, code[property]);
+				}
 			} else if (Number.isInteger(code) && typeof callback === 'function') {
 				/* change the responds callback based on the returned http status code */
 				this.callbacks[code] = callback;
