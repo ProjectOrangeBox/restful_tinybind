@@ -34,15 +34,4 @@ class Get extends CI_Controller
 			->config('storageCache', $this->superStorageCacheSeconds)
 			->send(200);
 	}
-
-	public function nav(): void
-	{
-		$this->Restful_model
-			->config('clearCache', !$this->cache)
-			->config('olderThanCache', $this->superStorageCacheSeconds)
-			->config('templateCache', $this->superStorageCacheSeconds)
-			->config('storageCache', $this->superStorageCacheSeconds)
-			->page('nav', $this->Nav_model->get(2))
-			->send(200);
-	}
 } /* end class */
