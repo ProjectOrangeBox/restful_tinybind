@@ -52,7 +52,7 @@ div.container
 
 		.form-group
 			label Select Multiple
-			select.form-control(name='mselect' rv-value='record.mselect | valuesToString' multiple)
+			select.form-control(name='mselect' rv-value='record.mselect | arrayValuesToString' multiple)
 				option(rv-each-row='form.select' rv-value='row.id') { row.value }
 
 		button.btn.btn-default(type='submit' rv-on-click='events.submit') Submit

@@ -1,8 +1,9 @@
 <?php
 
-class Robots_model extends MY_Model {
+class Robots_model extends MY_Model
+{
 	protected $table = 'robots';
-	public $empty = ['id'=>'','name'=>'','type'=>'Droid','year'=>'2019','enabled'=>1,'options'=>11,'select'=>2,'mselect'=>[2,"4",6]];
+	public $empty = ['id' => '', 'name' => '', 'type' => 'Droid', 'year' => '2019', 'enabled' => 0, 'options' => 11, 'select' => 2, 'mselect' => [2, "4", 6]];
 	public $required = 'id,name,type,year';
 
 	/**
@@ -13,7 +14,7 @@ class Robots_model extends MY_Model {
 	 */
 	public function get(int $primary_id)
 	{
-		$row = $this->db->get_where($this->table,[$this->primary_key=>$primary_id])->row();
+		$row = $this->db->get_where($this->table, [$this->primary_key => $primary_id])->row();
 
 		if (isset($row)) {
 			$row->mselect = json_decode($row->mselect);
@@ -32,7 +33,7 @@ class Robots_model extends MY_Model {
 	 */
 	public function insert(array $data)
 	{
-		if ($success = $this->check($data,false)) {
+		if ($success = $this->check($data, false)) {
 			$data['mselect'] = json_encode($data['mselect']);
 
 			$this->db->insert($this->table, $data);
@@ -51,15 +52,14 @@ class Robots_model extends MY_Model {
 	 */
 	public function update(array $data)
 	{
-		if ($success = $this->check($data,true)) {
+		if ($success = $this->check($data, true)) {
 			$data['mselect'] = json_encode($data['mselect']);
 
-			$this->db->update($this->table, $data,[$this->primary_key=>$data[$this->primary_key]]);
+			$this->db->update($this->table, $data, [$this->primary_key => $data[$this->primary_key]]);
 
 			$success = $this->db->affected_rows();
 		}
 
 		return $success;
 	}
-
 } /* end class */

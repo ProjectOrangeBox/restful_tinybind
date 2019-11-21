@@ -62,13 +62,14 @@ In you `javascript` `app` is declared as a global variable in `orangeBind/orange
 
 `init()` application init
 
-`local: {}` local app storage (not saved between full page refreshes)
-
 ---
 
 `error: boolean` storage for bound has error
 
 `errors: {}` storage for bound errors
+
+---
+`local: {}` local app storage (not saved between full page refreshes)
 
 `model: {}` storage for the currently bound model (record OR records)
 
@@ -84,7 +85,7 @@ In you `javascript` `app` is declared as a global variable in `orangeBind/orange
 
 `config: {}` storage for application configuration
 
-`config.alter(name,value)` add or change a configuration value
+`config.alter(name|object,value)` add or change a configuration value(s)
 
 ---
 `trigger: {}` storage for application specific DOM triggers
@@ -93,13 +94,13 @@ In you `javascript` `app` is declared as a global variable in `orangeBind/orange
 
 `trigger.unbound` trigger DOM unbound event
 
-`trigger.alter(name, callback)` add or change a trigger
+`trigger.alter(name|object, callback)` add or change a trigger(s)
 
 ---
 
 `events: {}` storage for tinybind events
 
-`event.alter(name, callback)` add or change a tinybind event
+`event.alter(name|object, callback)` add or change a tinybind event(s)
 
 `<a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>`
 
@@ -109,7 +110,7 @@ https://blikblum.github.io/tinybind/docs/reference/#on-[event]
 
 `method: {}` storage for user methods
 
-`method.alter(name, callback)` add or change a user method
+`method.alter(name|object, callback)` add or change a user method(s)
 
 ---
 
@@ -129,7 +130,7 @@ https://blikblum.github.io/tinybind/docs/reference/#on-[event]
 
 ---
 
-`response.alter(code, callback)` add or change a response codes action
+`response.alter(code|object, callback)` add or change a response codes action(s)
 
 `response.merge(callbacks)` add multiple callbacks at once
 

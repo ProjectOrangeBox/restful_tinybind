@@ -4,9 +4,16 @@
  * https://blikblum.github.io/tinybind/
  * https://github.com/matthieuriolo/rivetsjs-stdlib
  *
- * Relies on jQuery for Ajax calls and events
+ * Relies on jQuery for:
+ * .ajax(url,{settings as object}) - ajax calls
+ * .extend() - object merge
+ * .trigger() - calling custom DOM triggers others can pick up
+ *		jQuery('body').trigger('something-happened');
+ *		$('body').on('something-happened', function() {
+ * 			alert("Hey! Something Happened!");
+ * 		});
  *
- * Router idea from:
+ * Orginal Router idea from:
  * http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url
  *
  */
@@ -20,7 +27,11 @@ var app = {
 	/* default config */
 	config: {
 		alter: function (name, value) {
-			this[name] = value;
+			if (Object.is(name)) {
+				jQuery.extend(this, name);
+			} else {
+				this[name] = value;
+			}
 
 			return this;
 		},
@@ -51,9 +62,15 @@ var app = {
 	user: {},
 	/* storage for local application variables */
 	local: {},
-	/* do we have an error - boolean true/false */
+	/*
+	do we have an error - boolean true/false
+	keep these exposed on app so tinybind can use them as a boolean
+	*/
 	error: false,
-	/* "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}} */
+	/*
+	"errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}}
+	keep these exposed on app so tinybind can use them as a object
+	*/
 	errors: {},
 	/* actual model storage */
 	model: {},
@@ -68,18 +85,6 @@ var app = {
 	/* user methods */
 	method: {},
 	/* default application trigger and storage */
-	trigger: {
-		bound: function () {
-			jQuery('body').trigger('tiny-bind-bound');
-		},
-		unbound: function () {
-			jQuery('body').trigger('tiny-bind-unbound');
-		},
-		alter: function (name, callback) {
-			this[name] = callback;
-			return this;
-		}
-	},
 	/* initialization function */
 	init: function () {
 		/* save a external scope reference */
@@ -110,19 +115,46 @@ var app = {
 		/* Make a Request for the configuration url using the default 200 responds we just setup above */
 		this.request.get(this.config.url);
 	},
+	trigger: {
+		bound: function () {
+			jQuery('body').trigger('tiny-bind-bound');
+		},
+		unbound: function () {
+			jQuery('body').trigger('tiny-bind-unbound');
+		},
+		alter: function (name, callback) {
+			if (Object.is(name)) {
+				jQuery.extend(this, name);
+			} else if (typeof callback === 'function') {
+				this[name] = callback;
+			}
+
+			return this;
+		}
+	},
 	/* store actual events */
 	events: {},
 	/* default events and event storage */
 	event: {
 		alter: function (name, callback) {
-			app.events[name] = callback;
+			if (Object.is(name)) {
+				jQuery.extend(app.events, name);
+			} else if (typeof callback === 'function') {
+				app.events[name] = callback;
+			}
+
 			return this; /* allow chaining */
 		}
 	},
 	method: {
 		/* wrapper to add events like this.event.add('name',function(){}); */
 		alter: function (name, callback) {
-			this[name] = callback;
+			if (Object.is(name)) {
+				jQuery.extend(this, name);
+			} else if (typeof callback === 'function') {
+				this[name] = callback;
+			}
+
 			return this; /* allow chaining */
 		}
 	},
@@ -263,7 +295,7 @@ var app = {
 		 * "private" default callbacks
 		 * this is actually the array your are changing when you attach new callbacks
 		 */
-		_callbacks: {
+		callbacks: {
 			/* standard get layout or get model */
 			200: function (data, status, xhr) {
 				console.log(arguments);
@@ -306,14 +338,14 @@ var app = {
 			},
 		},
 		alter: function (code, callback) {
-			/* change the responds callback based on the returned http status code */
-			this._callbacks[code] = callback;
+			if (Object.is(code)) {
+				jQuery.extend(this.callbacks, code);
+			} else if (Number.isInteger(code) && typeof callback === 'function') {
+				/* change the responds callback based on the returned http status code */
+				this.callbacks[code] = callback;
+			}
 
 			return this;
-		},
-		merge: function (callbacks) {
-			/* get the callbacks */
-			return jQuery.extend(this._callbacks, callbacks);
 		}
 	},
 	request: {
@@ -332,7 +364,7 @@ var app = {
 				/* always! */
 				timeout: app.config.ajaxTimeout,
 				/* 5 seconds */
-				statusCode: app.response.merge(callbacks),
+				statusCode: app.response.alter(callbacks).callbacks,
 			});
 
 			return this;
