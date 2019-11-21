@@ -3,3 +3,4 @@
 .editorconfig
 node_modules
 var/*
+/assets/plugins/orangeBind/_tinybind.js

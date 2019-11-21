@@ -96,20 +96,6 @@ class Restful_model
 		$this->payload = get_instance()->input->request();
 	}
 
-	/**
-	 * Config Flag - special flags from the server which come over in the config object
-	 *
-	 * @param mixed $name
-	 * @param mixed $value
-	 * @return void
-	 */
-	public function flag(string $name, $value): Restful_model
-	{
-		$this->payload['config']['flags'][$name] = $value;
-
-		return $this;
-	}
-
 	public function __call($name, $arguments)
 	{
 		//var_dump($name, $arguments, count($arguments));

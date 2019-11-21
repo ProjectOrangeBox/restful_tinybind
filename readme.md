@@ -56,6 +56,19 @@ In you `javascript` `app` is declared as a global variable in `orangeBind/orange
 
 #### orangeBind properties and methods
 
+Relies on jQuery for:
+
+`.ajax(url,{settings as object})` - request.send() ajax calls
+`.extend()` - setData() object merge
+`.trigger()` - calling custom DOM triggers others can pick up
+
+```javascript
+jQuery('body').trigger('something-happened');
+jQuery('body').on('something-happened', function() {
+	alert("Hey! Something Happened!");
+});
+```
+
 ---
 
 `id` the applications div wrapper id (default is app)
@@ -102,7 +115,9 @@ In you `javascript` `app` is declared as a global variable in `orangeBind/orange
 
 `event.alter(name|object, callback)` add or change a tinybind event(s)
 
-`<a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>`
+```html
+<a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
+```
 
 https://blikblum.github.io/tinybind/docs/reference/#on-[event]
 
@@ -242,33 +257,68 @@ Setup the application
 
 Then the following methods are called to add additional values
 
-_required_
+__Required Configuration Values__
 The url to call to get the applications configuration from the server
-`app.config.alter('url','/get/config')`
+
+```javascript
+app.config.alter('url','/get/config')
+```
 
 The url to call to get a layout
-`app.config.alter('layoutUrl','/get/layout')`
 
-_optional_
-Add or change an application configuration value
-`app.config.alter(name,value)`
+```javascript
+app.config.alter('layoutUrl','/get/layout')
+```
 
-Routers and there callbacks
-`app.router.alter(name,callback)`
+_Optional Configuration Values_
 
-Tinybind events
-`app.event.alter(name,callback)`
+Alter Configuration Value individually or in bulk
 
-#### Note: the last app.router.alter(function() {...}) is the default route
+```javascript
+app.config.alter((string) name,(mixed) value);
+app.config.alter((object) name);
+```
 
-User methods
-`app.method.alter('open',function()...)`
+Alter Route Value individually or in bulk
+
+```javascript
+app.router.alter((string) regular expression, (function) callback);
+app.router.alter((object) regular expression);
+```
+
+Alter TinyBind Event Values individually or in bulk
+
+```javascript
+app.event.alter((string) name,(function) callback);
+app.event.alter((object) name);
+```
+
+Alter Trigger Values individually or in bulk
+
+```javascript
+app.trigger.alter((string) name,(function) callback);
+app.trigger.alter((object) name);
+```
+
+Alter User Method Values individually or in bulk
+
+```javascript
+app.method.alter((string) name,(function) callback);
+app.method.alter((object) name);
+```
+
+Alter Response Based on HTTP status code individually or in bulk
+
+```javascript
+app.response.alter((integer) code, (function) callback);
+app.response.alter((object) code);
+```
 
 # /assets/js/\*
 
 ## application.js
 
-File to place your own javascript
+File to place your own javascript which is combined in the distro.
 
 ## binders.js
 
@@ -287,5 +337,5 @@ https://blikblum.github.io/tinybind/docs/guide/#formatters
 ## onReady.js
 
 File to put all of your on DOM ready javascript
-This is also what calls app.init() once the DOM is Ready
+This is also what calls `app.init()` once the DOM is Ready
 
