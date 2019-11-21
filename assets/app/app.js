@@ -1,17 +1,19 @@
 /* Setup the Application */
 
-app.config
-	.alter('url', '/get/configuration') /* the url to call to get the applications configuration from the server */
-	.alter('layoutUrl', '/get/layout') /* the url to call to get a layout ie. /get/layout/{name} */
-	.alter('default', {
+app.config.alter({
+	/* the url to call to get the applications configuration from the server */
+	url: '/get/configuration',
+	/* the url to call to get a layout ie. /get/layout/{name} */
+	layoutUrl: '/get/layout',
+	defaults: {
 		Precision: 2,
 		ThousandSeparator: ',',
 		DecimalSeparator: '.',
 		DateFormat: 'YYYY-MM-DD',
 		TimeFormat: 'HH:mm:ss',
 		DatetimeFormat: 'YYYY-MM-DD HH:mm:ss'
-	})
-	.alter('nav', {
+	},
+	nav: {
 		open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/" target="_top">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
 		close: '</ul></div></div>',
 		item: {
@@ -20,92 +22,99 @@ app.config
 			rowSub: '<a appNavigate target="%3$s" href="%1$s" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">%2$s</a><ul class="dropdown-menu" role="menu">',
 			rowSingle: '<li><a appNavigate target="%3$s" href="%1$s">%2$s</a></li>',
 			hr: '<li role="separator" class="divider"></li>',
-			close: '</ul></li>',
-		},
-	});
+			close: '</ul></li>'
+		}
+	}
+});
 
-/* Add Routes */
-app.router
-	.alter('multi/edit/(:num)', function (primary_id) {
+app.router.alter({
+	'multi/edit/(:num)': function (primary_id) {
 		app.loadModel('/multi/edit/' + primary_id, app.config.layoutUrl + '/multi/details');
-	})
-	.alter('multi/create', function () {
+	},
+	'multi/create': function () {
 		app.loadModel('/multi/create', app.config.layoutUrl + '/multi/details');
-	})
-	.alter('multi', function () {
+	},
+	'multi/edit/(:num)': function (primary_id) {
+		app.loadModel('/multi/edit/' + primary_id, app.config.layoutUrl + '/multi/details');
+	},
+	'multi/create': function () {
+		app.loadModel('/multi/create', app.config.layoutUrl + '/multi/details');
+	},
+	'multi': function () {
 		app.loadModel('/multi/index', app.config.layoutUrl + '/multi/index');
-	})
-	.alter('people/edit/(:num)', function (primary_id) {
+	},
+	'people/edit/(:num)': function (primary_id) {
 		app.loadModel('/people/edit/' + primary_id, app.config.layoutUrl + '/people/details');
-	})
-	.alter('people/create', function () {
+	},
+	'people/create': function () {
 		app.loadModel('/people/create', app.config.layoutUrl + '/people/details');
-	})
-	.alter('people', function () {
+	},
+	'people': function () {
 		app.loadModel('/people/index', app.config.layoutUrl + '/people/index');
-	})
-	.alter('zipcodes/edit/(:num)', function (primary_id) {
+	},
+	'zipcodes/edit/(:num)': function (primary_id) {
 		app.loadModel('/zipcodes/edit/' + primary_id, app.config.layoutUrl + '/zipcodes/details');
-	})
-	.alter('zipcodes/create', function () {
+	},
+	'zipcodes/create': function () {
 		app.loadModel('/zipcodes/create', app.config.layoutUrl + '/zipcodes/details');
-	})
-	.alter('zipcodes', function () {
+	},
+	'zipcodes': function () {
 		app.loadModel('/zipcodes/index', app.config.layoutUrl + '/zipcodes/index');
-	})
-	.alter('catalog/edit/(:num)', function (primary_id) {
+	},
+	'catalog/edit/(:num)': function (primary_id) {
 		app.loadModel('/catalog/edit/' + primary_id, app.config.layoutUrl + '/catalog/details');
-	})
-	.alter('catalog/create', function () {
+	},
+	'catalog/create': function () {
 		app.loadModel('/catalog/create', app.config.layoutUrl + '/catalog/details');
-	})
-	.alter('catalog', function () {
+	},
+	'catalog': function () {
 		app.loadModel('/catalog/index', app.config.layoutUrl + '/catalog/index');
-	})
-	.alter('robot/edit/(:num)', function (primary_id) {
+	},
+	'robot/edit/(:num)': function (primary_id) {
 		app.loadModel('/robot/edit/' + primary_id, app.config.layoutUrl + '/robot/details');
-	})
-	.alter('robot/create', function () {
+	},
+	'robot/create': function () {
 		app.loadModel('/robot/create', app.config.layoutUrl + '/robot/details');
-	})
-	.alter('robot', function () {
+	},
+	'robot': function () {
 		app.loadModel('/robot/index', app.config.layoutUrl + '/robot/index');
-	})
+	},
 	/* mpa example page - when this page loads load this model */
-	.alter('food/edit/(:num)', function (primary_id) {
+	'food/edit/(:num)': function (primary_id) {
 		app.loadModel('/food/edit/' + primary_id);
-	})
+	},
 	/* mpa example page - when this page loads load this model */
-	.alter('food/create', function () {
+	'food/create': function () {
 		app.loadModel('/food/create');
-	})
+	},
 	/* mpa example page - when this page loads load this model */
-	.alter('food', function () {
+	'food': function () {
 		app.loadModel('/food/index');
-	})
-	.alter(function () {
+	},
+	'': function () {
 		/* leave empty to allow for standard web page loads */
 		/* default route */
 		/* redirect */
-		console.log('default: ' + app.router.getUrl());
+		console.log('default route');
 		app.refresh();
-	});
+	}
+});
 
 app.response.alter(404, function (xhr, status, error) {
 	/* don't show the default alert() - instead show not found */
 	app.loadTemplate(app.config.layoutUrl + '/notfound');
 });
 
-app.method
-	.alter('buildUrl', function (args) {
+app.method.alter({
+	'buildUrl': function (args) {
 		var that = args.pop();
 		var event = args.pop();
 
 		event.preventDefault();
 
 		return sprintf.apply(args[0], args);
-	})
-	.alter('submit', function (redirect) {
+	},
+	'submit': function (redirect) {
 		/* created record - create */
 		app.response.alter(201, function (data, status, xhr) {
 			/* good redirect */
@@ -139,27 +148,28 @@ app.method
 		});
 
 		app.request[app.form.method](app.form.action, app.getData());
-	});
+	}
+});
 
 /* Button Events */
-app.event
-	.alter('create', function (url, event) {
+app.event.alter({
+	create: function (url, event) {
 		event.preventDefault();
 		app.router.navigate(url + '/create');
-	})
-	.alter('edit', function (url, primaryId, event) {
+	},
+	edit: function (url, primaryId, event) {
 		event.preventDefault();
 		app.router.navigate(url + '/edit/' + primaryId);
-	})
-	.alter('navigate', function () {
+	},
+	navigate: function () {
 		/* spa navigate - to the first argument passed */
 		app.router.navigate(app.method.buildUrl([].slice.call(arguments)), false);
-	})
-	.alter('redirect', function () {
+	},
+	redirect: function () {
 		/* mpa redirect - to the first argument passed */
 		app.router.navigate(app.method.buildUrl([].slice.call(arguments)), true);
-	})
-	.alter('delete', function (url, primaryId, event) {
+	},
+	delete: function (url, primaryId, event) {
 		event.preventDefault();
 		/* we need to save this for the 202 responds */
 		app.local.closest_tr = jQuery(this).closest('tr');
@@ -190,12 +200,13 @@ app.event
 				}
 			},
 		});
-	})
-	.alter('submit', function (event) {
+	},
+	submit: function (event) {
 		event.preventDefault();
 		app.method.submit(false);
-	})
-	.alter('submitRedirect', function (event) {
+	},
+	submitRedirect: function (event) {
 		event.preventDefault();
 		app.method.submit(true);
-	});
+	}
+});

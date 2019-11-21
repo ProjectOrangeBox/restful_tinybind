@@ -27,7 +27,7 @@ var app = {
 	/* default config */
 	config: {
 		alter: function (name, value) {
-			if (Object.is(name)) {
+			if (typeof name === 'object') {
 				jQuery.extend(this, name);
 			} else {
 				this[name] = value;
@@ -123,7 +123,7 @@ var app = {
 			jQuery('body').trigger('tiny-bind-unbound');
 		},
 		alter: function (name, callback) {
-			if (Object.is(name)) {
+			if (typeof name === 'object') {
 				jQuery.extend(this, name);
 			} else if (typeof callback === 'function') {
 				this[name] = callback;
@@ -137,7 +137,7 @@ var app = {
 	/* default events and event storage */
 	event: {
 		alter: function (name, callback) {
-			if (Object.is(name)) {
+			if (typeof name === 'object') {
 				jQuery.extend(app.events, name);
 			} else if (typeof callback === 'function') {
 				app.events[name] = callback;
@@ -149,7 +149,7 @@ var app = {
 	method: {
 		/* wrapper to add events like this.event.add('name',function(){}); */
 		alter: function (name, callback) {
-			if (Object.is(name)) {
+			if (typeof name === 'object') {
 				jQuery.extend(this, name);
 			} else if (typeof callback === 'function') {
 				this[name] = callback;
@@ -210,29 +210,29 @@ var app = {
 			return this._clearSlashes(url);
 		},
 		alter: function (regularExpression, callback) {
-			/* handle the default when a callback is sent in for the regular expression */
-			if (typeof regularExpression === 'function') {
-				callback = regularExpression;
-				regularExpression = '';
+			if (typeof regularExpression === 'object') {
+				for (var property in regularExpression) {
+					this.alter(property, regularExpression[property]);
+				}
+			} else {
+				/* trim / fore & aft */
+				regularExpression = this._clearSlashes(regularExpression);
+
+				/* escape / to \/ */
+				regularExpression = regularExpression.replace(new RegExp('/', "g"), '\\/');
+
+				/* add CodeIgniter matches */
+				regularExpression = regularExpression.replace(new RegExp(":any", "g"), '[^/]+'); /* anything */
+				regularExpression = regularExpression.replace(new RegExp(":num", "g"), '[0-9]+'); /* number only */
+				regularExpression = regularExpression.replace(new RegExp(":hex", "g"), '[0-9a-f]+'); /* hex values */
+				regularExpression = regularExpression.replace(new RegExp(":str", "g"), '[0-9a-zA-Z]+'); /* str values */
+
+				/* add to the routes array */
+				this.routes.push({
+					re: new RegExp(regularExpression),
+					callback: callback
+				});
 			}
-
-			/* trim / fore & aft */
-			regularExpression = this._clearSlashes(regularExpression);
-
-			/* escape / to \/ */
-			regularExpression = regularExpression.replace(new RegExp('/', "g"), '\\/');
-
-			/* add CodeIgniter matches */
-			regularExpression = regularExpression.replace(new RegExp(":any", "g"), '[^/]+'); /* anything */
-			regularExpression = regularExpression.replace(new RegExp(":num", "g"), '[0-9]+'); /* number only */
-			regularExpression = regularExpression.replace(new RegExp(":hex", "g"), '[0-9a-f]+'); /* hex values */
-			regularExpression = regularExpression.replace(new RegExp(":str", "g"), '[0-9a-zA-Z]+'); /* str values */
-
-			/* add to the routes array */
-			this.routes.push({
-				re: new RegExp(regularExpression),
-				callback: callback
-			});
 
 			return this; /* allow chaining */
 		},
@@ -338,7 +338,7 @@ var app = {
 			},
 		},
 		alter: function (code, callback) {
-			if (Object.is(code)) {
+			if (typeof code === 'object') {
 				jQuery.extend(this.callbacks, code);
 			} else if (Number.isInteger(code) && typeof callback === 'function') {
 				/* change the responds callback based on the returned http status code */

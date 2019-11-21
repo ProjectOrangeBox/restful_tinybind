@@ -565,15 +565,15 @@ tinybind.formatters.numberFormat = function (
 		tinybind.formatters.toDecimal(target);
 
 	if (!tinybind.formatters.isInteger(precision)) {
-		precision = app.config.default.precision;
+		precision = app.config.defaults.precision;
 	}
 
 	if (!decimalSeparator) {
-		decimalSeparator = app.config.default.DecimalSeparator;
+		decimalSeparator = app.config.defaults.DecimalSeparator;
 	}
 
 	if (!thousandSeparator) {
-		thousandSeparator = app.config.default.ThousandSeparator;
+		thousandSeparator = app.config.defaults.ThousandSeparator;
 	}
 
 	/*
@@ -618,7 +618,7 @@ tinybind.formatters.numberFormat = function (
 	return: string
 */
 tinybind.formatters.date = function (target) {
-	return moment(target).format(app.config.default.DateFormat);
+	return moment(target).format(app.config.defaults.DateFormat);
 };
 
 /*
@@ -628,7 +628,7 @@ tinybind.formatters.date = function (target) {
 	return: string
 */
 tinybind.formatters.time = function (target) {
-	return moment(target).format(app.config.default.TimeFormat);
+	return moment(target).format(app.config.defaults.TimeFormat);
 };
 
 /*
@@ -638,7 +638,7 @@ tinybind.formatters.time = function (target) {
 	return: string
 */
 tinybind.formatters.datetime = function (target) {
-	return moment(target).format(app.config.default.DatetimeFormat);
+	return moment(target).format(app.config.defaults.DatetimeFormat);
 };
 
 /*
