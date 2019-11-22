@@ -26,23 +26,23 @@ var orangeBinder = {
 		this.router = new orangeBinder.router(this);
 
 		this.setData = function (data) {
-			parent = this;
+			console.debug('setData', data);
 
-			console.info('setData', data);
+			if (typeof data.page === 'object') {
+				this.page.alter(data.page);
+			}
 
-			/* overwrite */
-			["error", "errors", "model"].forEach(function (element) {
-				if (data[element]) {
-					parent[element] = data[element];
-				}
-			});
+			if (typeof data.form === 'object') {
+				this.form.alter(data.form);
+			}
 
-			/* deep merge these values */
-			["page", "form", "config"].forEach(function (element) {
-				if (data[element]) {
-					parent[element] = jQuery.extend(true, parent[element], data[element]);
-				}
-			});
+			if (typeof data.config === 'object') {
+				this.config.alter(data.config);
+			}
+
+			this.error = data.error || this.error;
+			this.errors = data.errors || this.errors;
+			this.model = data.model || this.model;
 
 			/**
 			 * these are references to the actual model
@@ -64,7 +64,7 @@ var orangeBinder = {
 				errors: this.errors,
 				model: this.model,
 				page: this.page.collect(),
-				form: this.form.collect()
+				form: this.form.collect(),
 			};
 		};
 
@@ -116,8 +116,8 @@ var orangeBinder = {
 			var template = storage.getItem(key, undefined);
 
 			/* have we already loaded the template? */
-			if (template) {
-				document.getElementById(this.id).innerHTML = template;
+			if (template !== undefined) {
+				this.getElementById().innerHTML = template;
 
 				if (then) {
 					then();
@@ -129,7 +129,7 @@ var orangeBinder = {
 
 					storage.setItem(key, data.template.source, cacheSeconds);
 
-					document.getElementById(_parent.id).innerHTML = data.template.source;
+					_parent.getElementById().innerHTML = data.template.source;
 
 					if (then) {
 						then();
@@ -140,6 +140,18 @@ var orangeBinder = {
 			}
 
 			return this; /* allow chaining */
+		};
+
+		this.getElementById = function () {
+			var element = document.getElementById(this.id);
+
+			if (element === null) {
+				console.error('Element Id "' + this.id + '" Not Found.');
+			} else {
+				console.log('Binding To "' + this.id + '"');
+			}
+
+			return element;
 		};
 
 		this.refresh = function (data, then) {
@@ -155,16 +167,7 @@ var orangeBinder = {
 				this.setData(data);
 			}
 
-			var boundToId = document.getElementById(this.id);
-
-			if (boundToId === null) {
-				console.error('Element Id "' + this.id + '" Not Found.');
-			} else {
-				console.log('Binding To "' + this.id + '"');
-			}
-
-			/* rebind */
-			this.bound = tinybind.bind(boundToId, this);
+			this.bound = tinybind.bind(this.getElementById(), this);
 
 			/* tell everyone we now have new data */
 			this.triggers.bound();
@@ -248,7 +251,6 @@ var orangeBinder = {
 				jQuery('body').trigger('spa-navgate');
 			},
 		});
-
 	},
 	router: function (parent) {
 		this._parent = parent;
@@ -542,7 +544,7 @@ var orangeBinder = {
 		this.alter = function (name, value) {
 			if (typeof name === "object") {
 				for (var property in name) {
-					this.alter(property, name[property]);
+					this[property] = name[property];
 				}
 			} else {
 				this[name] = value;
@@ -555,10 +557,7 @@ var orangeBinder = {
 			var collection = {};
 
 			for (var propertyName in this) {
-				if (
-					typeof this[propertyName] !== "function" &&
-					propertyName !== "_parent"
-				) {
+				if (typeof this[propertyName] !== "function" && propertyName !== "_parent") {
 					collection[propertyName] = this[propertyName];
 				}
 			}

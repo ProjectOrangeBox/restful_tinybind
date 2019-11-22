@@ -64,6 +64,7 @@ let js = {
 		'assets/js/formatters.js',
 
 		'assets/app/app.js',
+		'assets/app/nav.js',
 
 		'assets/js/onReady.js',
 	],

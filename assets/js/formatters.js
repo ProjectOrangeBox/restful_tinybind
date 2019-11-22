@@ -1018,21 +1018,6 @@ tinybind.formatters.bootstrap_nav = function (records) {
 
 	html += nav.config.nav.close;
 
-	if (!tinybind.formatters.bootstrap_navINIT) {
-		setInterval(function () {
-			var json = JSON.stringify(nav.page.nav);
-
-			if (json !== tinybind.formatters.nav_page_nav) {
-				var saved = nav.page.nav;
-				nav.page.nav = {};
-				nav.page.nav = saved;
-			}
-
-			tinybind.formatters.nav_page_nav = json;
-		}, 300);
-		tinybind.formatters.bootstrap_navINIT = true;
-	}
-
 	return html;
 };
 

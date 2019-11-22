@@ -41,7 +41,7 @@ $(document).on('click', '[appNavigate]', function (event) {
 	var redirect = ($(this).attr('target') == '_top');
 
 	if (href) {
-		app.router.navigate(href, redirect);
+		nav.router.navigate(href, redirect);
 	}
 });
 
