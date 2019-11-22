@@ -3,7 +3,7 @@
 class Get extends CI_Controller
 {
 	protected $superStorageCacheSeconds = 600;
-	protected $cache = false;
+	protected $cache = true;
 
 	/* default empty */
 	public function index(): void
@@ -15,23 +15,13 @@ class Get extends CI_Controller
 	public function layout(): void
 	{
 		/* simple clean up */
-		$file = preg_replace("/[^\/a-zA-Z0-9]+/", "", implode('/', func_get_args()));
+		$file = preg_replace("/[^\/a-zA-Z0-9]+/", '', implode('/', func_get_args()));
 
 		/* file location */
 		$template = '/' . $file . '.html';
 
 		$this->Restful_model
 			->template($this->load->view($template, [], true), $this->superStorageCacheSeconds)
-			->send(200);
-	}
-
-	public function navConfiguration(): void
-	{
-		$this->Restful_model
-			->config('clearCache', !$this->cache)
-			->config('olderThanCache', $this->superStorageCacheSeconds)
-			->config('templateCache', $this->superStorageCacheSeconds)
-			->config('storageCache', $this->superStorageCacheSeconds)
 			->send(200);
 	}
 

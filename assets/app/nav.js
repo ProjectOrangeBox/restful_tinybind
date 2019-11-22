@@ -1,4 +1,4 @@
-var nav = new orangeBinder.bind('nav', '/get/navConfiguration', '/get/layout');
+var nav = new orangeBinder.bind('nav', '/get/configuration', '/get/layout');
 
 nav.config.alter({
 	nav: {
@@ -15,6 +15,69 @@ nav.config.alter({
 	}
 });
 
+nav.templates.alter('navbar', '<nav id="nav" class="navbar navbar-inverse navbar-fixed-top" rv-html="page.nav | bootstrap_nav"></nav>');
+
+/* for any page request use the same model and template */
 nav.router.alter('(.*)', function () {
-	nav.loadModel('/get/navModel', '/includes/nav');
+	nav.loadModel('/get/navModel', 'navbar');
 });
+
+/*
+	bootstrap_nav
+	Returns: converts the passed javascript object (json) into bootstrap navigation. Using app.config values for the templating
+	targetL function
+	return: string
+	Example:
+		<nav class="navbar navbar-inverse navbar-fixed-top" rv-html="page.nav | bootstrap_nav"></nav>
+*/
+tinybind.formatters.bootstrap_nav = function (records) {
+	var html = "";
+
+	html += nav.config.nav.open;
+
+	var submenu = function (record, isRoot) {
+		var html = "";
+
+		if (Array.isArray(record.children)) {
+			if (record.text) {
+				html += isRoot ? nav.config.nav.item.open : nav.config.nav.item.openSub;
+				html += sprintf(nav.config.nav.item.rowSub, record.url, record.text);
+
+				for (var idx in record.children) {
+					if (record.children[idx]) {
+						html += submenu(record.children[idx], false);
+					}
+				}
+
+				html += nav.config.nav.item.close;
+			}
+		} else {
+			/* item */
+			if (record.text) {
+				record.target = record.target != null ? record.target : "";
+				html +=
+					record.text == "{hr}" ?
+					nav.config.nav.item.hr :
+					sprintf(
+						nav.config.nav.item.rowSingle,
+						record.url,
+						record.text,
+						record.target
+					);
+			}
+		}
+
+		return html;
+	};
+
+	/* start with the navbar level */
+	for (var idx in records) {
+		if (records[idx]) {
+			html += submenu(records[idx], true);
+		}
+	}
+
+	html += nav.config.nav.close;
+
+	return html;
+};

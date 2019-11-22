@@ -20,6 +20,7 @@ var orangeBinder = {
 		this.methods = new orangeBinder.collection(this);
 		this.events = new orangeBinder.collection(this);
 		this.triggers = new orangeBinder.collection(this);
+		this.templates = new orangeBinder.collection(this);
 
 		this.response = new orangeBinder.response(this);
 		this.request = new orangeBinder.request(this);
@@ -107,13 +108,14 @@ var orangeBinder = {
 		this.loadTemplate = function (templateEndPoint, then) {
 			var _parent = this;
 			var key = templateEndPoint + ".template";
+			var template = undefined;
 
-			templateEndPoint = this.config.templateUrl + templateEndPoint;
-
-			console.log('Template End Point: ' + templateEndPoint);
-
-			/* Get bind template from browser local session storage? */
-			var template = storage.getItem(key, undefined);
+			if (this.templates[templateEndPoint] !== undefined) {
+				template = this.templates[templateEndPoint];
+			} else if (storage !== undefined) {
+				/* Get bind template from browser local session storage? */
+				template = storage.getItem(key, undefined);
+			}
 
 			/* have we already loaded the template? */
 			if (template !== undefined) {
@@ -127,7 +129,9 @@ var orangeBinder = {
 				this.response.alter(200, function (data, status, xhr) {
 					var cacheSeconds = data.template.cache ? data.template.cache : _parent.config.templateCache;
 
-					storage.setItem(key, data.template.source, cacheSeconds);
+					if (storage !== undefined) {
+						storage.setItem(key, data.template.source, cacheSeconds);
+					}
 
 					_parent.getElementById().innerHTML = data.template.source;
 
@@ -136,7 +140,11 @@ var orangeBinder = {
 					}
 				});
 
-				_parent.request.get(templateEndPoint);
+				var url = this.config.templateUrl + templateEndPoint;
+
+				console.log('Template End Point: ' + url);
+
+				_parent.request.get(url);
 			}
 
 			return this; /* allow chaining */
