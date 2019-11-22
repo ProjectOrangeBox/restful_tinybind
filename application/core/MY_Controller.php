@@ -27,6 +27,8 @@ class MY_Controller extends CI_Controller
 
 		$method = $method . ucwords($this->input->method()) . (($isAjax || $isJson) ? 'Ajax' : '');
 
+		$this->Restful_model->page('method', $method);
+
 		if (method_exists($this, $method)) {
 			call_user_func_array([$this, $method], $params);
 		} else {

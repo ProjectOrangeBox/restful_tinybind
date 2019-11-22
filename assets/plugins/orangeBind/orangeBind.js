@@ -2,6 +2,8 @@ var orangeBinder = {
 	bind: function (id, configUrl, templateUrl, modelUrl) {
 		this.id = id;
 
+		this.bound = undefined;
+
 		this.error = false;
 		this.errors = {};
 
@@ -9,14 +11,11 @@ var orangeBinder = {
 		this.record = {};
 		this.records = {};
 
-		this.page = {};
-		this.form = {};
-		this.local = {};
-
-		this.bound = undefined;
-
+		this.page = new orangeBinder.collection(this);
+		this.form = new orangeBinder.collection(this);
 		this.user = new orangeBinder.collection(this);
 		this.local = new orangeBinder.collection(this);
+
 		this.config = new orangeBinder.collection(this);
 		this.methods = new orangeBinder.collection(this);
 		this.events = new orangeBinder.collection(this);
@@ -26,30 +25,10 @@ var orangeBinder = {
 		this.request = new orangeBinder.request(this);
 		this.router = new orangeBinder.router(this);
 
-		this.config.alter({
-			defaults: {},
-			configUrl: configUrl,
-			modelUrl: modelUrl,
-			templateUrl: templateUrl,
-			redirect: false,
-			ajaxTimeout: 5000,
-			routerRoot: '/',
-			storageCache: 0,
-			templateCache: 0,
-			clearCache: false,
-			ajaxCacheBuster: false,
-			tinyBind: {
-				prefix: 'rv',
-				preloadData: true,
-				rootInterface: '.',
-				templateDelimiters: ['{', '}'],
-			}
-		});
-
 		this.setData = function (data) {
 			parent = this;
 
-			console.info("setData", data);
+			console.info('setData', data);
 
 			/* overwrite */
 			["error", "errors", "model"].forEach(function (element) {
@@ -84,8 +63,8 @@ var orangeBinder = {
 				error: this.error,
 				errors: this.errors,
 				model: this.model,
-				page: this.page,
-				form: this.form
+				page: this.page.collect(),
+				form: this.form.collect()
 			};
 		};
 
@@ -108,6 +87,10 @@ var orangeBinder = {
 		this.loadModel = function (modelEndPoint, templateEndPoint) {
 			var _parent = this;
 
+			modelEndPoint = this.config.modelUrl + modelEndPoint;
+
+			console.log('Model End Point ' + modelEndPoint);
+
 			if (templateEndPoint) {
 				/* load the template then the model */
 				this.loadTemplate(templateEndPoint, function () {
@@ -125,6 +108,10 @@ var orangeBinder = {
 			var _parent = this;
 			var key = templateEndPoint + ".template";
 
+			templateEndPoint = this.config.templateUrl + templateEndPoint;
+
+			console.log('Template End Point: ' + templateEndPoint);
+
 			/* Get bind template from browser local session storage? */
 			var template = storage.getItem(key, undefined);
 
@@ -138,9 +125,7 @@ var orangeBinder = {
 			} else {
 				/* setup retrieve model - success */
 				this.response.alter(200, function (data, status, xhr) {
-					var cacheSeconds = data.template.cache ?
-						data.template.cache :
-						_parent.config.templateCache;
+					var cacheSeconds = data.template.cache ? data.template.cache : _parent.config.templateCache;
 
 					storage.setItem(key, data.template.source, cacheSeconds);
 
@@ -158,23 +143,31 @@ var orangeBinder = {
 		};
 
 		this.refresh = function (data, then) {
-			this.trigger.unbound();
+			this.triggers.unbound();
 
 			/* unbind tinybind */
 			if (this.bound) {
 				this.bound.unbind();
 			}
 
-			/* update app data */
+			/* update instance data */
 			if (data) {
 				this.setData(data);
 			}
 
+			var boundToId = document.getElementById(this.id);
+
+			if (boundToId === null) {
+				console.error('Element Id "' + this.id + '" Not Found.');
+			} else {
+				console.log('Binding To "' + this.id + '"');
+			}
+
 			/* rebind */
-			this.bound = tinybind.bind(document.getElementById(this.id), app);
+			this.bound = tinybind.bind(boundToId, this);
 
 			/* tell everyone we now have new data */
-			this.trigger.bound();
+			this.triggers.bound();
 
 			if (then) {
 				then();
@@ -194,34 +187,12 @@ var orangeBinder = {
 			return this; /* allow chaining */
 		};
 
-		/* finish init */
-
-		/* attach our default triggers */
-		this.triggers.alter({
-			bound: function () {
-				jQuery('body').trigger('tiny-bind-bound');
-			},
-			unbound: function () {
-				jQuery('body').trigger('tiny-bind-unbound');
-			}
-		});
-
-		/* attach out default route */
-		this.router.alter('', function () {
-			/* leave empty to allow for standard web page loads */
-			/* default route */
-			/* redirect */
-			console.log('default route');
-			app.refresh();
-		});
-
 		this.domReady = function () {
 			var _parent = this;
 
 			/* default init 200 callback */
 			this.response.alter(200, function (data, xhr) {
 				/**
-				 * try to application (app) variables
 				 * replace: error, errors, model
 				 * merge: page, form, config
 				 */
@@ -243,6 +214,41 @@ var orangeBinder = {
 			/* Make a Request for the configuration url using the default 200 responds we just setup above */
 			this.request.get(this.config.configUrl);
 		}
+
+		/* finish init */
+		this.config.alter({
+			defaults: {},
+			configUrl: (configUrl || ''),
+			modelUrl: (modelUrl || ''),
+			templateUrl: (templateUrl || ''),
+			redirect: false,
+			ajaxTimeout: 5000,
+			routerRoot: '/',
+			storageCache: 0,
+			templateCache: 0,
+			clearCache: false,
+			ajaxCacheBuster: false,
+			tinyBind: {
+				prefix: 'rv',
+				preloadData: true,
+				rootInterface: '.',
+				templateDelimiters: ['{', '}'],
+			}
+		});
+
+		/* attach our default triggers */
+		this.triggers.alter({
+			bound: function () {
+				jQuery('body').trigger('tiny-bind-bound');
+			},
+			unbound: function () {
+				jQuery('body').trigger('tiny-bind-unbound');
+			},
+			bindNavigate: function () {
+				jQuery('body').trigger('spa-navgate');
+			},
+		});
+
 	},
 	router: function (parent) {
 		this._parent = parent;
@@ -293,10 +299,7 @@ var orangeBinder = {
 
 			url = this._clearSlashes(decodeURI(location.pathname + location.search));
 			url = url.replace(/\?(.*)$/, "");
-			url =
-				app.config.routerRoot !== "/" ?
-				url.replace(app.config.routerRoot, "") :
-				url;
+			url = this._parent.config.routerRoot !== "/" ? url.replace(this._parent.config.routerRoot, '') : url;
 
 			return this._clearSlashes(url);
 		};
@@ -386,12 +389,15 @@ var orangeBinder = {
 		};
 
 		this.navigate = function (url, redirect) {
-			url = url ? app.config.routerRoot + this._clearSlashes(url) : "";
-			redirect = redirect ? redirect : app.config.redirect;
+			url = url ? this._parent.config.routerRoot + this._clearSlashes(url) : "";
+			redirect = redirect ? redirect : this._parent.config.redirect;
 
 			console.info("router::navigate", url, redirect);
 
+			this._parent.triggers.bindNavigate(url, redirect);
+
 			if (redirect) {
+				/* full page reload so trigger wouldn't even be picked up */
 				window.location.href = url;
 			} else {
 				history.pushState(null, null, url);
@@ -478,13 +484,13 @@ var orangeBinder = {
 				url: url,
 				data: data,
 				dataType: "json",
-				cache: !app.config.ajaxCacheBuster,
+				cache: !this._parent.config.ajaxCacheBuster,
 				/* ajax cache buster? */
 				async: true,
 				/* always! */
-				timeout: app.config.ajaxTimeout,
+				timeout: this._parent.config.ajaxTimeout,
 				/* 5 seconds */
-				statusCode: app.response.alter(callbacks).callbacks
+				statusCode: this._parent.response.alter(callbacks).callbacks
 			});
 
 			return this;

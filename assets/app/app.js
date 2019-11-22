@@ -1,15 +1,9 @@
 /* Setup the Application */
-var app = new orangeBinder.bind('appid', '/get/configuration');
+var app = new orangeBinder.bind('app', '/get/configuration', '/get/layout');
 
-app.config.alter({
-	defaults: {
-		Precision: 2,
-		ThousandSeparator: ',',
-		DecimalSeparator: '.',
-		DateFormat: 'YYYY-MM-DD',
-		TimeFormat: 'HH:mm:ss',
-		DatetimeFormat: 'YYYY-MM-DD HH:mm:ss'
-	},
+var nav = new orangeBinder.bind('nav', '/get/navConfiguration');
+
+nav.config.alter({
 	nav: {
 		open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/" target="_top">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
 		close: '</ul></div></div>',
@@ -24,57 +18,74 @@ app.config.alter({
 	}
 });
 
+nav.router.alter('', function () {
+	console.log('refresh nav');
+
+	app.refresh();
+});
+
+app.config.alter({
+	defaults: {
+		Precision: 2,
+		ThousandSeparator: ',',
+		DecimalSeparator: '.',
+		DateFormat: 'YYYY-MM-DD',
+		TimeFormat: 'HH:mm:ss',
+		DatetimeFormat: 'YYYY-MM-DD HH:mm:ss'
+	}
+});
+
 app.router.alter({
 	'multi/edit/(:num)': function (primary_id) {
-		app.loadModel('/multi/edit/' + primary_id, app.config.layoutUrl + '/multi/details');
+		app.loadModel('/multi/edit/' + primary_id, '/multi/details');
 	},
 	'multi/create': function () {
-		app.loadModel('/multi/create', app.config.layoutUrl + '/multi/details');
+		app.loadModel('/multi/create', '/multi/details');
 	},
 	'multi/edit/(:num)': function (primary_id) {
-		app.loadModel('/multi/edit/' + primary_id, app.config.layoutUrl + '/multi/details');
+		app.loadModel('/multi/edit/' + primary_id, '/multi/details');
 	},
 	'multi/create': function () {
-		app.loadModel('/multi/create', app.config.layoutUrl + '/multi/details');
+		app.loadModel('/multi/create', '/multi/details');
 	},
 	'multi': function () {
-		app.loadModel('/multi/index', app.config.layoutUrl + '/multi/index');
+		app.loadModel('/multi/index', '/multi/index');
 	},
 	'people/edit/(:num)': function (primary_id) {
-		app.loadModel('/people/edit/' + primary_id, app.config.layoutUrl + '/people/details');
+		app.loadModel('/people/edit/' + primary_id, '/people/details');
 	},
 	'people/create': function () {
-		app.loadModel('/people/create', app.config.layoutUrl + '/people/details');
+		app.loadModel('/people/create', '/people/details');
 	},
 	'people': function () {
-		app.loadModel('/people/index', app.config.layoutUrl + '/people/index');
+		app.loadModel('/people/index', '/people/index');
 	},
 	'zipcodes/edit/(:num)': function (primary_id) {
-		app.loadModel('/zipcodes/edit/' + primary_id, app.config.layoutUrl + '/zipcodes/details');
+		app.loadModel('/zipcodes/edit/' + primary_id, '/zipcodes/details');
 	},
 	'zipcodes/create': function () {
-		app.loadModel('/zipcodes/create', app.config.layoutUrl + '/zipcodes/details');
+		app.loadModel('/zipcodes/create', '/zipcodes/details');
 	},
 	'zipcodes': function () {
-		app.loadModel('/zipcodes/index', app.config.layoutUrl + '/zipcodes/index');
+		app.loadModel('/zipcodes/index', '/zipcodes/index');
 	},
 	'catalog/edit/(:num)': function (primary_id) {
-		app.loadModel('/catalog/edit/' + primary_id, app.config.layoutUrl + '/catalog/details');
+		app.loadModel('/catalog/edit/' + primary_id, '/catalog/details');
 	},
 	'catalog/create': function () {
-		app.loadModel('/catalog/create', app.config.layoutUrl + '/catalog/details');
+		app.loadModel('/catalog/create', '/catalog/details');
 	},
 	'catalog': function () {
-		app.loadModel('/catalog/index', app.config.layoutUrl + '/catalog/index');
+		app.loadModel('/catalog/index', '/catalog/index');
 	},
 	'robot/edit/(:num)': function (primary_id) {
-		app.loadModel('/robot/edit/' + primary_id, app.config.layoutUrl + '/robot/details');
+		app.loadModel('/robot/edit/' + primary_id, '/robot/details');
 	},
 	'robot/create': function () {
-		app.loadModel('/robot/create', app.config.layoutUrl + '/robot/details');
+		app.loadModel('/robot/create', '/robot/details');
 	},
 	'robot': function () {
-		app.loadModel('/robot/index', app.config.layoutUrl + '/robot/index');
+		app.loadModel('/robot/index', '/robot/index');
 	},
 	/* mpa example page - when this page loads load this model */
 	'food/edit/(:num)': function (primary_id) {
@@ -87,12 +98,15 @@ app.router.alter({
 	/* mpa example page - when this page loads load this model */
 	'food': function () {
 		app.loadModel('/food/index');
+	},
+	'': function () {
+		app.refresh();
 	}
 });
 
 //app.response.alter(404, function (xhr, status, error) {
 /* don't show the default alert() - instead show not found */
-//app.loadTemplate(app.config.layoutUrl + '/notfound');
+//app.loadTemplate('/notfound');
 //});
 
 app.methods.alter({
@@ -153,11 +167,11 @@ app.events.alter({
 	},
 	navigate: function () {
 		/* spa navigate - to the first argument passed */
-		app.router.navigate(app.method.buildUrl([].slice.call(arguments)), false);
+		app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), false);
 	},
 	redirect: function () {
 		/* mpa redirect - to the first argument passed */
-		app.router.navigate(app.method.buildUrl([].slice.call(arguments)), true);
+		app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), true);
 	},
 	delete: function (url, primaryId, event) {
 		event.preventDefault();
@@ -193,10 +207,10 @@ app.events.alter({
 	},
 	submit: function (event) {
 		event.preventDefault();
-		app.method.submit(false);
+		app.methods.submit(false);
 	},
 	submitRedirect: function (event) {
 		event.preventDefault();
-		app.method.submit(true);
+		app.methods.submit(true);
 	}
 });

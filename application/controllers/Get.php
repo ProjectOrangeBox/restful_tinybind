@@ -25,7 +25,7 @@ class Get extends CI_Controller
 			->send(200);
 	}
 
-	public function configuration(): void
+	public function navConfiguration(): void
 	{
 		$this->Restful_model
 			->config('clearCache', !$this->cache)
@@ -33,6 +33,16 @@ class Get extends CI_Controller
 			->config('templateCache', $this->superStorageCacheSeconds)
 			->config('storageCache', $this->superStorageCacheSeconds)
 			->page('nav', $this->Nav_model->get(2))
+			->send(200);
+	}
+
+	public function configuration(): void
+	{
+		$this->Restful_model
+			->config('clearCache', !$this->cache)
+			->config('olderThanCache', $this->superStorageCacheSeconds)
+			->config('templateCache', $this->superStorageCacheSeconds)
+			->config('storageCache', $this->superStorageCacheSeconds)
 			->send(200);
 	}
 } /* end class */

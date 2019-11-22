@@ -972,15 +972,15 @@ tinybind.formatters.arrayValuesToString = function (target) {
 tinybind.formatters.bootstrap_nav = function (records) {
 	var html = "";
 
-	html += app.config.nav.open;
+	html += nav.config.nav.open;
 
 	var submenu = function (record, isRoot) {
 		var html = "";
 
 		if (Array.isArray(record.children)) {
 			if (record.text) {
-				html += isRoot ? app.config.nav.item.open : app.config.nav.item.openSub;
-				html += sprintf(app.config.nav.item.rowSub, record.url, record.text);
+				html += isRoot ? nav.config.nav.item.open : nav.config.nav.item.openSub;
+				html += sprintf(nav.config.nav.item.rowSub, record.url, record.text);
 
 				for (var idx in record.children) {
 					if (record.children[idx]) {
@@ -988,7 +988,7 @@ tinybind.formatters.bootstrap_nav = function (records) {
 					}
 				}
 
-				html += app.config.nav.item.close;
+				html += nav.config.nav.item.close;
 			}
 		} else {
 			/* item */
@@ -996,9 +996,9 @@ tinybind.formatters.bootstrap_nav = function (records) {
 				record.target = record.target != null ? record.target : "";
 				html +=
 					record.text == "{hr}" ?
-					app.config.nav.item.hr :
+					nav.config.nav.item.hr :
 					sprintf(
-						app.config.nav.item.rowSingle,
+						nav.config.nav.item.rowSingle,
 						record.url,
 						record.text,
 						record.target
@@ -1016,19 +1016,19 @@ tinybind.formatters.bootstrap_nav = function (records) {
 		}
 	}
 
-	html += app.config.nav.close;
+	html += nav.config.nav.close;
 
 	if (!tinybind.formatters.bootstrap_navINIT) {
 		setInterval(function () {
-			var json = JSON.stringify(app.page.nav);
+			var json = JSON.stringify(nav.page.nav);
 
-			if (json !== tinybind.formatters.app_page_nav) {
-				var saved = app.page.nav;
-				app.page.nav = {};
-				app.page.nav = saved;
+			if (json !== tinybind.formatters.nav_page_nav) {
+				var saved = nav.page.nav;
+				nav.page.nav = {};
+				nav.page.nav = saved;
 			}
 
-			tinybind.formatters.app_page_nav = json;
+			tinybind.formatters.nav_page_nav = json;
 		}, 300);
 		tinybind.formatters.bootstrap_navINIT = true;
 	}

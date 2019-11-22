@@ -4,30 +4,30 @@ Download the standard CodeIgniter 3 Package and install
 
 Then to your application folder add the `MY_Controller`, `MY_Input`, `MY_Model` files to your core folder.
 
-MY_Controller provides some really basic routing using the CodeIgniter Controller _remap method.
+MY_Controller provides some really basic routing using the CodeIgniter Controller \_remap method.
 
-* indexGet()
-* indexGetAjax()
-* createGetAjax()
-* createPostAjax()
-* editGetAjax()
-* editPatchAjax()
-* deleteDeleteAjax()
-* send(success,fail)
+- indexGet()
+- indexGetAjax()
+- createGetAjax()
+- createPostAjax()
+- editGetAjax()
+- editPatchAjax()
+- deleteDeleteAjax()
+- send(success,fail)
 
 MY_Input provides a wrapper around the raw input stream
 
-* request(key) get a value from the raw input
+- request(key) get a value from the raw input
 
 MY_Model provides a some simple database functions for:
 
-* all() return all records
-* empty() return a empty record
-* get(primary id) get a record based on it's primary id
-* insert(data array) insert a record
-* update(data array) update a record
-* delete(primary id) delete a record based on it primary id
-* check(data array, primary key required) simple validation that only checks for required fields
+- all() return all records
+- empty() return a empty record
+- get(primary id) get a record based on it's primary id
+- insert(data array) insert a record
+- update(data array) update a record
+- delete(primary id) delete a record based on it primary id
+- check(data array, primary key required) simple validation that only checks for required fields
 
 Create a `/assets` folder
 
@@ -63,8 +63,8 @@ Relies on jQuery for:
 `.trigger()` - calling custom DOM triggers others can pick up
 
 ```javascript
-jQuery('body').trigger('something-happened');
-jQuery('body').on('something-happened', function() {
+jQuery("body").trigger("something-happened");
+jQuery("body").on("something-happened", function() {
 	alert("Hey! Something Happened!");
 });
 ```
@@ -82,6 +82,7 @@ jQuery('body').on('something-happened', function() {
 `errors: {}` storage for bound errors
 
 ---
+
 `local: {}` local app storage (not saved between full page refreshes)
 
 `model: {}` storage for the currently bound model (record OR records)
@@ -101,6 +102,7 @@ jQuery('body').on('something-happened', function() {
 `config.alter(name|object,value)` add or change a configuration value(s)
 
 ---
+
 `trigger: {}` storage for application specific DOM triggers
 
 `trigger.bound` trigger DOM bound event
@@ -116,7 +118,11 @@ jQuery('body').on('something-happened', function() {
 `event.alter(name|object, callback)` add or change a tinybind event(s)
 
 ```html
-<a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
+<a
+	class="btn btn-default btn-sm js-esc"
+	rv-on-click="events.navigate | wrap page.path"
+	><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a
+>
 ```
 
 https://blikblum.github.io/tinybind/docs/reference/#on-[event]
@@ -139,7 +145,7 @@ https://blikblum.github.io/tinybind/docs/reference/#on-[event]
 
 `router.flush()` remove ALL routes
 
-`router.listen()` turn on the route listener 
+`router.listen()` turn on the route listener
 
 `router.navigate(url, redirect)` navigate to a different url
 
@@ -173,29 +179,29 @@ https://blikblum.github.io/tinybind/docs/reference/#on-[event]
 
 `setData(data)` merge passed data with the current application data
 
-* error
-* errors
-* model
-* page
-* form
-* config
-* record
-* records
-* config
+- error
+- errors
+- model
+- page
+- form
+- config
+- record
+- records
+- config
 
 `getData(data)` return the current application data
 
-* error
-* errors
-* models
-* page
-* form
-* values
+- error
+- errors
+- models
+- page
+- form
+- values
 
 `cacheCleanUp(config)` clean up the cached based on passed class
 
-* clearCache = boolean
-* olderThanCache seconds (integer)
+- clearCache = boolean
+- olderThanCache seconds (integer)
 
 `loadModel(modelEndPoint, templateEndPoint)` load a model from the server or load a template then a model from the server
 
@@ -247,36 +253,18 @@ The espiritual sucessor of Rivets.js
 
 https://blikblum.github.io/tinybind/
 
-
 ---
-
 
 # /assets/app/app.js
 
 Setup the application
-
-Then the following methods are called to add additional values
-
-__Required Configuration Values__
-The url to call to get the applications configuration from the server
-
-```javascript
-app.config.alter('url','/get/config')
-```
-
-The url to call to get a layout
-
-```javascript
-app.config.alter('layoutUrl','/get/layout')
-```
-
-_Optional Configuration Values_
 
 Alter Configuration Value individually or in bulk
 
 ```javascript
 app.config.alter((string) name,(mixed) value);
 app.config.alter((object) name);
+app.config.collect();
 ```
 
 Alter Route Value individually or in bulk
@@ -289,15 +277,17 @@ app.router.alter((object) regular expression);
 Alter TinyBind Event Values individually or in bulk
 
 ```javascript
-app.event.alter((string) name,(function) callback);
-app.event.alter((object) name);
+app.events.alter((string) name,(function) callback);
+app.events.alter((object) name);
+app.events.collect();
 ```
 
 Alter Trigger Values individually or in bulk
 
 ```javascript
-app.trigger.alter((string) name,(function) callback);
-app.trigger.alter((object) name);
+app.triggers.alter((string) name,(function) callback);
+app.triggers.alter((object) name);
+app.triggers.collect();
 ```
 
 Alter User Method Values individually or in bulk
@@ -305,6 +295,7 @@ Alter User Method Values individually or in bulk
 ```javascript
 app.method.alter((string) name,(function) callback);
 app.method.alter((object) name);
+app.methods.collect();
 ```
 
 Alter Response Based on HTTP status code individually or in bulk
@@ -338,4 +329,3 @@ https://blikblum.github.io/tinybind/docs/guide/#formatters
 
 File to put all of your on DOM ready javascript
 This is also what calls `app.init()` once the DOM is Ready
-
