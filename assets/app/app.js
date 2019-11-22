@@ -1,9 +1,7 @@
 /* Setup the Application */
+var app = new orangeBinder.bind('appid', '/get/configuration');
+
 app.config.alter({
-	/* the url to call to get the applications configuration from the server */
-	url: '/get/configuration',
-	/* the url to call to get a layout ie. /get/layout/{name} */
-	layoutUrl: '/get/layout',
 	defaults: {
 		Precision: 2,
 		ThousandSeparator: ',',
@@ -89,22 +87,15 @@ app.router.alter({
 	/* mpa example page - when this page loads load this model */
 	'food': function () {
 		app.loadModel('/food/index');
-	},
-	'': function () {
-		/* leave empty to allow for standard web page loads */
-		/* default route */
-		/* redirect */
-		console.log('default route');
-		app.refresh();
 	}
 });
 
-app.response.alter(404, function (xhr, status, error) {
-	/* don't show the default alert() - instead show not found */
-	app.loadTemplate(app.config.layoutUrl + '/notfound');
-});
+//app.response.alter(404, function (xhr, status, error) {
+/* don't show the default alert() - instead show not found */
+//app.loadTemplate(app.config.layoutUrl + '/notfound');
+//});
 
-app.method.alter({
+app.methods.alter({
 	'buildUrl': function (args) {
 		var that = args.pop();
 		var event = args.pop();
@@ -151,7 +142,7 @@ app.method.alter({
 });
 
 /* Button Events */
-app.event.alter({
+app.events.alter({
 	create: function (url, event) {
 		event.preventDefault();
 		app.router.navigate(url + '/create');
