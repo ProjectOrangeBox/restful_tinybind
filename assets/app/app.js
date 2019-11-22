@@ -1,5 +1,4 @@
 /* Setup the Application */
-
 app.config.alter({
 	/* the url to call to get the applications configuration from the server */
 	url: '/get/configuration',
