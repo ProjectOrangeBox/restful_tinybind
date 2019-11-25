@@ -191,8 +191,7 @@ var orangeBinder = {
 
 		this.loadTemplate = function (templateEndPoint, then) {
 			var _p = this;
-			var key = templateEndPoint + '.template';
-
+			var cacheKey = templateEndPoint + '.template';
 			var template = undefined;
 
 			/* is this storaged in our local template cache */
@@ -200,12 +199,12 @@ var orangeBinder = {
 				template = this.templates[templateEndPoint];
 			} else if (storage !== undefined) {
 				/* Get bind template from browser local session storage? */
-				template = storage.getItem(key, undefined);
+				template = storage.getItem(cacheKey, undefined);
 			}
 
 			/* have we already loaded the template? */
 			if (template !== undefined) {
-				this.getElementById().innerHTML = template;
+				this.replaceHtml(template);
 
 				if (then) {
 					then();
@@ -216,10 +215,13 @@ var orangeBinder = {
 					var cacheSeconds = data.template.cache ? data.template.cache : _p.config.templateCache;
 
 					if (storage !== undefined) {
-						storage.setItem(key, data.template.source, cacheSeconds);
+						storage.setItem(cacheKey, data.template.source, cacheSeconds);
 					}
 
-					_p.getElementById().innerHTML = data.template.source;
+					/* attach it locally */
+					_p.templates.alter(templateEndPoint, data.template.source);
+
+					_p.replaceHtml(data.template.source);
 
 					if (then) {
 						then();
@@ -234,6 +236,12 @@ var orangeBinder = {
 			}
 
 			return this; /* allow chaining */
+		};
+
+		this.replaceHtml = function (html) {
+			console.log('replaceHtml', html);
+
+			this.getElementById().innerHTML = html;
 		};
 
 		this.getElementById = function () {
