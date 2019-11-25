@@ -1,4 +1,11 @@
-var nav = new orangeBinder.bind('nav', '/get/configuration', '/get/layout');
+/*
+Setup the nav global variable for the nav "block"
+
+1. we request tell bind what the id is
+2. then where to get it's config from the server
+
+*/
+var nav = new orangeBinder.bind('nav', '/get/configuration');
 
 nav.config.alter({
 	nav: {

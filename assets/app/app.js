@@ -1,4 +1,11 @@
-/* Setup the Application */
+/*
+Setup the Application global variable for the app "block"
+
+1. we request tell bind what the id is
+2. then where to get it's config from the server
+3. prefix all layout requests with...
+
+*/
 
 var app = new orangeBinder.bind('app', '/get/configuration', '/get/layout');
 

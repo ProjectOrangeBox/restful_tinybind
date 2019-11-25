@@ -90,7 +90,7 @@ var orangeBinder = {
 
 			modelEndPoint = this.config.modelUrl + modelEndPoint;
 
-			console.log('Model End Point ' + modelEndPoint);
+			console.debug('Model End Point ' + modelEndPoint);
 
 			if (templateEndPoint) {
 				/* load the template then the model */
@@ -107,7 +107,7 @@ var orangeBinder = {
 
 		this.loadTemplate = function (templateEndPoint, then) {
 			var _parent = this;
-			var key = templateEndPoint + ".template";
+			var key = templateEndPoint + '.template';
 			var template = undefined;
 
 			if (this.templates[templateEndPoint] !== undefined) {
@@ -142,7 +142,7 @@ var orangeBinder = {
 
 				var url = this.config.templateUrl + templateEndPoint;
 
-				console.log('Template End Point: ' + url);
+				console.debug('Template End Point: ' + url);
 
 				_parent.request.get(url);
 			}
@@ -156,7 +156,7 @@ var orangeBinder = {
 			if (element === null) {
 				console.error('Element Id "' + this.id + '" Not Found.');
 			} else {
-				console.log('Binding To "' + this.id + '"');
+				console.debug('Binding To "' + this.id + '"');
 			}
 
 			return element;
@@ -203,19 +203,13 @@ var orangeBinder = {
 
 			/* default init 200 callback */
 			this.response.alter(200, function (data, xhr) {
-				/**
-				 * replace: error, errors, model
-				 * merge: page, form, config
-				 */
 				_parent.setData(data);
 
-				/**
-				 * send into tinybind the configuration
-				 */
+				/* send into tinybind the configuration */
 				tinybind.configure(_parent.config.tinyBind);
 
 				/**
-				 * check to see if the current route is something we are listening for
+				 * Turn on the listener to check to see if the current route is something we are listening for
 				 * if a match is found then trigger the callback with the url
 				 * ie. callback('/foo/bar');
 				 */
@@ -264,92 +258,67 @@ var orangeBinder = {
 		this._parent = parent;
 
 		this.routes = [];
-		this.interval = undefined;
-		this.listening = undefined;
 
+		/* reference to intervalID */
+		this.interval = undefined;
+
+		/* check the router url and call the callback if a match is found */
 		this.check = function (url) {
-			/**
-			 * Do we have any routes to listen for?
-			 */
+			/* do we have any routes to listen for? */
 			if (this.routes.length) {
-				/* turn on listening */
 
 				/* did they send in a url? if not then get the current url */
 				url = url || this.getUrl();
 
-				console.info("router::check", url);
+				console.info('router::check', url);
 
-				/* are we listening for changes? if not start listener */
-				if (!this.listening) {
-					this.listening = this.listen();
-				}
+				/* loop though the routes */
+				for (var key in this.routes) {
+					var parameters = url.match(this.routes[key].re);
 
-				/* check for a match */
-				for (var i = 0; i < this.routes.length; i++) {
-					var match = url.match(this.routes[i].re);
+					if (parameters) {
+						console.info('router::check::parameters', parameters, this.routes[key].re.toString());
 
-					if (match) {
-						match.shift();
+						/* remove matched url  */
+						parameters.shift();
 
-						console.info("router::check::match", this.routes[i].re.toString());
-
-						/* call the route callback */
-						this.routes[i].callback.apply({}, match);
+						/* call the route callback and pass in the parameters */
+						this.routes[key].callback.apply({}, parameters);
 
 						break; /* break from for loop */
 					}
+				}
+
+				/* turn on listening if it's not already */
+				if (!this.interval) {
+					this.listen();
 				}
 			}
 
 			return this; /* allow chaining */
 		};
 
+		/* get the current page url */
 		this.getUrl = function () {
-			var url = "";
+			var url = '';
 
 			url = this._clearSlashes(decodeURI(location.pathname + location.search));
-			url = url.replace(/\?(.*)$/, "");
-			url = this._parent.config.routerRoot !== "/" ? url.replace(this._parent.config.routerRoot, '') : url;
+			url = url.replace(/\?(.*)$/, '');
+			url = this._parent.config.routerRoot !== '/' ? url.replace(this._parent.config.routerRoot, '') : url;
 
 			return this._clearSlashes(url);
 		};
 
+		/* add or change a route */
 		this.alter = function (regularExpression, callback) {
-			if (typeof regularExpression === "object") {
+			if (typeof regularExpression === 'object') {
 				for (var property in regularExpression) {
 					this.alter(property, regularExpression[property]);
 				}
 			} else {
-				/* trim / fore & aft */
-				regularExpression = this._clearSlashes(regularExpression);
-
-				/* escape / to \/ */
-				regularExpression = regularExpression.replace(
-					new RegExp("/", "g"),
-					"\\/"
-				);
-
-				/* add CodeIgniter matches */
-				regularExpression = regularExpression.replace(
-					new RegExp(":any", "g"),
-					"[^/]+"
-				); /* anything */
-				regularExpression = regularExpression.replace(
-					new RegExp(":num", "g"),
-					"[0-9]+"
-				); /* number only */
-				regularExpression = regularExpression.replace(
-					new RegExp(":hex", "g"),
-					"[0-9a-f]+"
-				); /* hex values */
-				regularExpression = regularExpression.replace(
-					new RegExp(":str", "g"),
-					"[0-9a-zA-Z]+"
-				); /* str values */
-
 				/* add to the routes array */
 				this.routes.push({
-					re: new RegExp(regularExpression),
+					re: this._reformatRegularExpression(regularExpression),
 					callback: callback
 				});
 			}
@@ -357,33 +326,67 @@ var orangeBinder = {
 			return this; /* allow chaining */
 		};
 
-		this.remove = function (param) {
-			var _parent = this;
+		/* remove a single route it's url regular expression */
+		this.remove = function (regularExpression) {
+			var re = this._reformatRegularExpression(regularExpression);
 
-			this.routes.forEach(function (value, index) {
-				if (
-					value.callback === param ||
-					value.re.toString() === param.toString()
-				) {
-					_parent.routes.splice(index, 1);
+			for (var key in this.routes) {
+				if (re.toString() == this.routes[key].re.toString()) {
+					this.routes.splice(key, 1);
 				}
-			});
+			}
 
 			return this; /* allow chaining */
 		};
 
+		this._reformatRegularExpression = function (regularExpression) {
+			/* trim / fore & aft */
+			regularExpression = this._clearSlashes(regularExpression);
+
+			/* escape / to \/ */
+			regularExpression = regularExpression.replace(
+				new RegExp('/', 'g'),
+				"\\/"
+			);
+
+			/* add CodeIgniter matches */
+			regularExpression = regularExpression.replace(
+				new RegExp(':any', 'g'),
+				'[^/]+'
+			); /* anything */
+			regularExpression = regularExpression.replace(
+				new RegExp(':num', 'g'),
+				'[0-9]+'
+			); /* number only */
+			regularExpression = regularExpression.replace(
+				new RegExp(':hex', 'g'),
+				'[0-9a-f]+'
+			); /* hex values */
+			regularExpression = regularExpression.replace(
+				new RegExp(':str', 'g'),
+				'[0-9a-zA-Z]+'
+			); /* str values */
+
+			return new RegExp(regularExpression);
+		};
+
+		/* delete all routes */
 		this.flush = function () {
 			this.routes = [];
 
 			return this; /* allow chaining */
 		};
 
+		/* start router listener checking for changes in the url */
 		this.listen = function () {
 			var _parent = this;
+
+			/* what is the current url */
 			var current = this.getUrl();
 
 			/* Do we have any routes to listen for? */
 			if (this.routes.length) {
+				/* clear any current interval */
 				clearInterval(this.interval);
 
 				/* we are now listening for url changes */
@@ -392,108 +395,116 @@ var orangeBinder = {
 						current = _parent.getUrl();
 						_parent.check(current);
 					}
-				}, 50);
+				}, 100);
 			}
 
 			return this; /* allow chaining */
 		};
 
+		/* navigate to a new url optionally specifying it as a redirect or history change */
 		this.navigate = function (url, redirect) {
-			url = url ? this._parent.config.routerRoot + this._clearSlashes(url) : "";
+			url = url ? this._parent.config.routerRoot + this._clearSlashes(url) : '';
 			redirect = redirect ? redirect : this._parent.config.redirect;
 
-			console.info("router::navigate", url, redirect);
+			console.info('router::navigate', url, redirect);
 
+			/* trigger a redirect so other javascript code knows we are redirecting */
 			this._parent.triggers.bindNavigate(url, redirect);
 
 			if (redirect) {
 				/* full page reload so trigger wouldn't even be picked up */
 				window.location.href = url;
 			} else {
+				/* adds a state to the browser's session history stack redirect */
 				history.pushState(null, null, url);
 			}
 
 			return this; /* allow chaining */
 		};
 
+		/* remove all slashes from the beginning and end of the passed url */
 		this._clearSlashes = function (url) {
 			return url
 				.toString()
-				.replace(/\/$/, "")
-				.replace(/^\//, "");
+				.replace(/\/$/, '')
+				.replace(/^\//, '');
 		};
 	},
 	response: function (parent) {
 		this._parent = parent;
 
-		this.callbacks = {
+		this.callbacks = {};
+
+		this.defaultCallbacks = {
 			/* standard get layout or get model */
 			200: function (data, status, xhr) {
-				console.log(arguments);
-				alert("200 (ok) callback");
+				console.debug(arguments);
+				alert('200 (ok) callback');
 			},
 			/* success on create */
 			201: function (data, status, xhr) {
-				console.log(arguments);
-				alert("201 (created) callback");
+				console.debug(arguments);
+				alert('201 (created) callback');
 			},
 			/* success on edit */
 			202: function (data, status, xhr) {
-				console.log(arguments);
-				alert("202 (accepted) callback");
+				console.debug(arguments);
+				alert('202 (accepted) callback');
 			},
 			/* access to resource not allowed */
 			401: function (xhr, status, error) {
-				console.log(arguments);
-				alert("401 (unauthorized) callback");
+				console.debug(arguments);
+				alert('401 (unauthorized) callback');
 			},
 			/* resource not found */
 			404: function (xhr, status, error) {
-				console.log(arguments);
-				alert("404 (not found) callback");
+				console.debug(arguments);
+				alert('404 (not found) callback');
 			},
 			/* error submitting resource (create, edit, delete) */
 			406: function (xhr, status, error) {
-				console.log(arguments);
-				alert("406 (not accepted) callback");
+				console.debug(arguments);
+				alert('406 (not accepted) callback');
 			},
 			/* resource conflict ie. trying to create a new resource with the same primary id */
 			409: function (xhr, status, error) {
-				console.log(arguments);
-				alert("409 (conflict) callback");
+				console.debug(arguments);
+				alert('409 (conflict) callback');
 			},
 			/* internal server error */
 			500: function (xhr, status, error) {
-				console.log(arguments);
-				alert("500 (server error) callback");
+				console.debug(arguments);
+				alert('500 (server error) callback');
 			}
 		};
 
 		this.alter = function (code, callback) {
-			if (typeof code === "object") {
+			if (typeof code === 'object') {
 				for (var property in code) {
 					this.alter(property, code[property]);
 				}
-			} else if (Number.isInteger(code) && typeof callback === "function") {
+			} else if (Number.isInteger(code) && typeof callback === 'function') {
 				/* change the responds callback based on the returned http status code */
 				this.callbacks[code] = callback;
 			}
 
 			return this;
 		};
+
+		this.callbacks = this.defaultCallbacks;
 	},
 	request: function (parent) {
 		this._parent = parent;
 
 		/* any method */
 		this.send = function (method, url, data, callbacks) {
-			console.info("request::send", method, url, data);
+			console.info('request::send', method, url, data);
 
 			jQuery.ajax({
 				method: method,
 				url: url,
 				data: data,
-				dataType: "json",
+				dataType: 'json',
 				cache: !this._parent.config.ajaxCacheBuster,
 				/* ajax cache buster? */
 				async: true,
@@ -508,49 +519,49 @@ var orangeBinder = {
 
 		/* REST / HTTP - get */
 		this.get = function (url, data, callbacks) {
-			return this.send("get", url, data, callbacks);
+			return this.send('get', url, data, callbacks);
 		};
 
 		/* REST / HTTP  - post */
 		this.post = function (url, data, callbacks) {
-			return this.send("post", url, data, callbacks);
+			return this.send('post', url, data, callbacks);
 		};
 
 		/* REST / HTTP  - patch */
 		this.patch = function (url, data, callbacks) {
-			return this.send("patch", url, data, callbacks);
+			return this.send('patch', url, data, callbacks);
 		};
 
 		/* CRUD / SQL / REST / HTTP  - delete */
 		this.delete = function (url, data, callbacks) {
-			return this.send("delete", url, data, callbacks);
+			return this.send('delete', url, data, callbacks);
 		};
 
 		/* CRUD - create */
 		this.create = function (url, data, callbacks) {
-			return this.send("post", url, data, callbacks);
+			return this.send('post', url, data, callbacks);
 		};
 
 		/* CRUD - read */
 		this.read = function (url, data, callbacks) {
-			return this.send("get", url, data, callbacks);
+			return this.send('get', url, data, callbacks);
 		};
 
 		/* CRUD / SQL - update */
 		this.update = function (url, data, callbacks) {
-			return this.send("patch", url, data, callbacks);
+			return this.send('patch', url, data, callbacks);
 		};
 
 		/* SQL - insert */
 		this.insert = function (url, data, callbacks) {
-			return this.send("post", url, data, callbacks);
+			return this.send('post', url, data, callbacks);
 		};
 	},
 	collection: function (parent) {
 		this._parent = parent;
 
 		this.alter = function (name, value) {
-			if (typeof name === "object") {
+			if (typeof name === 'object') {
 				for (var property in name) {
 					this[property] = name[property];
 				}
@@ -565,7 +576,7 @@ var orangeBinder = {
 			var collection = {};
 
 			for (var propertyName in this) {
-				if (typeof this[propertyName] !== "function" && propertyName !== "_parent") {
+				if (typeof this[propertyName] !== 'function' && propertyName !== '_parent') {
 					collection[propertyName] = this[propertyName];
 				}
 			}
