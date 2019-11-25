@@ -25,16 +25,24 @@ var orangeBinder = {
 		 */
 		this.errors = {};
 
-		/* actual model storage */
+		/**
+		 * actual model storage
+		 */
 		this.model = {};
 
-		/* when model is single records */
+		/**
+		 * when model is single records
+		 */
 		this.record = {};
 
-		/* when model is multiple records */
+		/**
+		 * when model is multiple records
+		 */
 		this.records = [];
 
-		/* collections alter & collect */
+		/**
+		 * collections - alter & collect
+		 */
 		this.page = new orangeBinder.collection(this);
 		this.form = new orangeBinder.collection(this);
 		this.user = new orangeBinder.collection(this);
@@ -46,16 +54,45 @@ var orangeBinder = {
 		this.triggers = new orangeBinder.collection(this);
 		this.templates = new orangeBinder.collection(this);
 
-		/* special instances */
+		/**
+		 * special instances
+		 */
 		this.response = new orangeBinder.response(this);
 		this.request = new orangeBinder.request(this);
 		this.router = new orangeBinder.router(this);
 
-		/* merge and replace data */
-		this.setData = function (data) {
-			console.log('setData', data);
+		/**
+		 * set up the default configuration
+		 */
+		this.config.alter({
+			settable: ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'],
+			gettable: ['error', 'errors', 'model', 'page', 'form'],
+			defaults: {},
+			configUrl: (configUrl || ''),
+			modelUrl: (modelUrl || ''),
+			templateUrl: (templateUrl || ''),
+			redirect: false,
+			ajaxTimeout: 5000,
+			routerRoot: '/',
+			storageCache: 0,
+			templateCache: 0,
+			clearCache: false,
+			ajaxCacheBuster: false,
+			tinyBind: {
+				prefix: 'rv',
+				preloadData: true,
+				rootInterface: '.',
+				templateDelimiters: ['{', '}'],
+			}
+		});
 
-			var settable = ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'];
+		/**
+		 * merge and replace data
+		 */
+		this.setData = function (data, settable) {
+			settable = settable || this.config.settable;
+
+			console.log('setData', data, settable);
 
 			for (var index in settable) {
 				var key = settable[index];
@@ -89,18 +126,18 @@ var orangeBinder = {
 			return this; /* allow chaining */
 		};
 
-		/*
-		get the data about this element
-		*/
-		this.getData = function (keys) {
-			keys = key ? key : ['error', 'errors', 'model', 'page', 'form'];
+		/**
+		 * get the data about this element
+		 */
+		this.getData = function (gettable) {
+			gettable = gettable || this.config.gettable;
 
-			console.log('getData', keys);
+			console.log('getData', gettable);
 
 			var collection = {};
 
-			for (var index in keys) {
-				var key = keys[index];
+			for (var index in gettable) {
+				var key = gettable[index];
 
 				collection[key] = (typeof this[key].collect === 'function') ? this[key].collect() : this[key];
 			}
@@ -110,17 +147,22 @@ var orangeBinder = {
 			return collection;
 		};
 
+		/**
+		 * preform garage collection based on the configuration sent in (usally from the server configuration value)
+		 * This uses my superStorage library to cache to the local browser application storage
+		 */
 		this.cacheCleanUp = function (config) {
-			/* handle some caching cleanups */
-
 			/* if true flush all */
-			if (config.clearCache) {
-				storage.clear();
-			}
+			if (storage !== undefined) {
+				/* set clear everything */
+				if (config.clearCache) {
+					storage.clear();
+				}
 
-			/* if older than cache seconds... */
-			if (config.olderThanCache !== undefined) {
-				storage.removeOlderThan(config.olderThanCache);
+				/* if set clear older than X seconds... */
+				if (config.olderThanCache !== undefined) {
+					storage.removeOlderThan(config.olderThanCache);
+				}
 			}
 
 			return this; /* allow chaining */
@@ -197,7 +239,7 @@ var orangeBinder = {
 			if (element === null) {
 				console.error('Element Id "' + this.id + '" Not Found.');
 			} else {
-				console.debug('Binding To "' + this.id + '"');
+				console.log('Binding To "' + this.id + '"');
 			}
 
 			return element;
@@ -260,27 +302,6 @@ var orangeBinder = {
 			/* Make a Request for the configuration url using the default 200 responds we just setup above */
 			this.request.get(this.config.configUrl);
 		}
-
-		/* finish init */
-		this.config.alter({
-			defaults: {},
-			configUrl: (configUrl || ''),
-			modelUrl: (modelUrl || ''),
-			templateUrl: (templateUrl || ''),
-			redirect: false,
-			ajaxTimeout: 5000,
-			routerRoot: '/',
-			storageCache: 0,
-			templateCache: 0,
-			clearCache: false,
-			ajaxCacheBuster: false,
-			tinyBind: {
-				prefix: 'rv',
-				preloadData: true,
-				rootInterface: '.',
-				templateDelimiters: ['{', '}'],
-			}
-		});
 
 		/* attach our default triggers */
 		this.triggers.alter({
