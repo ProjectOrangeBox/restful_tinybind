@@ -1,16 +1,40 @@
 var orangeBinder = {
+	/**
+	 * create the bind element
+	 * arguments:
+	 * id - DOM element id ie. <div id="foobar"></div>
+	 * configuration url - url requested to get the "base" configuration
+	 * template url - template url prefix
+	 * model url - model url prefix
+	 */
 	bind: function (id, configUrl, templateUrl, modelUrl) {
+		/* DOM element id */
 		this.id = id;
 
+		/* is tiny bound bound to anything? */
 		this.bound = undefined;
 
+		/**
+		 * do we have an error - boolean true/false
+		 * keep these exposed on app so tinybind can use them as a boolean
+		 */
 		this.error = false;
+		/**
+		 * "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}}
+		 * keep these exposed on app so tinybind can use them as a object
+		 */
 		this.errors = {};
 
+		/* actual model storage */
 		this.model = {};
-		this.record = {};
-		this.records = {};
 
+		/* when model is single records */
+		this.record = {};
+
+		/* when model is multiple records */
+		this.records = [];
+
+		/* collections alter & collect */
 		this.page = new orangeBinder.collection(this);
 		this.form = new orangeBinder.collection(this);
 		this.user = new orangeBinder.collection(this);
@@ -22,28 +46,34 @@ var orangeBinder = {
 		this.triggers = new orangeBinder.collection(this);
 		this.templates = new orangeBinder.collection(this);
 
+		/* special instances */
 		this.response = new orangeBinder.response(this);
 		this.request = new orangeBinder.request(this);
 		this.router = new orangeBinder.router(this);
 
+		/* merge and replace data */
 		this.setData = function (data) {
-			console.debug('setData', data);
+			console.log('setData', data);
 
-			if (typeof data.page === 'object') {
-				this.page.alter(data.page);
+			var settable = ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'];
+
+			for (var index in settable) {
+				var key = settable[index];
+
+				if (data[key] !== undefined) {
+					console.log(key, data[key]);
+
+					/*
+					if they have alter then send them in as objects and let alter merge the contents
+					else they replace the entire variable
+					*/
+					if (typeof this[key].alter === 'function') {
+						this[key].alter(data[key]);
+					} else {
+						this[key] = data[key];
+					}
+				}
 			}
-
-			if (typeof data.form === 'object') {
-				this.form.alter(data.form);
-			}
-
-			if (typeof data.config === 'object') {
-				this.config.alter(data.config);
-			}
-
-			this.error = data.error || this.error;
-			this.errors = data.errors || this.errors;
-			this.model = data.model || this.model;
 
 			/**
 			 * these are references to the actual model
@@ -59,14 +89,25 @@ var orangeBinder = {
 			return this; /* allow chaining */
 		};
 
-		this.getData = function () {
-			return {
-				error: this.error,
-				errors: this.errors,
-				model: this.model,
-				page: this.page.collect(),
-				form: this.form.collect(),
-			};
+		/*
+		get the data about this element
+		*/
+		this.getData = function (keys) {
+			keys = key ? key : ['error', 'errors', 'model', 'page', 'form'];
+
+			console.log('getData', keys);
+
+			var collection = {};
+
+			for (var index in keys) {
+				var key = keys[index];
+
+				collection[key] = (typeof this[key].collect === 'function') ? this[key].collect() : this[key];
+			}
+
+			console.log(collection);
+
+			return collection;
 		};
 
 		this.cacheCleanUp = function (config) {
@@ -90,7 +131,7 @@ var orangeBinder = {
 
 			modelEndPoint = this.config.modelUrl + modelEndPoint;
 
-			console.debug('Model End Point ' + modelEndPoint);
+			console.log('Model End Point ' + modelEndPoint);
 
 			if (templateEndPoint) {
 				/* load the template then the model */
@@ -142,7 +183,7 @@ var orangeBinder = {
 
 				var url = this.config.templateUrl + templateEndPoint;
 
-				console.debug('Template End Point: ' + url);
+				console.log('Template End Point: ' + url);
 
 				_parent.request.get(url);
 			}
@@ -282,14 +323,14 @@ var orangeBinder = {
 				/* did they send in a url? if not then get the current url */
 				url = url || this.getUrl();
 
-				console.info('router::match', url);
+				console.log('router::match', url);
 
 				/* loop though the routes */
 				for (var key in this.routes) {
 					var parameters = url.match(this.routes[key].re);
 
 					if (parameters) {
-						console.info('router::match::parameters', parameters, this.routes[key].re.toString());
+						console.log('router::match::parameters', parameters, this.routes[key].re.toString());
 
 						/* remove matched url  */
 						parameters.shift();
@@ -424,7 +465,7 @@ var orangeBinder = {
 			url = url ? this._parent.config.routerRoot + this._clearSlashes(url) : '';
 			redirect = redirect ? redirect : this._parent.config.redirect;
 
-			console.info('router::navigate', url, redirect);
+			console.log('router::navigate', url, redirect);
 
 			/* trigger a redirect so other javascript code knows we are redirecting */
 			this._parent.triggers.bindNavigate(url, redirect);
@@ -516,7 +557,7 @@ var orangeBinder = {
 
 		/* any method */
 		this.send = function (method, url, data, callbacks) {
-			console.info('request::send', method, url, data);
+			console.log('request::send', method, url, data);
 
 			jQuery.ajax({
 				method: method,
