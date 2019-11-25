@@ -648,7 +648,10 @@ var orangeBinder = {
 			return this.send('post', url, data, callbacks);
 		};
 	},
+	/* collection class */
 	collection: function () {
+
+		/* add or change a collection property */
 		this.alter = function (name, value) {
 			if (typeof name === 'object') {
 				for (var property in name) {
@@ -661,6 +664,7 @@ var orangeBinder = {
 			return this;
 		};
 
+		/* collect the objects property for export */
 		this.collect = function () {
 			var collection = {};
 
