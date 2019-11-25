@@ -257,16 +257,16 @@ var orangeBinder = {
 	router: function (parent) {
 		this._parent = parent;
 
+		/* array of routes */
 		this.routes = [];
 
 		/* reference to intervalID */
-		this.interval = undefined;
+		this.intervalID = undefined;
 
-		/* get the current page url */
+		/* get and normalize the current page url */
 		this.getUrl = function () {
-			var url = '';
+			var url = this._clearSlashes(decodeURI(location.pathname + location.search));
 
-			url = this._clearSlashes(decodeURI(location.pathname + location.search));
 			url = url.replace(/\?(.*)$/, '');
 			url = this._parent.config.routerRoot !== '/' ? url.replace(this._parent.config.routerRoot, '') : url;
 
@@ -275,6 +275,7 @@ var orangeBinder = {
 
 		/* match the router url and call the callback if a match is found */
 		this.match = function (url) {
+
 			/* do we have any routes to listen for? */
 			if (this.routes.length) {
 
@@ -299,11 +300,6 @@ var orangeBinder = {
 						break; /* break from for loop */
 					}
 				}
-
-				/* turn on listening if it's not already */
-				if (!this.interval) {
-					this.listen();
-				}
 			}
 
 			return this; /* allow chaining */
@@ -318,9 +314,14 @@ var orangeBinder = {
 			} else {
 				/* add to the routes array */
 				this.routes.push({
-					re: this._reformatRegularExpression(regularExpression),
+					re: this._normalizeRegularExpression(regularExpression),
 					callback: callback
 				});
+			}
+
+			/* turn on listening if it's not already */
+			if (!this.intervalID) {
+				this.listen();
 			}
 
 			return this; /* allow chaining */
@@ -328,7 +329,7 @@ var orangeBinder = {
 
 		/* remove a single route it's url regular expression */
 		this.remove = function (regularExpression) {
-			var re = this._reformatRegularExpression(regularExpression);
+			var re = this._normalizeRegularExpression(regularExpression);
 
 			for (var key in this.routes) {
 				if (re.toString() == this.routes[key].re.toString()) {
@@ -339,7 +340,11 @@ var orangeBinder = {
 			return this; /* allow chaining */
 		};
 
-		this._reformatRegularExpression = function (regularExpression) {
+		/*
+		normalize the regular expression
+		and convert (:any) (:num) (:hex) (:str) to actual expression values
+		*/
+		this._normalizeRegularExpression = function (regularExpression) {
 			/* trim / fore & aft */
 			regularExpression = this._clearSlashes(regularExpression);
 
@@ -374,31 +379,43 @@ var orangeBinder = {
 		this.flush = function () {
 			this.routes = [];
 
-			return this; /* allow chaining */
+			return this.stopListening(); /* allow chaining */
 		};
+
+		this.stopListening = function () {
+			if (this.intervalID) {
+				clearInterval(this.intervalID);
+			}
+
+			return this; /* allow chaining */
+		}
 
 		/* start router listener matching for changes in the url */
 		this.listen = function () {
 			/* Do we have any routes to listen for? */
 			if (this.routes.length) {
-				/* clear any current interval */
-				clearInterval(this.interval);
+				/* if we are already listening let's just make sure we stop first */
+				this.stopListening();
 
 				/* we are now listening for url changes */
-				this.interval = setInterval(this.listener, 100, this);
+				this.intervalID = setInterval(this.listener, 100, this);
 			}
 
 			return this; /* allow chaining */
 		};
 
+		/*
+		the interval listener
+		since interval is actually calling a function the reference to "this" doesn't work
+		*/
 		this.listener = function (router) {
-			var checkedUrl = router.getUrl();
+			var url = router.getUrl();
 
-			if (router.currentUrl != checkedUrl) {
+			if (router._currentUrl != url) {
 
-				router.currentUrl = checkedUrl;
+				router._currentUrl = url;
 
-				router.match(checkedUrl);
+				router.match(url);
 			}
 		};
 
@@ -425,14 +442,11 @@ var orangeBinder = {
 
 		/* remove all slashes from the beginning and end of the passed url */
 		this._clearSlashes = function (url) {
-			return url
-				.toString()
-				.replace(/\/$/, '')
-				.replace(/^\//, '');
+			return url.toString().replace(/\/$/, '').replace(/^\//, '');
 		};
 
 		/* what is our current url */
-		this.currentUrl = this.getUrl();
+		this._currentUrl = this.getUrl();
 	},
 	response: function (parent) {
 		this._parent = parent;
