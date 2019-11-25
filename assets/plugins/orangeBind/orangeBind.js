@@ -209,11 +209,11 @@ var orangeBinder = {
 				tinybind.configure(_parent.config.tinyBind);
 
 				/**
-				 * Turn on the listener to check to see if the current route is something we are listening for
+				 * Turn on the listener to match to see if the current route is something we are listening for
 				 * if a match is found then trigger the callback with the url
 				 * ie. callback('/foo/bar');
 				 */
-				_parent.router.check();
+				_parent.router.match();
 			});
 
 			/* Make a Request for the configuration url using the default 200 responds we just setup above */
@@ -262,22 +262,33 @@ var orangeBinder = {
 		/* reference to intervalID */
 		this.interval = undefined;
 
-		/* check the router url and call the callback if a match is found */
-		this.check = function (url) {
+		/* get the current page url */
+		this.getUrl = function () {
+			var url = '';
+
+			url = this._clearSlashes(decodeURI(location.pathname + location.search));
+			url = url.replace(/\?(.*)$/, '');
+			url = this._parent.config.routerRoot !== '/' ? url.replace(this._parent.config.routerRoot, '') : url;
+
+			return this._clearSlashes(url);
+		};
+
+		/* match the router url and call the callback if a match is found */
+		this.match = function (url) {
 			/* do we have any routes to listen for? */
 			if (this.routes.length) {
 
 				/* did they send in a url? if not then get the current url */
 				url = url || this.getUrl();
 
-				console.info('router::check', url);
+				console.info('router::match', url);
 
 				/* loop though the routes */
 				for (var key in this.routes) {
 					var parameters = url.match(this.routes[key].re);
 
 					if (parameters) {
-						console.info('router::check::parameters', parameters, this.routes[key].re.toString());
+						console.info('router::match::parameters', parameters, this.routes[key].re.toString());
 
 						/* remove matched url  */
 						parameters.shift();
@@ -296,17 +307,6 @@ var orangeBinder = {
 			}
 
 			return this; /* allow chaining */
-		};
-
-		/* get the current page url */
-		this.getUrl = function () {
-			var url = '';
-
-			url = this._clearSlashes(decodeURI(location.pathname + location.search));
-			url = url.replace(/\?(.*)$/, '');
-			url = this._parent.config.routerRoot !== '/' ? url.replace(this._parent.config.routerRoot, '') : url;
-
-			return this._clearSlashes(url);
 		};
 
 		/* add or change a route */
@@ -377,28 +377,29 @@ var orangeBinder = {
 			return this; /* allow chaining */
 		};
 
-		/* start router listener checking for changes in the url */
+		/* start router listener matching for changes in the url */
 		this.listen = function () {
-			var _parent = this;
-
-			/* what is the current url */
-			var current = this.getUrl();
-
 			/* Do we have any routes to listen for? */
 			if (this.routes.length) {
 				/* clear any current interval */
 				clearInterval(this.interval);
 
 				/* we are now listening for url changes */
-				this.interval = setInterval(function () {
-					if (current !== _parent.getUrl()) {
-						current = _parent.getUrl();
-						_parent.check(current);
-					}
-				}, 100);
+				this.interval = setInterval(this.listener, 100, this);
 			}
 
 			return this; /* allow chaining */
+		};
+
+		this.listener = function (router) {
+			var checkedUrl = router.getUrl();
+
+			if (router.currentUrl != checkedUrl) {
+
+				router.currentUrl = checkedUrl;
+
+				router.match(checkedUrl);
+			}
 		};
 
 		/* navigate to a new url optionally specifying it as a redirect or history change */
@@ -429,6 +430,9 @@ var orangeBinder = {
 				.replace(/\/$/, '')
 				.replace(/^\//, '');
 		};
+
+		/* what is our current url */
+		this.currentUrl = this.getUrl();
 	},
 	response: function (parent) {
 		this._parent = parent;
