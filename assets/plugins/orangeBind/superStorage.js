@@ -5,7 +5,7 @@ var storage = {
 	storage: undefined,
 	/* local reference */
 	config: {
-		dbPrefix: '{superStorge}',
+		dbPrefix: 'ss.',
 		/* every key must start with this */
 		storage: 'localStorage',
 		/* which storage to use localStorage or sessionStorage */

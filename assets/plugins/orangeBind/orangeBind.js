@@ -43,20 +43,17 @@ var orangeBinder = {
 		/**
 		 * collections - alter & collect
 		 */
-		this.page = new orangeBinder.collection(this);
-		this.form = new orangeBinder.collection(this);
-		this.user = new orangeBinder.collection(this);
-		this.local = new orangeBinder.collection(this);
+		this.page = new orangeBinder.collection();
+		this.form = new orangeBinder.collection();
+		this.user = new orangeBinder.collection();
+		this.local = new orangeBinder.collection();
 
-		this.config = new orangeBinder.collection(this);
-		this.methods = new orangeBinder.collection(this);
-		this.events = new orangeBinder.collection(this);
-		this.triggers = new orangeBinder.collection(this);
-		this.templates = new orangeBinder.collection(this);
+		this.config = new orangeBinder.collection();
+		this.methods = new orangeBinder.collection();
+		this.events = new orangeBinder.collection();
+		this.triggers = new orangeBinder.collection();
+		this.templates = new orangeBinder.collection();
 
-		/**
-		 * special instances
-		 */
 		this.response = new orangeBinder.response(this);
 		this.request = new orangeBinder.request(this);
 		this.router = new orangeBinder.router(this);
@@ -66,7 +63,7 @@ var orangeBinder = {
 		 */
 		this.config.alter({
 			settable: ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'],
-			gettable: ['error', 'errors', 'model', 'page', 'form'],
+			gettable: ['page', 'form', 'error', 'errors', 'model'],
 			defaults: {},
 			configUrl: (configUrl || ''),
 			modelUrl: (modelUrl || ''),
@@ -152,7 +149,7 @@ var orangeBinder = {
 		 * This uses my superStorage library to cache to the local browser application storage
 		 */
 		this.cacheCleanUp = function (config) {
-			/* if true flush all */
+			/* is it loaded? */
 			if (storage !== undefined) {
 				/* set clear everything */
 				if (config.clearCache) {
@@ -168,31 +165,37 @@ var orangeBinder = {
 			return this; /* allow chaining */
 		};
 
-		this.loadModel = function (modelEndPoint, templateEndPoint) {
-			var _parent = this;
+		this.loadModel = function (modelEndPoint, templateEndPoint, then) {
+			var _p = this;
 
 			modelEndPoint = this.config.modelUrl + modelEndPoint;
 
-			console.log('Model End Point ' + modelEndPoint);
+			console.log('loadModel ' + modelEndPoint);
 
 			if (templateEndPoint) {
 				/* load the template then the model */
 				this.loadTemplate(templateEndPoint, function () {
-					_parent._loadModel(modelEndPoint);
+					_p._loadModel(modelEndPoint);
 				});
 			} else {
 				/* just load the model */
 				this._loadModel(modelEndPoint);
 			}
 
+			if (then) {
+				then();
+			}
+
 			return this; /* allow chaining */
 		};
 
 		this.loadTemplate = function (templateEndPoint, then) {
-			var _parent = this;
+			var _p = this;
 			var key = templateEndPoint + '.template';
+
 			var template = undefined;
 
+			/* is this storaged in our local template cache */
 			if (this.templates[templateEndPoint] !== undefined) {
 				template = this.templates[templateEndPoint];
 			} else if (storage !== undefined) {
@@ -210,13 +213,13 @@ var orangeBinder = {
 			} else {
 				/* setup retrieve model - success */
 				this.response.alter(200, function (data, status, xhr) {
-					var cacheSeconds = data.template.cache ? data.template.cache : _parent.config.templateCache;
+					var cacheSeconds = data.template.cache ? data.template.cache : _p.config.templateCache;
 
 					if (storage !== undefined) {
 						storage.setItem(key, data.template.source, cacheSeconds);
 					}
 
-					_parent.getElementById().innerHTML = data.template.source;
+					_p.getElementById().innerHTML = data.template.source;
 
 					if (then) {
 						then();
@@ -225,9 +228,9 @@ var orangeBinder = {
 
 				var url = this.config.templateUrl + templateEndPoint;
 
-				console.log('Template End Point: ' + url);
+				console.log('loadTemplate ' + url);
 
-				_parent.request.get(url);
+				_p.request.get(url);
 			}
 
 			return this; /* allow chaining */
@@ -239,7 +242,7 @@ var orangeBinder = {
 			if (element === null) {
 				console.error('Element Id "' + this.id + '" Not Found.');
 			} else {
-				console.log('Binding To "' + this.id + '"');
+				console.log('"' + this.id + '" bound.');
 			}
 
 			return element;
@@ -269,38 +272,46 @@ var orangeBinder = {
 		};
 
 		this._loadModel = function (modelEndPoint, then) {
-			var _parent = this;
+			var _p = this;
 
 			this.response.alter(200, function (data, status, xhr) {
-				_parent.refresh(data, then);
+				_p.refresh(data, then);
 			});
 
 			/* run the query */
-			_parent.request.get(modelEndPoint);
+			_p.request.get(modelEndPoint);
 
 			return this; /* allow chaining */
 		};
 
 		this.domReady = function () {
-			var _parent = this;
+			var _p = this;
 
-			/* default init 200 callback */
-			this.response.alter(200, function (data, xhr) {
-				_parent.setData(data);
+			if (this.config.configUrl !== '') {
+				/* default init 200 callback */
+				this.response.alter(200, function (data, xhr) {
+					_p.setData(data);
 
-				/* send into tinybind the configuration */
-				tinybind.configure(_parent.config.tinyBind);
+					/* send into tinybind the configuration */
+					tinybind.configure(_p.config.tinyBind);
 
-				/**
-				 * Turn on the listener to match to see if the current route is something we are listening for
-				 * if a match is found then trigger the callback with the url
-				 * ie. callback('/foo/bar');
-				 */
-				_parent.router.match();
-			});
+					/**
+					 * Turn on the listener to match to see if the current route is something we are listening for
+					 * if a match is found then trigger the callback with the url
+					 * ie. callback('/foo/bar');
+					 */
+					_p.router.match();
+				});
 
-			/* Make a Request for the configuration url using the default 200 responds we just setup above */
-			this.request.get(this.config.configUrl);
+				/* Make a Request for the configuration url using the default 200 responds we just setup above */
+				this.request.get(this.config.configUrl);
+			} else {
+				/* do not make a ajax call so we will just use the config we already have */
+				tinybind.configure(this.config.tinyBind);
+
+				/* and then fire off the router matcher */
+				this.router.match();
+			}
 		}
 
 		/* attach our default triggers */
@@ -316,8 +327,8 @@ var orangeBinder = {
 			},
 		});
 	},
-	router: function (parent) {
-		this._parent = parent;
+	router: function (_p) {
+		this._p = _p;
 
 		/* array of routes */
 		this.routes = [];
@@ -330,7 +341,7 @@ var orangeBinder = {
 			var url = this._clearSlashes(decodeURI(location.pathname + location.search));
 
 			url = url.replace(/\?(.*)$/, '');
-			url = this._parent.config.routerRoot !== '/' ? url.replace(this._parent.config.routerRoot, '') : url;
+			url = this._p.config.routerRoot !== '/' ? url.replace(this._p.config.routerRoot, '') : url;
 
 			return this._clearSlashes(url);
 		};
@@ -344,14 +355,14 @@ var orangeBinder = {
 				/* did they send in a url? if not then get the current url */
 				url = url || this.getUrl();
 
-				console.log('router::match', url);
+				console.log('match', url);
 
 				/* loop though the routes */
 				for (var key in this.routes) {
 					var parameters = url.match(this.routes[key].re);
 
 					if (parameters) {
-						console.log('router::match::parameters', parameters, this.routes[key].re.toString());
+						console.log('matched', parameters, this.routes[key].re.toString());
 
 						/* remove matched url  */
 						parameters.shift();
@@ -483,13 +494,13 @@ var orangeBinder = {
 
 		/* navigate to a new url optionally specifying it as a redirect or history change */
 		this.navigate = function (url, redirect) {
-			url = url ? this._parent.config.routerRoot + this._clearSlashes(url) : '';
-			redirect = redirect ? redirect : this._parent.config.redirect;
+			url = url ? this._p.config.routerRoot + this._clearSlashes(url) : '';
+			redirect = redirect ? redirect : this._p.config.redirect;
 
-			console.log('router::navigate', url, redirect);
+			console.log('navigate', url, redirect);
 
 			/* trigger a redirect so other javascript code knows we are redirecting */
-			this._parent.triggers.bindNavigate(url, redirect);
+			this._p.triggers.bindNavigate(url, redirect);
 
 			if (redirect) {
 				/* full page reload so trigger wouldn't even be picked up */
@@ -510,8 +521,8 @@ var orangeBinder = {
 		/* what is our current url */
 		this._currentUrl = this.getUrl();
 	},
-	response: function (parent) {
-		this._parent = parent;
+	response: function (_p) {
+		this._p = _p;
 
 		this.callbacks = {};
 
@@ -573,25 +584,25 @@ var orangeBinder = {
 
 		this.callbacks = this.defaultCallbacks;
 	},
-	request: function (parent) {
-		this._parent = parent;
+	request: function (_p) {
+		this._p = _p;
 
 		/* any method */
 		this.send = function (method, url, data, callbacks) {
-			console.log('request::send', method, url, data);
+			console.log('request', method, url, data);
 
 			jQuery.ajax({
 				method: method,
 				url: url,
 				data: data,
 				dataType: 'json',
-				cache: !this._parent.config.ajaxCacheBuster,
+				cache: !this._p.config.ajaxCacheBuster,
 				/* ajax cache buster? */
 				async: true,
 				/* always! */
-				timeout: this._parent.config.ajaxTimeout,
+				timeout: this._p.config.ajaxTimeout,
 				/* 5 seconds */
-				statusCode: this._parent.response.alter(callbacks).callbacks
+				statusCode: this._p.response.alter(callbacks).callbacks
 			});
 
 			return this;
@@ -637,9 +648,7 @@ var orangeBinder = {
 			return this.send('post', url, data, callbacks);
 		};
 	},
-	collection: function (parent) {
-		this._parent = parent;
-
+	collection: function () {
 		this.alter = function (name, value) {
 			if (typeof name === 'object') {
 				for (var property in name) {
@@ -656,7 +665,7 @@ var orangeBinder = {
 			var collection = {};
 
 			for (var propertyName in this) {
-				if (typeof this[propertyName] !== 'function' && propertyName !== '_parent') {
+				if (typeof this[propertyName] !== 'function' && propertyName !== '_p') {
 					collection[propertyName] = this[propertyName];
 				}
 			}
