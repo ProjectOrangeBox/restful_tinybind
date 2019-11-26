@@ -28,6 +28,10 @@ d.trigger("activate.bs.scrollspy")},b.prototype.clear=function(){a(this.selector
  * http://bootboxjs.com/license.txt
  */
 !function(t,e){'use strict';'function'==typeof define&&define.amd?define(['jquery'],e):'object'==typeof exports?module.exports=e(require('jquery')):t.bootbox=e(t.jQuery)}(this,function e(p,u){'use strict';var r,n,i,l;Object.keys||(Object.keys=(r=Object.prototype.hasOwnProperty,n=!{toString:null}.propertyIsEnumerable('toString'),l=(i=['toString','toLocaleString','valueOf','hasOwnProperty','isPrototypeOf','propertyIsEnumerable','constructor']).length,function(t){if('function'!=typeof t&&('object'!=typeof t||null===t))throw new TypeError('Object.keys called on non-object');var e,o,a=[];for(e in t)r.call(t,e)&&a.push(e);if(n)for(o=0;o<l;o++)r.call(t,i[o])&&a.push(i[o]);return a}));var d={};d.VERSION='5.0.0';var b={ar:{OK:'موافق',CANCEL:'الغاء',CONFIRM:'تأكيد'},bg_BG:{OK:'Ок',CANCEL:'Отказ',CONFIRM:'Потвърждавам'},br:{OK:'OK',CANCEL:'Cancelar',CONFIRM:'Sim'},cs:{OK:'OK',CANCEL:'Zrušit',CONFIRM:'Potvrdit'},da:{OK:'OK',CANCEL:'Annuller',CONFIRM:'Accepter'},de:{OK:'OK',CANCEL:'Abbrechen',CONFIRM:'Akzeptieren'},el:{OK:'Εντάξει',CANCEL:'Ακύρωση',CONFIRM:'Επιβεβαίωση'},en:{OK:'OK',CANCEL:'Cancel',CONFIRM:'OK'},es:{OK:'OK',CANCEL:'Cancelar',CONFIRM:'Aceptar'},eu:{OK:'OK',CANCEL:'Ezeztatu',CONFIRM:'Onartu'},et:{OK:'OK',CANCEL:'Katkesta',CONFIRM:'OK'},fa:{OK:'قبول',CANCEL:'لغو',CONFIRM:'تایید'},fi:{OK:'OK',CANCEL:'Peruuta',CONFIRM:'OK'},fr:{OK:'OK',CANCEL:'Annuler',CONFIRM:'Confirmer'},he:{OK:'אישור',CANCEL:'ביטול',CONFIRM:'אישור'},hu:{OK:'OK',CANCEL:'Mégsem',CONFIRM:'Megerősít'},hr:{OK:'OK',CANCEL:'Odustani',CONFIRM:'Potvrdi'},id:{OK:'OK',CANCEL:'Batal',CONFIRM:'OK'},it:{OK:'OK',CANCEL:'Annulla',CONFIRM:'Conferma'},ja:{OK:'OK',CANCEL:'キャンセル',CONFIRM:'確認'},ka:{OK:'OK',CANCEL:'გაუქმება',CONFIRM:'დადასტურება'},ko:{OK:'OK',CANCEL:'취소',CONFIRM:'확인'},lt:{OK:'Gerai',CANCEL:'Atšaukti',CONFIRM:'Patvirtinti'},lv:{OK:'Labi',CANCEL:'Atcelt',CONFIRM:'Apstiprināt'},nl:{OK:'OK',CANCEL:'Annuleren',CONFIRM:'Accepteren'},no:{OK:'OK',CANCEL:'Avbryt',CONFIRM:'OK'},pl:{OK:'OK',CANCEL:'Anuluj',CONFIRM:'Potwierdź'},pt:{OK:'OK',CANCEL:'Cancelar',CONFIRM:'Confirmar'},ru:{OK:'OK',CANCEL:'Отмена',CONFIRM:'Применить'},sk:{OK:'OK',CANCEL:'Zrušiť',CONFIRM:'Potvrdiť'},sl:{OK:'OK',CANCEL:'Prekliči',CONFIRM:'Potrdi'},sq:{OK:'OK',CANCEL:'Anulo',CONFIRM:'Prano'},sv:{OK:'OK',CANCEL:'Avbryt',CONFIRM:'OK'},sw:{OK:'Sawa',CANCEL:'Ghairi',CONFIRM:'Thibitisha'},ta:{OK:'சரி',CANCEL:'ரத்து செய்',CONFIRM:'உறுதி செய்'},th:{OK:'ตกลง',CANCEL:'ยกเลิก',CONFIRM:'ยืนยัน'},tr:{OK:'Tamam',CANCEL:'İptal',CONFIRM:'Onayla'},uk:{OK:'OK',CANCEL:'Відміна',CONFIRM:'Прийняти'},zh_CN:{OK:'OK',CANCEL:'取消',CONFIRM:'确认'},zh_TW:{OK:'OK',CANCEL:'取消',CONFIRM:'確認'}},f={dialog:"<div class=\"bootbox modal\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\"><div class=\"modal-dialog\"><div class=\"modal-content\"><div class=\"modal-body\"><div class=\"bootbox-body\"></div></div></div></div></div>",header:"<div class=\"modal-header\"><h5 class=\"modal-title\"></h5></div>",footer:'<div class="modal-footer"></div>',closeButton:'<button type="button" class="bootbox-close-button close" aria-hidden="true">&times;</button>',form:'<form class="bootbox-form"></form>',button:'<button type="button" class="btn"></button>',option:'<option></option>',promptMessage:'<div class="bootbox-prompt-message"></div>',inputs:{text:'<input class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text" />',textarea:'<textarea class="bootbox-input bootbox-input-textarea form-control"></textarea>',email:'<input class="bootbox-input bootbox-input-email form-control" autocomplete="off" type="email" />',select:'<select class="bootbox-input bootbox-input-select form-control"></select>',checkbox:'<div class="form-check checkbox"><label class="form-check-label"><input class="form-check-input bootbox-input bootbox-input-checkbox" type="checkbox" /></label></div>',radio:'<div class="form-check radio"><label class="form-check-label"><input class="form-check-input bootbox-input bootbox-input-radio" type="radio" name="bootbox-radio" /></label></div>',date:'<input class="bootbox-input bootbox-input-date form-control" autocomplete="off" type="date" />',time:'<input class="bootbox-input bootbox-input-time form-control" autocomplete="off" type="time" />',number:'<input class="bootbox-input bootbox-input-number form-control" autocomplete="off" type="number" />',password:'<input class="bootbox-input bootbox-input-password form-control" autocomplete="off" type="password" />',range:'<input class="bootbox-input bootbox-input-range form-control-range" autocomplete="off" type="range" />'}},m={locale:'en',backdrop:'static',animate:!0,className:null,closeButton:!0,show:!0,container:'body',value:'',inputType:'text',swapButtonOrder:!1,centerVertical:!1,multiple:!1,scrollable:!1};function c(t,e,o){return p.extend(!0,{},t,function(t,e){var o=t.length,a={};if(o<1||2<o)throw new Error('Invalid argument length');return 2===o||'string'==typeof t[0]?(a[e[0]]=t[0],a[e[1]]=t[1]):a=t[0],a}(e,o))}function h(t,e,o,a){var r;a&&a[0]&&(r=a[0].locale||m.locale,(a[0].swapButtonOrder||m.swapButtonOrder)&&(e=e.reverse()));var n,i,l,s={className:'bootbox-'+t,buttons:function(t,e){for(var o={},a=0,r=t.length;a<r;a++){var n=t[a],i=n.toLowerCase(),l=n.toUpperCase();o[i]={label:(s=l,c=e,void 0,p=b[c],p?p[s]:b.en[s])}}var s,c,p;return o}(e,r)};return n=c(s,a,o),l={},O(i=e,function(t,e){l[e]=!0}),O(n.buttons,function(t){if(l[t]===u)throw new Error('button key "'+t+'" is not allowed (options are '+i.join(' ')+')')}),n}function C(t){return Object.keys(t).length}function O(t,o){var a=0;p.each(t,function(t,e){o(t,e,a++)})}function v(t,e,o){t.stopPropagation(),t.preventDefault(),p.isFunction(o)&&!1===o.call(e,t)||e.modal('hide')}function w(t){return/([01][0-9]|2[0-3]):[0-5][0-9]?:[0-5][0-9]/.test(t)}function g(t){return/(\d{4})-(\d{2})-(\d{2})/.test(t)}return d.locales=function(t){return t?b[t]:b},d.addLocale=function(t,o){return p.each(['OK','CANCEL','CONFIRM'],function(t,e){if(!o[e])throw new Error('Please supply a translation for "'+e+'"')}),b[t]={OK:o.OK,CANCEL:o.CANCEL,CONFIRM:o.CONFIRM},d},d.removeLocale=function(t){if('en'===t)throw new Error('"en" is used as the default and fallback locale and cannot be removed.');return delete b[t],d},d.setLocale=function(t){return d.setDefaults('locale',t)},d.setDefaults=function(){var t={};return 2===arguments.length?t[arguments[0]]=arguments[1]:t=arguments[0],p.extend(m,t),d},d.hideAll=function(){return p('.bootbox').modal('hide'),d},d.init=function(t){return e(t||p)},d.dialog=function(t){if(p.fn.modal===u)throw new Error("\"$.fn.modal\" is not defined; please double check you have included the Bootstrap JavaScript library. See http://getbootstrap.com/javascript/ for more details.");if(t=function(r){var n,i;if('object'!=typeof r)throw new Error('Please supply an object of options');if(!r.message)throw new Error('"message" option must not be null or an empty string.');(r=p.extend({},m,r)).buttons||(r.buttons={});return n=r.buttons,i=C(n),O(n,function(t,e,o){if(p.isFunction(e)&&(e=n[t]={callback:e}),'object'!==p.type(e))throw new Error('button with key "'+t+'" must be an object');if(e.label||(e.label=t),!e.className){var a=!1;a=r.swapButtonOrder?0===o:o===i-1,e.className=i<=2&&a?'btn-primary':'btn-secondary btn-default'}}),r}(t),p.fn.modal.Constructor.VERSION){t.fullBootstrapVersion=p.fn.modal.Constructor.VERSION;var e=t.fullBootstrapVersion.indexOf('.');t.bootstrap=t.fullBootstrapVersion.substring(0,e)}else t.bootstrap='2',t.fullBootstrapVersion='2.3.2',console.warn('Bootbox will *mostly* work with Bootstrap 2, but we do not officially support it. Please upgrade, if possible.');var o=p(f.dialog),a=o.find('.modal-dialog'),r=o.find('.modal-body'),n=p(f.header),i=p(f.footer),l=t.buttons,s={onEscape:t.onEscape};if(r.find('.bootbox-body').html(t.message),0<C(t.buttons)&&(O(l,function(t,e){var o=p(f.button);switch(o.data('bb-handler',t),o.addClass(e.className),t){case'ok':case'confirm':o.addClass('bootbox-accept');break;case'cancel':o.addClass('bootbox-cancel')}o.html(e.label),i.append(o),s[t]=e.callback}),r.after(i)),!0===t.animate&&o.addClass('fade'),t.className&&o.addClass(t.className),t.size)switch(t.fullBootstrapVersion.substring(0,3)<'3.1'&&console.warn('"size" requires Bootstrap 3.1.0 or higher. You appear to be using '+t.fullBootstrapVersion+'. Please upgrade to use this option.'),t.size){case'small':case'sm':a.addClass('modal-sm');break;case'large':case'lg':a.addClass('modal-lg');break;case'xl':case'extra-large':t.fullBootstrapVersion.substring(0,3)<'4.2'&&console.warn('Using size "xl"/"extra-large" requires Bootstrap 4.2.0 or higher. You appear to be using '+t.fullBootstrapVersion+'. Please upgrade to use this option.'),a.addClass('modal-xl')}if(t.scrollable&&(t.fullBootstrapVersion.substring(0,3)<'4.3'&&console.warn('Using "scrollable" requires Bootstrap 4.3.0 or higher. You appear to be using '+t.fullBootstrapVersion+'. Please upgrade to use this option.'),a.addClass('modal-dialog-scrollable')),t.title&&(r.before(n),o.find('.modal-title').html(t.title)),t.closeButton){var c=p(f.closeButton);t.title?3<t.bootstrap?o.find('.modal-header').append(c):o.find('.modal-header').prepend(c):c.prependTo(r)}return t.centerVertical&&(t.fullBootstrapVersion<'4.0.0'&&console.warn('"centerVertical" requires Bootstrap 4.0.0-beta.3 or higher. You appear to be using '+t.fullBootstrapVersion+'. Please upgrade to use this option.'),a.addClass('modal-dialog-centered')),o.one('hide.bs.modal',function(t){t.target===this&&(o.off('escape.close.bb'),o.off('click'))}),o.one('hidden.bs.modal',function(t){t.target===this&&o.remove()}),o.one('shown.bs.modal',function(){o.find('.bootbox-accept').first().trigger('focus')}),'static'!==t.backdrop&&o.on('click.dismiss.bs.modal',function(t){o.children('.modal-backdrop').length&&(t.currentTarget=o.children('.modal-backdrop').get(0)),t.target===t.currentTarget&&o.trigger('escape.close.bb')}),o.on('escape.close.bb',function(t){s.onEscape&&v(t,o,s.onEscape)}),o.on('click','.modal-footer button:not(.disabled)',function(t){var e=p(this).data('bb-handler');e!==u&&v(t,o,s[e])}),o.on('click','.bootbox-close-button',function(t){v(t,o,s.onEscape)}),o.on('keyup',function(t){27===t.which&&o.trigger('escape.close.bb')}),p(t.container).append(o),o.modal({backdrop:!!t.backdrop&&'static',keyboard:!1,show:!1}),t.show&&o.modal('show'),o},d.alert=function(){var t;if((t=h('alert',['ok'],['message','callback'],arguments)).callback&&!p.isFunction(t.callback))throw new Error('alert requires the "callback" property to be a function when provided');return t.buttons.ok.callback=t.onEscape=function(){return!p.isFunction(t.callback)||t.callback.call(this)},d.dialog(t)},d.confirm=function(){var t;if(t=h('confirm',['cancel','confirm'],['message','callback'],arguments),!p.isFunction(t.callback))throw new Error('confirm requires a callback');return t.buttons.cancel.callback=t.onEscape=function(){return t.callback.call(this,!1)},t.buttons.confirm.callback=function(){return t.callback.call(this,!0)},d.dialog(t)},d.prompt=function(){var r,e,t,n,o,a;if(t=p(f.form),(r=h('prompt',['cancel','confirm'],['title','callback'],arguments)).value||(r.value=m.value),r.inputType||(r.inputType=m.inputType),o=r.show===u?m.show:r.show,r.show=!1,r.buttons.cancel.callback=r.onEscape=function(){return r.callback.call(this,null)},r.buttons.confirm.callback=function(){var t;if('checkbox'===r.inputType)t=n.find('input:checked').map(function(){return p(this).val()}).get();else if('radio'===r.inputType)t=n.find('input:checked').val();else{if(n[0].checkValidity&&!n[0].checkValidity())return!1;t='select'===r.inputType&&!0===r.multiple?n.find('option:selected').map(function(){return p(this).val()}).get():n.val()}return r.callback.call(this,t)},!r.title)throw new Error('prompt requires a title');if(!p.isFunction(r.callback))throw new Error('prompt requires a callback');if(!f.inputs[r.inputType])throw new Error('Invalid prompt type');switch(n=p(f.inputs[r.inputType]),r.inputType){case'text':case'textarea':case'email':case'password':n.val(r.value),r.placeholder&&n.attr('placeholder',r.placeholder),r.pattern&&n.attr('pattern',r.pattern),r.maxlength&&n.attr('maxlength',r.maxlength),r.required&&n.prop({required:!0}),r.rows&&!isNaN(parseInt(r.rows))&&'textarea'===r.inputType&&n.attr({rows:r.rows});break;case'date':case'time':case'number':case'range':if(n.val(r.value),r.placeholder&&n.attr('placeholder',r.placeholder),r.pattern&&n.attr('pattern',r.pattern),r.required&&n.prop({required:!0}),'date'!==r.inputType&&r.step){if(!('any'===r.step||!isNaN(r.step)&&0<parseFloat(r.step)))throw new Error('"step" must be a valid positive number or the value "any". See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-step for more information.');n.attr('step',r.step)}(function(t,e,o){var a=!1,r=!0,n=!0;if('date'===t)e===u||(r=g(e))?o===u||(n=g(o))||console.warn('Browsers which natively support the "date" input type expect date values to be of the form "YYYY-MM-DD" (see ISO-8601 https://www.iso.org/iso-8601-date-and-time-format.html). Bootbox does not enforce this rule, but your max value may not be enforced by this browser.'):console.warn('Browsers which natively support the "date" input type expect date values to be of the form "YYYY-MM-DD" (see ISO-8601 https://www.iso.org/iso-8601-date-and-time-format.html). Bootbox does not enforce this rule, but your min value may not be enforced by this browser.');else if('time'===t){if(e!==u&&!(r=w(e)))throw new Error('"min" is not a valid time. See https://www.w3.org/TR/2012/WD-html-markup-20120315/datatypes.html#form.data.time for more information.');if(o!==u&&!(n=w(o)))throw new Error('"max" is not a valid time. See https://www.w3.org/TR/2012/WD-html-markup-20120315/datatypes.html#form.data.time for more information.')}else{if(e!==u&&isNaN(e))throw r=!1,new Error('"min" must be a valid number. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-min for more information.');if(o!==u&&isNaN(o))throw n=!1,new Error('"max" must be a valid number. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-max for more information.')}if(r&&n){if(o<=e)throw new Error('"max" must be greater than "min". See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-max for more information.');a=!0}return a})(r.inputType,r.min,r.max)&&(r.min!==u&&n.attr('min',r.min),r.max!==u&&n.attr('max',r.max));break;case'select':var i={};if(a=r.inputOptions||[],!p.isArray(a))throw new Error('Please pass an array of input options');if(!a.length)throw new Error('prompt with "inputType" set to "select" requires at least one option');r.placeholder&&n.attr('placeholder',r.placeholder),r.required&&n.prop({required:!0}),r.multiple&&n.prop({multiple:!0}),O(a,function(t,e){var o=n;if(e.value===u||e.text===u)throw new Error('each option needs a "value" property and a "text" property');e.group&&(i[e.group]||(i[e.group]=p('<optgroup />').attr('label',e.group)),o=i[e.group]);var a=p(f.option);a.attr('value',e.value).text(e.text),o.append(a)}),O(i,function(t,e){n.append(e)}),n.val(r.value);break;case'checkbox':var l=p.isArray(r.value)?r.value:[r.value];if(!(a=r.inputOptions||[]).length)throw new Error('prompt with "inputType" set to "checkbox" requires at least one option');n=p('<div class="bootbox-checkbox-list"></div>'),O(a,function(t,o){if(o.value===u||o.text===u)throw new Error('each option needs a "value" property and a "text" property');var a=p(f.inputs[r.inputType]);a.find('input').attr('value',o.value),a.find('label').append('\n'+o.text),O(l,function(t,e){e===o.value&&a.find('input').prop('checked',!0)}),n.append(a)});break;case'radio':if(r.value!==u&&p.isArray(r.value))throw new Error('prompt with "inputType" set to "radio" requires a single, non-array value for "value"');if(!(a=r.inputOptions||[]).length)throw new Error('prompt with "inputType" set to "radio" requires at least one option');n=p('<div class="bootbox-radiobutton-list"></div>');var s=!0;O(a,function(t,e){if(e.value===u||e.text===u)throw new Error('each option needs a "value" property and a "text" property');var o=p(f.inputs[r.inputType]);o.find('input').attr('value',e.value),o.find('label').append('\n'+e.text),r.value!==u&&e.value===r.value&&(o.find('input').prop('checked',!0),s=!1),n.append(o)}),s&&n.find('input[type="radio"]').first().prop('checked',!0)}if(t.append(n),t.on('submit',function(t){t.preventDefault(),t.stopPropagation(),e.find('.bootbox-accept').trigger('click')}),''!==p.trim(r.message)){var c=p(f.promptMessage).html(r.message);t.prepend(c),r.message=t}else r.message=t;return(e=d.dialog(r)).off('shown.bs.modal'),e.on('shown.bs.modal',function(){n.focus()}),!0===o&&e.modal('show'),e},d});
+/*! sprintf-js v1.1.2 | Copyright (c) 2007-present, Alexandru Mărășteanu <hello@alexei.ro> | BSD-3-Clause */
+!function(){"use strict";var g={not_string:/[^s]/,not_bool:/[^t]/,not_type:/[^T]/,not_primitive:/[^v]/,number:/[diefg]/,numeric_arg:/[bcdiefguxX]/,json:/[j]/,not_json:/[^j]/,text:/^[^\x25]+/,modulo:/^\x25{2}/,placeholder:/^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-gijostTuvxX])/,key:/^([a-z_][a-z_\d]*)/i,key_access:/^\.([a-z_][a-z_\d]*)/i,index_access:/^\[(\d+)\]/,sign:/^[+-]/};function y(e){return function(e,t){var r,n,i,s,a,o,p,c,l,u=1,f=e.length,d="";for(n=0;n<f;n++)if("string"==typeof e[n])d+=e[n];else if("object"==typeof e[n]){if((s=e[n]).keys)for(r=t[u],i=0;i<s.keys.length;i++){if(null==r)throw new Error(y('[sprintf] Cannot access property "%s" of undefined value "%s"',s.keys[i],s.keys[i-1]));r=r[s.keys[i]]}else r=s.param_no?t[s.param_no]:t[u++];if(g.not_type.test(s.type)&&g.not_primitive.test(s.type)&&r instanceof Function&&(r=r()),g.numeric_arg.test(s.type)&&"number"!=typeof r&&isNaN(r))throw new TypeError(y("[sprintf] expecting number but found %T",r));switch(g.number.test(s.type)&&(c=0<=r),s.type){case"b":r=parseInt(r,10).toString(2);break;case"c":r=String.fromCharCode(parseInt(r,10));break;case"d":case"i":r=parseInt(r,10);break;case"j":r=JSON.stringify(r,null,s.width?parseInt(s.width):0);break;case"e":r=s.precision?parseFloat(r).toExponential(s.precision):parseFloat(r).toExponential();break;case"f":r=s.precision?parseFloat(r).toFixed(s.precision):parseFloat(r);break;case"g":r=s.precision?String(Number(r.toPrecision(s.precision))):parseFloat(r);break;case"o":r=(parseInt(r,10)>>>0).toString(8);break;case"s":r=String(r),r=s.precision?r.substring(0,s.precision):r;break;case"t":r=String(!!r),r=s.precision?r.substring(0,s.precision):r;break;case"T":r=Object.prototype.toString.call(r).slice(8,-1).toLowerCase(),r=s.precision?r.substring(0,s.precision):r;break;case"u":r=parseInt(r,10)>>>0;break;case"v":r=r.valueOf(),r=s.precision?r.substring(0,s.precision):r;break;case"x":r=(parseInt(r,10)>>>0).toString(16);break;case"X":r=(parseInt(r,10)>>>0).toString(16).toUpperCase()}g.json.test(s.type)?d+=r:(!g.number.test(s.type)||c&&!s.sign?l="":(l=c?"+":"-",r=r.toString().replace(g.sign,"")),o=s.pad_char?"0"===s.pad_char?"0":s.pad_char.charAt(1):" ",p=s.width-(l+r).length,a=s.width&&0<p?o.repeat(p):"",d+=s.align?l+r+a:"0"===o?l+a+r:a+l+r)}return d}(function(e){if(p[e])return p[e];var t,r=e,n=[],i=0;for(;r;){if(null!==(t=g.text.exec(r)))n.push(t[0]);else if(null!==(t=g.modulo.exec(r)))n.push("%");else{if(null===(t=g.placeholder.exec(r)))throw new SyntaxError("[sprintf] unexpected placeholder");if(t[2]){i|=1;var s=[],a=t[2],o=[];if(null===(o=g.key.exec(a)))throw new SyntaxError("[sprintf] failed to parse named argument key");for(s.push(o[1]);""!==(a=a.substring(o[0].length));)if(null!==(o=g.key_access.exec(a)))s.push(o[1]);else{if(null===(o=g.index_access.exec(a)))throw new SyntaxError("[sprintf] failed to parse named argument key");s.push(o[1])}t[2]=s}else i|=2;if(3===i)throw new Error("[sprintf] mixing positional and named placeholders is not (yet) supported");n.push({placeholder:t[0],param_no:t[1],keys:t[2],sign:t[3],pad_char:t[4],align:t[5],width:t[6],precision:t[7],type:t[8]})}r=r.substring(t[0].length)}return p[e]=n}(e),arguments)}function e(e,t){return y.apply(null,[e].concat(t||[]))}var p=Object.create(null);"undefined"!=typeof exports&&(exports.sprintf=y,exports.vsprintf=e),"undefined"!=typeof window&&(window.sprintf=y,window.vsprintf=e,"function"==typeof define&&define.amd&&define(function(){return{sprintf:y,vsprintf:e}}))}();
+//# sourceMappingURL=sprintf.min.js.map
+
 /**
  * Smarter Browser Storage
  */
@@ -192,759 +196,304 @@ var storage = {
     return this.storage !== undefined;
   }
 };
-/*
-Javascript Implementation of sprintf
-
-https://www.tutorialspoint.com/c_standard_library/c_function_sprintf.htm
-
-https://github.com/hirak/phpjs
-https://github.com/kvz/locutus/blob/master/src/php/strings/sprintf.js
-
-*/
-function sprintf() {
-  //  discuss at: http://phpjs.org/functions/sprintf/
-  // original by: Ash Searle (http://hexmen.com/blog/)
-  // improved by: Michael White (http://getsprink.com)
-  // improved by: Jack
-  // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // improved by: Dj
-  // improved by: Allidylls
-  //    input by: Paulo Freitas
-  //    input by: Brett Zamir (http://brett-zamir.me)
-  //   example 1: sprintf("%01.2f", 123.1);
-  //   returns 1: 123.10
-  //   example 2: sprintf("[%10s]", 'monkey');
-  //   returns 2: '[    monkey]'
-  //   example 3: sprintf("[%'#10s]", 'monkey');
-  //   returns 3: '[####monkey]'
-  //   example 4: sprintf("%d", 123456789012345);
-  //   returns 4: '123456789012345'
-  //   example 5: sprintf('%-03s', 'E');
-  //   returns 5: 'E00'
-  var regex = /%%|%(\d+\$)?([\-+\'#0 ]*)(\*\d+\$|\*|\d+)?(?:\.(\*\d+\$|\*|\d+))?([scboxXuideEfFgG])/g;
-  var a = arguments;
-  var i = 0;
-  var format = a[i++]; // pad()
-
-  var pad = function (str, len, chr, leftJustify) {
-    if (!chr) {
-      chr = ' ';
+class orangeCollection {
+  constructor(defaults) {
+    if (defaults) {
+      this.alter(defaults);
     }
-
-    var padding = str.length >= len ? '' : new Array(1 + len - str.length >>> 0).join(chr);
-    return leftJustify ? str + padding : padding + str;
-  }; // justify()
-
-
-  var justify = function (value, prefix, leftJustify, minWidth, zeroPad, customPadChar) {
-    var diff = minWidth - value.length;
-
-    if (diff > 0) {
-      if (leftJustify || !zeroPad) {
-        value = pad(value, minWidth, customPadChar, leftJustify);
-      } else {
-        value = value.slice(0, prefix.length) + pad('', diff, '0', true) + value.slice(prefix.length);
-      }
-    }
-
-    return value;
-  }; // formatBaseX()
-
-
-  var formatBaseX = function (value, base, prefix, leftJustify, minWidth, precision, zeroPad) {
-    // Note: casts negative numbers to positive ones
-    var number = value >>> 0;
-    prefix = prefix && number && {
-      '2': '0b',
-      '8': '0',
-      '16': '0x'
-    }[base] || '';
-    value = prefix + pad(number.toString(base), precision || 0, '0', false);
-    return justify(value, prefix, leftJustify, minWidth, zeroPad);
-  }; // formatString()
-
-
-  var formatString = function (value, leftJustify, minWidth, precision, zeroPad, customPadChar) {
-    if (precision !== null && precision !== undefined) {
-      value = value.slice(0, precision);
-    }
-
-    return justify(value, '', leftJustify, minWidth, zeroPad, customPadChar);
-  }; // doFormat()
-
-
-  var doFormat = function (substring, valueIndex, flags, minWidth, precision, type) {
-    var number, prefix, method, textTransform, value;
-
-    if (substring === '%%') {
-      return '%';
-    } // parse flags
-
-
-    var leftJustify = false;
-    var positivePrefix = '';
-    var zeroPad = false;
-    var prefixBaseX = false;
-    var customPadChar = ' ';
-    var flagsl = flags.length;
-    var j;
-
-    for (j = 0; flags && j < flagsl; j++) {
-      switch (flags.charAt(j)) {
-        case ' ':
-          positivePrefix = ' ';
-          break;
-
-        case '+':
-          positivePrefix = '+';
-          break;
-
-        case '-':
-          leftJustify = true;
-          break;
-
-        case "'":
-          customPadChar = flags.charAt(j + 1);
-          break;
-
-        case '0':
-          zeroPad = true;
-          customPadChar = '0';
-          break;
-
-        case '#':
-          prefixBaseX = true;
-          break;
-      }
-    } // parameters may be null, undefined, empty-string or real valued
-    // we want to ignore null, undefined and empty-string values
-
-
-    if (!minWidth) {
-      minWidth = 0;
-    } else if (minWidth === '*') {
-      minWidth = +a[i++];
-    } else if (minWidth.charAt(0) === '*') {
-      minWidth = +a[minWidth.slice(1, -1)];
-    } else {
-      minWidth = +minWidth;
-    } // Note: undocumented perl feature:
-
-
-    if (minWidth < 0) {
-      minWidth = -minWidth;
-      leftJustify = true;
-    }
-
-    if (!isFinite(minWidth)) {
-      throw new Error('sprintf: (minimum-)width must be finite');
-    }
-
-    if (!precision) {
-      precision = 'fFeE'.indexOf(type) > -1 ? 6 : type === 'd' ? 0 : undefined;
-    } else if (precision === '*') {
-      precision = +a[i++];
-    } else if (precision.charAt(0) === '*') {
-      precision = +a[precision.slice(1, -1)];
-    } else {
-      precision = +precision;
-    } // grab value using valueIndex if required?
-
-
-    value = valueIndex ? a[valueIndex.slice(0, -1)] : a[i++];
-
-    switch (type) {
-      case 's':
-        return formatString(String(value), leftJustify, minWidth, precision, zeroPad, customPadChar);
-
-      case 'c':
-        return formatString(String.fromCharCode(+value), leftJustify, minWidth, precision, zeroPad);
-
-      case 'b':
-        return formatBaseX(value, 2, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
-
-      case 'o':
-        return formatBaseX(value, 8, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
-
-      case 'x':
-        return formatBaseX(value, 16, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
-
-      case 'X':
-        return formatBaseX(value, 16, prefixBaseX, leftJustify, minWidth, precision, zeroPad).toUpperCase();
-
-      case 'u':
-        return formatBaseX(value, 10, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
-
-      case 'i':
-      case 'd':
-        number = +value || 0; // Plain Math.round doesn't just truncate
-
-        number = Math.round(number - number % 1);
-        prefix = number < 0 ? '-' : positivePrefix;
-        value = prefix + pad(String(Math.abs(number)), precision, '0', false);
-        return justify(value, prefix, leftJustify, minWidth, zeroPad);
-
-      case 'e':
-      case 'E':
-      case 'f': // Should handle locales (as per setlocale)
-
-      case 'F':
-      case 'g':
-      case 'G':
-        number = +value;
-        prefix = number < 0 ? '-' : positivePrefix;
-        method = ['toExponential', 'toFixed', 'toPrecision']['efg'.indexOf(type.toLowerCase())];
-        textTransform = ['toString', 'toUpperCase']['eEfFgG'.indexOf(type) % 2];
-        value = prefix + Math.abs(number)[method](precision);
-        return justify(value, prefix, leftJustify, minWidth, zeroPad)[textTransform]();
-
-      default:
-        return substring;
-    }
-  };
-
-  try {
-    return format.replace(regex, doFormat);
-  } catch (err) {
-    return false;
   }
+  /* add or change a collection property */
+
+
+  alter(name, value) {
+    if (typeof name === 'object') {
+      for (let property in name) {
+        this[property] = name[property];
+      }
+    } else {
+      this[name] = value;
+    }
+
+    return this;
+  }
+  /* collect the objects property for export */
+
+
+  collect() {
+    let collection = {};
+
+    for (let propertyName in this) {
+      if (typeof this[propertyName] !== 'function' && propertyName !== '_p') {
+        collection[propertyName] = this[propertyName];
+      }
+    }
+
+    return collection;
+  }
+
 }
-var orangeBinder = {
-  /**
-   * create the bind element
-   * arguments:
-   * id - DOM element id ie. <div id="foobar"></div>
-   * configuration url - url requested to get the "base" configuration
-   * template url - template url prefix
-   * model url - model url prefix
-   */
-  bind: function (id, configUrl, templateUrl, modelUrl) {
-    /* DOM element id */
-    this.id = id;
-    /* is tiny bound bound to anything? */
-
-    this.bound = undefined;
-    /**
-     * do we have an error - boolean true/false
-     * keep these exposed on app so tinybind can use them as a boolean
-     */
-
-    this.error = false;
-    /**
-     * "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}}
-     * keep these exposed on app so tinybind can use them as a object
-     */
-
-    this.errors = {};
-    /**
-     * actual model storage
-     */
-
-    this.model = {};
-    /**
-     * when model is single records
-     */
-
-    this.record = {};
-    /**
-     * when model is multiple records
-     */
-
-    this.records = [];
-    /**
-     * collections - alter & collect
-     */
-
-    this.page = new orangeBinder.collection();
-    this.form = new orangeBinder.collection();
-    this.user = new orangeBinder.collection();
-    this.local = new orangeBinder.collection();
-    this.config = new orangeBinder.collection();
-    this.methods = new orangeBinder.collection();
-    this.events = new orangeBinder.collection();
-    this.triggers = new orangeBinder.collection();
-    this.templates = new orangeBinder.collection();
-    this.response = new orangeBinder.response(this);
-    this.request = new orangeBinder.request(this);
-    this.router = new orangeBinder.router(this);
-    /**
-     * set up the default configuration
-     */
-
-    this.config.alter({
-      settable: ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'],
-      gettable: ['page', 'form', 'error', 'errors', 'model'],
-      defaults: {},
-      configUrl: configUrl || '',
-      modelUrl: modelUrl || '',
-      templateUrl: templateUrl || '',
-      redirect: false,
-      ajaxTimeout: 5000,
-      routerRoot: '/',
-      storageCache: 0,
-      templateCache: 0,
-      clearCache: false,
-      ajaxCacheBuster: false,
-      tinyBind: {
-        prefix: 'rv',
-        preloadData: true,
-        rootInterface: '.',
-        templateDelimiters: ['{', '}']
-      }
-    });
-    /**
-     * merge and replace data
-     */
-
-    this.setData = function (data, settable) {
-      settable = settable || this.config.settable;
-      console.log('setData', data, settable);
-
-      for (var index in settable) {
-        var key = settable[index];
-
-        if (data[key] !== undefined) {
-          console.log(key, data[key]);
-          /*
-          if they have alter then send them in as objects and let alter merge the contents
-          else they replace the entire variable
-          */
-
-          if (typeof this[key].alter === 'function') {
-            this[key].alter(data[key]);
-          } else {
-            this[key] = data[key];
-          }
-        }
-      }
-      /**
-       * these are references to the actual model
-       * so the view can use records or record
-       * or you can still use model
-       */
-
-
-      this.records = this.model;
-      this.record = this.model;
-      /* do any cache cleaning based on the sent in data */
-
-      this.cacheCleanUp(this.config);
-      return this;
-      /* allow chaining */
-    };
-    /**
-     * get the data about this element
-     */
-
-
-    this.getData = function (gettable) {
-      gettable = gettable || this.config.gettable;
-      console.log('getData', gettable);
-      var collection = {};
-
-      for (var index in gettable) {
-        var key = gettable[index];
-        collection[key] = typeof this[key].collect === 'function' ? this[key].collect() : this[key];
-      }
-
-      console.log(collection);
-      return collection;
-    };
-    /**
-     * preform garage collection based on the configuration sent in (usally from the server configuration value)
-     * This uses my superStorage library to cache to the local browser application storage
-     */
-
-
-    this.cacheCleanUp = function (config) {
-      /* is it loaded? */
-      if (storage !== undefined) {
-        /* set clear everything */
-        if (config.clearCache) {
-          storage.clear();
-        }
-        /* if set clear older than X seconds... */
-
-
-        if (config.olderThanCache !== undefined) {
-          storage.removeOlderThan(config.olderThanCache);
-        }
-      }
-
-      return this;
-      /* allow chaining */
-    };
-
-    this.loadModel = function (modelEndPoint, templateEndPoint, then) {
-      var _p = this;
-
-      modelEndPoint = this.config.modelUrl + modelEndPoint;
-      console.log('loadModel ' + modelEndPoint);
-
-      if (templateEndPoint) {
-        /* load the template then the model */
-        this.loadTemplate(templateEndPoint, function () {
-          _p._loadModel(modelEndPoint, then);
-        });
-      } else {
-        /* just load the model */
-        this._loadModel(modelEndPoint, then);
-      }
-
-      return this;
-      /* allow chaining */
-    };
-
-    this.loadTemplate = function (templateEndPoint, then) {
-      var _p = this;
-
-      var cacheKey = templateEndPoint + '.template';
-      var template = undefined;
-      /* is this stored in our local template cache */
-
-      if (this.templates[templateEndPoint] !== undefined) {
-        /* yes it is so grab it */
-        template = this.templates[templateEndPoint];
-      } else if (storage !== undefined) {
-        /* is this stored in our cached data */
-        template = storage.getItem(cacheKey, undefined);
-        console.log('getItem', cacheKey, template);
-      }
-      /* have we already loaded the template? */
-
-
-      if (template !== undefined) {
-        this.replaceElement(template);
-
-        if (then) {
-          then();
-        }
-      } else {
-        /* setup retrieve model - success */
-        this.response.alter(200, function (data, status, xhr) {
-          /* if storage is setup than store a copy */
-          if (storage !== undefined) {
-            var cacheSeconds = data.template.cache ? data.template.cache : _p.config.templateCache;
-            console.log('cache key set ' + cacheKey, cacheSeconds);
-            storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
-          }
-
-          _p.replaceElement(data.template.source);
-
-          if (then) {
-            then();
-          }
-        });
-        var url = this.config.templateUrl + templateEndPoint;
-        console.log('loadTemplate ' + url);
-
-        _p.request.get(url);
-      }
-
-      return this;
-      /* allow chaining */
-    };
-
-    this.replaceElement = function (html) {
-      this.getElementById().innerHTML = html;
-    };
-
-    this.getElementById = function () {
-      var element = document.getElementById(this.id);
-
-      if (element === null) {
-        console.error('Element Id "' + this.id + '" Not Found.');
-      } else {
-        console.log('"' + this.id + '" bound.');
-      }
-
-      return element;
-    };
-
-    this.refresh = function (data, then) {
-      this.triggers.unbound();
-      /* unbind tinybind */
-
-      if (this.bound) {
-        this.bound.unbind();
-      }
-      /* update instance data */
-
-
-      if (data) {
-        this.setData(data);
-      }
-
-      this.bound = tinybind.bind(this.getElementById(), this);
-      /* tell everyone we now have new data */
-
-      this.triggers.bound();
-
-      if (then) {
-        then();
-      }
-    };
-
-    this._loadModel = function (modelEndPoint, then) {
-      var _p = this;
-
-      this.response.alter(200, function (data, status, xhr) {
-        _p.refresh(data, then);
-      });
-      /* run the query */
-
-      _p.request.get(modelEndPoint);
-
-      return this;
-      /* allow chaining */
-    };
-
-    this.domReady = function () {
-      var _p = this;
-
-      if (this.config.configUrl !== '') {
-        /* default init 200 callback */
-        this.response.alter(200, function (data, xhr) {
-          _p.setData(data);
-          /* send into tinybind the configuration */
-
-
-          tinybind.configure(_p.config.tinyBind);
-          /**
-           * Turn on the listener to match to see if the current route is something we are listening for
-           * if a match is found then trigger the callback with the url
-           * ie. callback('/foo/bar');
-           */
-
-          _p.router.match();
-        });
-        /* Make a Request for the configuration url using the default 200 responds we just setup above */
-
-        this.request.get(this.config.configUrl);
-      } else {
-        /* do not make a ajax call so we will just use the config we already have */
-        tinybind.configure(this.config.tinyBind);
-        /* and then fire off the router matcher */
-
-        this.router.match();
-      }
-    };
-    /* attach our default triggers */
-
-
-    this.triggers.alter({
-      bound: function () {
-        jQuery('body').trigger('tiny-bind-bound');
-      },
-      unbound: function () {
-        jQuery('body').trigger('tiny-bind-unbound');
-      },
-      bindNavigate: function () {
-        jQuery('body').trigger('spa-navgate');
-      }
-    });
-  },
-  router: function (_p) {
-    this._p = _p;
+class orangeRouter {
+  constructor(app) {
+    this.app = app;
     /* array of routes */
 
     this.routes = [];
     /* reference to intervalID */
 
     this.intervalID = undefined;
-    /* get and normalize the current page url */
-
-    this.getUrl = function () {
-      var url = this._clearSlashes(decodeURI(location.pathname + location.search));
-
-      url = url.replace(/\?(.*)$/, '');
-      url = this._p.config.routerRoot !== '/' ? url.replace(this._p.config.routerRoot, '') : url;
-      return this._clearSlashes(url);
-    };
-    /* match the router url and call the callback if a match is found */
-
-
-    this.match = function (url) {
-      /* do we have any routes to listen for? */
-      if (this.routes.length) {
-        /* did they send in a url? if not then get the current url */
-        url = url || this.getUrl();
-        console.log('match', url);
-        /* loop though the routes */
-
-        for (var key in this.routes) {
-          var parameters = url.match(this.routes[key].re);
-
-          if (parameters) {
-            console.log('matched', parameters, this.routes[key].re.toString());
-            /* remove matched url  */
-
-            parameters.shift();
-            /* call the route callback and pass in the parameters */
-
-            this.routes[key].callback.apply({}, parameters);
-            break;
-            /* break from for loop */
-          }
-        }
-      }
-
-      return this;
-      /* allow chaining */
-    };
-    /* add or change a route */
-
-
-    this.alter = function (regularExpression, callback) {
-      if (typeof regularExpression === 'object') {
-        for (var property in regularExpression) {
-          this.alter(property, regularExpression[property]);
-        }
-      } else {
-        /* add to the routes array */
-        this.routes.push({
-          re: this._normalizeRegularExpression(regularExpression),
-          callback: callback
-        });
-      }
-      /* turn on listening if it's not already */
-
-
-      if (!this.intervalID) {
-        this.listen();
-      }
-
-      return this;
-      /* allow chaining */
-    };
-    /* remove a single route it's url regular expression */
-
-
-    this.remove = function (regularExpression) {
-      var re = this._normalizeRegularExpression(regularExpression);
-
-      for (var key in this.routes) {
-        if (re.toString() == this.routes[key].re.toString()) {
-          this.routes.splice(key, 1);
-        }
-      }
-
-      return this;
-      /* allow chaining */
-    };
-    /*
-    normalize the regular expression
-    and convert (:any) (:num) (:hex) (:str) to actual expression values
-    */
-
-
-    this._normalizeRegularExpression = function (regularExpression) {
-      /* trim / fore & aft */
-      regularExpression = this._clearSlashes(regularExpression);
-      /* escape / to \/ */
-
-      regularExpression = regularExpression.replace(new RegExp('/', 'g'), "\\/");
-      /* add CodeIgniter matches */
-
-      regularExpression = regularExpression.replace(new RegExp(':any', 'g'), '[^/]+');
-      /* anything */
-
-      regularExpression = regularExpression.replace(new RegExp(':num', 'g'), '[0-9]+');
-      /* number only */
-
-      regularExpression = regularExpression.replace(new RegExp(':hex', 'g'), '[0-9a-f]+');
-      /* hex values */
-
-      regularExpression = regularExpression.replace(new RegExp(':str', 'g'), '[0-9a-zA-Z]+');
-      /* str values */
-
-      return new RegExp(regularExpression);
-    };
-    /* delete all routes */
-
-
-    this.flush = function () {
-      this.routes = [];
-      return this.stopListening();
-      /* allow chaining */
-    };
-
-    this.stopListening = function () {
-      if (this.intervalID) {
-        clearInterval(this.intervalID);
-      }
-
-      return this;
-      /* allow chaining */
-    };
-    /* start router listener matching for changes in the url */
-
-
-    this.listen = function () {
-      /* Do we have any routes to listen for? */
-      if (this.routes.length) {
-        /* if we are already listening let's just make sure we stop first */
-        this.stopListening();
-        /* we are now listening for url changes */
-
-        this.intervalID = setInterval(this.listener, 100, this);
-      }
-
-      return this;
-      /* allow chaining */
-    };
-    /*
-    the interval listener
-    since interval is actually calling a function the reference to "this" doesn't work
-    */
-
-
-    this.listener = function (router) {
-      var url = router.getUrl();
-
-      if (router._currentUrl != url) {
-        router._currentUrl = url;
-        router.match(url);
-      }
-    };
-    /* navigate to a new url optionally specifying it as a redirect or history change */
-
-
-    this.navigate = function (url, redirect) {
-      url = url ? this._p.config.routerRoot + this._clearSlashes(url) : '';
-      redirect = redirect ? redirect : this._p.config.redirect;
-      console.log('navigate', url, redirect);
-      /* trigger a redirect so other javascript code knows we are redirecting */
-
-      this._p.triggers.bindNavigate(url, redirect);
-
-      if (redirect) {
-        /* full page reload so trigger wouldn't even be picked up */
-        window.location.href = url;
-      } else {
-        /* adds a state to the browser's session history stack redirect */
-        history.pushState(null, null, url);
-      }
-
-      return this;
-      /* allow chaining */
-    };
-    /* remove all slashes from the beginning and end of the passed url */
-
-
-    this._clearSlashes = function (url) {
-      return url.toString().replace(/\/$/, '').replace(/^\//, '');
-    };
     /* what is our current url */
 
-
     this._currentUrl = this.getUrl();
-  },
-  response: function (_p) {
-    this._p = _p;
-    this.callbacks = {};
+  }
+  /* get and normalize the current page url */
+
+
+  getUrl() {
+    let url = this._clearSlashes(decodeURI(location.pathname + location.search));
+
+    url = url.replace(/\?(.*)$/, '');
+    url = this.app.config.routerRoot !== '/' ? url.replace(this.app.config.routerRoot, '') : url;
+    return this._clearSlashes(url);
+  }
+  /* match the router url and call the callback if a match is found */
+
+
+  match(url) {
+    /* do we have any routes to listen for? */
+    if (this.routes.length) {
+      /* did they send in a url? if not then get the current url */
+      url = url || this.getUrl();
+      console.log('match', url);
+      /* loop though the routes */
+
+      for (let key in this.routes) {
+        let parameters = url.match(this.routes[key].re);
+
+        if (parameters) {
+          console.log('matched', parameters, this.routes[key].re.toString());
+          /* remove matched url  */
+
+          parameters.shift();
+          /* call the route callback and pass in the parameters */
+
+          this.routes[key].callback.apply({}, parameters);
+          break;
+          /* break from for loop */
+        }
+      }
+    }
+
+    return this;
+    /* allow chaining */
+  }
+  /* add or change a route */
+
+
+  alter(regularExpression, callback) {
+    if (typeof regularExpression === 'object') {
+      for (let property in regularExpression) {
+        this.alter(property, regularExpression[property]);
+      }
+    } else {
+      /* add to the routes array */
+      this.routes.push({
+        re: this._normalizeRegularExpression(regularExpression),
+        callback: callback
+      });
+    }
+    /* turn on listening if it's not already */
+
+
+    if (!this.intervalID) {
+      this.listen();
+    }
+
+    return this;
+    /* allow chaining */
+  }
+  /* remove a single route it's url regular expression */
+
+
+  remove(regularExpression) {
+    let re = this._normalizeRegularExpression(regularExpression);
+
+    for (let key in this.routes) {
+      if (re.toString() == this.routes[key].re.toString()) {
+        this.routes.splice(key, 1);
+      }
+    }
+
+    return this;
+    /* allow chaining */
+  }
+  /* delete all routes */
+
+
+  flush() {
+    this.routes = [];
+    return this.stopListening();
+    /* allow chaining */
+  }
+
+  stopListening() {
+    if (this.intervalID) {
+      clearInterval(this.intervalID);
+    }
+
+    return this;
+    /* allow chaining */
+  }
+  /* start router listener matching for changes in the url */
+
+
+  listen() {
+    /* Do we have any routes to listen for? */
+    if (this.routes.length) {
+      /* if we are already listening let's just make sure we stop first */
+      this.stopListening();
+      /* we are now listening for url changes */
+
+      this.intervalID = setInterval(this.listener, 100, this);
+    }
+
+    return this;
+    /* allow chaining */
+  }
+  /*
+  the interval listener
+  since interval is actually calling a function the reference to "this" doesn't work
+  */
+
+
+  listener(router) {
+    let url = router.getUrl();
+
+    if (router._currentUrl != url) {
+      router._currentUrl = url;
+      router.match(url);
+    }
+  }
+  /* navigate to a new url optionally specifying it as a redirect or history change */
+
+
+  navigate(url, redirect) {
+    url = url ? this.app.config.routerRoot + this._clearSlashes(url) : '';
+    redirect = redirect ? redirect : this.app.config.redirect;
+    console.log('navigate', url, redirect);
+    /* trigger a redirect so other javascript code knows we are redirecting */
+
+    this.app.triggers.bindNavigate(url, redirect);
+
+    if (redirect) {
+      /* full page reload so trigger wouldn't even be picked up */
+      window.location.href = url;
+    } else {
+      /* adds a state to the browser's session history stack redirect */
+      history.pushState(null, null, url);
+    }
+
+    return this;
+    /* allow chaining */
+  }
+  /* private */
+
+  /* remove all slashes from the beginning and end of the passed url */
+
+
+  _clearSlashes(url) {
+    return url.toString().replace(/\/$/, '').replace(/^\//, '');
+  }
+  /*
+  normalize the regular expression
+  and convert (:any) (:num) (:hex) (:str) to actual expression values
+  */
+
+
+  _normalizeRegularExpression(regularExpression) {
+    /* trim / fore & aft */
+    regularExpression = this._clearSlashes(regularExpression);
+    /* escape / to \/ */
+
+    regularExpression = regularExpression.replace(new RegExp('/', 'g'), "\\/");
+    /* add CodeIgniter matches */
+
+    regularExpression = regularExpression.replace(new RegExp(':any', 'g'), '[^/]+');
+    /* anything */
+
+    regularExpression = regularExpression.replace(new RegExp(':num', 'g'), '[0-9]+');
+    /* number only */
+
+    regularExpression = regularExpression.replace(new RegExp(':hex', 'g'), '[0-9a-f]+');
+    /* hex values */
+
+    regularExpression = regularExpression.replace(new RegExp(':str', 'g'), '[0-9a-zA-Z]+');
+    /* str values */
+
+    return new RegExp(regularExpression);
+  }
+
+}
+class orangeRequest {
+  constructor(app) {
+    this.app = app;
+  }
+
+  send(method, url, data, callbacks) {
+    console.log('request', method, url, data);
+    jQuery.ajax({
+      method: method,
+      url: url,
+      data: data,
+      dataType: 'json',
+      cache: !this.app.config.ajaxCacheBuster,
+
+      /* ajax cache buster? */
+      async: true,
+
+      /* always! */
+      timeout: this.app.config.ajaxTimeout,
+
+      /* 5 seconds */
+      statusCode: this.app.response.alter(callbacks).callbacks
+    });
+    return this;
+  }
+
+  get(url, data, callbacks) {
+    return this.send('get', url, data, callbacks);
+  }
+
+  post(url, data, callbacks) {
+    return this.send('post', url, data, callbacks);
+  }
+
+  patch(url, data, callbacks) {
+    return this.send('patch', url, data, callbacks);
+  }
+
+  delete(url, data, callbacks) {
+    return this.send('delete', url, data, callbacks);
+  }
+
+  create(url, data, callbacks) {
+    return this.send('post', url, data, callbacks);
+  }
+
+  read(url, data, callbacks) {
+    return this.send('get', url, data, callbacks);
+  }
+
+  update(url, data, callbacks) {
+    return this.send('patch', url, data, callbacks);
+  }
+
+  insert(url, data, callbacks) {
+    return this.send('post', url, data, callbacks);
+  }
+
+}
+class orangeResponse {
+  constructor() {
     this.defaultCallbacks = {
       /* standard get layout or get model */
       200: function (data, status, xhr) {
@@ -994,126 +543,340 @@ var orangeBinder = {
         alert('500 (server error) callback');
       }
     };
-
-    this.alter = function (code, callback) {
-      if (typeof code === 'object') {
-        for (var property in code) {
-          this.alter(property, code[property]);
-        }
-      } else if (Number.isInteger(code) && typeof callback === 'function') {
-        /* change the responds callback based on the returned http status code */
-        this.callbacks[code] = callback;
-      }
-
-      return this;
-    };
-
     this.callbacks = this.defaultCallbacks;
-  },
-  request: function (_p) {
-    this._p = _p;
-    /* any method */
-
-    this.send = function (method, url, data, callbacks) {
-      console.log('request', method, url, data);
-      jQuery.ajax({
-        method: method,
-        url: url,
-        data: data,
-        dataType: 'json',
-        cache: !this._p.config.ajaxCacheBuster,
-
-        /* ajax cache buster? */
-        async: true,
-
-        /* always! */
-        timeout: this._p.config.ajaxTimeout,
-
-        /* 5 seconds */
-        statusCode: this._p.response.alter(callbacks).callbacks
-      });
-      return this;
-    };
-    /* REST / HTTP - get */
-
-
-    this.get = function (url, data, callbacks) {
-      return this.send('get', url, data, callbacks);
-    };
-    /* REST / HTTP  - post */
-
-
-    this.post = function (url, data, callbacks) {
-      return this.send('post', url, data, callbacks);
-    };
-    /* REST / HTTP  - patch */
-
-
-    this.patch = function (url, data, callbacks) {
-      return this.send('patch', url, data, callbacks);
-    };
-    /* CRUD / SQL / REST / HTTP  - delete */
-
-
-    this.delete = function (url, data, callbacks) {
-      return this.send('delete', url, data, callbacks);
-    };
-    /* CRUD - create */
-
-
-    this.create = function (url, data, callbacks) {
-      return this.send('post', url, data, callbacks);
-    };
-    /* CRUD - read */
-
-
-    this.read = function (url, data, callbacks) {
-      return this.send('get', url, data, callbacks);
-    };
-    /* CRUD / SQL - update */
-
-
-    this.update = function (url, data, callbacks) {
-      return this.send('patch', url, data, callbacks);
-    };
-    /* SQL - insert */
-
-
-    this.insert = function (url, data, callbacks) {
-      return this.send('post', url, data, callbacks);
-    };
-  },
-
-  /* collection class */
-  collection: function () {
-    /* add or change a collection property */
-    this.alter = function (name, value) {
-      if (typeof name === 'object') {
-        for (var property in name) {
-          this[property] = name[property];
-        }
-      } else {
-        this[name] = value;
-      }
-
-      return this;
-    };
-    /* collect the objects property for export */
-
-
-    this.collect = function () {
-      var collection = {};
-
-      for (var propertyName in this) {
-        if (typeof this[propertyName] !== 'function' && propertyName !== '_p') {
-          collection[propertyName] = this[propertyName];
-        }
-      }
-
-      return collection;
-    };
   }
-};
+
+  alter(code, callback) {
+    if (typeof code === 'object') {
+      for (let property in code) {
+        this.alter(property, code[property]);
+      }
+    } else if (Number.isInteger(code) && typeof callback === 'function') {
+      /* change the responds callback based on the returned http status code */
+      this.callbacks[code] = callback;
+    }
+
+    return this;
+  }
+
+}
+/**
+ * create the bind element
+ * arguments:
+ * id - DOM element id ie. <div id="foobar"></div>
+ * configuration url - url requested to get the "base" configuration
+ * template url - template url prefix
+ * model url - model url prefix
+ */
+class orangeBinder {
+  constructor(id, configUrl, templateUrl, modelUrl) {
+    /* DOM element id */
+    this.id = id;
+    /* is tiny bound bound to anything? */
+
+    this.bound = undefined;
+    /**
+     * do we have an error - boolean true/false
+     * keep these exposed on app so tinybind can use them as a boolean
+     */
+
+    this.error = false;
+    /**
+     * "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}}
+     * keep these exposed on app so tinybind can use them as a object
+     */
+
+    this.errors = {};
+    /**
+     * actual model storage
+     */
+
+    this.model = {};
+    /**
+     * when model is single records
+     */
+
+    this.record = {};
+    /**
+     * when model is multiple records
+     */
+
+    this.records = [];
+    /**
+     * collections - alter & collect
+     */
+
+    this.page = new orangeCollection();
+    this.form = new orangeCollection();
+    this.user = new orangeCollection();
+    this.local = new orangeCollection();
+    this.config = new orangeCollection({
+      settable: ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'],
+      gettable: ['page', 'form', 'error', 'errors', 'model'],
+      defaults: {},
+      configUrl: configUrl || '',
+      modelUrl: modelUrl || '',
+      templateUrl: templateUrl || '',
+      redirect: false,
+      ajaxTimeout: 5000,
+      routerRoot: '/',
+      storageCache: 0,
+      templateCache: 0,
+      clearCache: false,
+      ajaxCacheBuster: false,
+      tinyBind: {
+        prefix: 'rv',
+        preloadData: true,
+        rootInterface: '.',
+        templateDelimiters: ['{', '}']
+      }
+    });
+    this.triggers = new orangeCollection({
+      bound: function () {
+        jQuery('body').trigger('tiny-bind-bound');
+      },
+      unbound: function () {
+        jQuery('body').trigger('tiny-bind-unbound');
+      },
+      bindNavigate: function () {
+        jQuery('body').trigger('spa-navgate');
+      }
+    });
+    this.methods = new orangeCollection();
+    this.events = new orangeCollection();
+    this.templates = new orangeCollection();
+    this.response = new orangeResponse(this);
+    this.request = new orangeRequest(this);
+    this.router = new orangeRouter(this);
+  }
+  /**
+   * merge and replace data
+   */
+
+
+  setData(data, settable) {
+    settable = settable || this.config.settable;
+    console.log('setData', data, settable);
+
+    for (let index in settable) {
+      let key = settable[index];
+
+      if (data[key] !== undefined) {
+        console.log(key, data[key]);
+        /*
+        if they have alter then send them in as objects and let alter merge the contents
+        else they replace the entire variable
+        */
+
+        if (typeof this[key].alter === 'function') {
+          this[key].alter(data[key]);
+        } else {
+          this[key] = data[key];
+        }
+      }
+    }
+    /**
+     * these are references to the actual model
+     * so the view can use records or record
+     * or you can still use model
+     */
+
+
+    this.records = this.model;
+    this.record = this.model;
+    /* do any cache cleaning based on the sent in data */
+
+    this.processServerConfig(this.config);
+    return this;
+    /* allow chaining */
+  }
+  /**
+   * get the data about this element
+   */
+
+
+  getData(gettable) {
+    gettable = gettable || this.config.gettable;
+    console.log('getData', gettable);
+    let collection = {};
+
+    for (let index in gettable) {
+      let key = gettable[index];
+      collection[key] = typeof this[key].collect === 'function' ? this[key].collect() : this[key];
+    }
+
+    console.log(collection);
+    return collection;
+  }
+
+  processServerConfig(config) {
+    /* is it loaded? */
+    if (storage !== undefined) {
+      if (config.clearCache) {
+        storage.clear();
+      }
+      /* if set clear older than X seconds... */
+
+
+      if (config.olderThanCache !== undefined) {
+        storage.removeOlderThan(config.olderThanCache);
+      }
+    }
+
+    return this;
+    /* allow chaining */
+  }
+
+  loadModel(modelEndPoint, then) {
+    let orangeBind = this;
+    this.response.alter(200, function (data, status, xhr) {
+      orangeBind.refreshTinyBind(data, then);
+    });
+    /* run the query */
+
+    this.request.get(modelEndPoint);
+    return this;
+    /* allow chaining */
+  }
+
+  loadTemplate(templateEndPoint, then) {
+    let orangeBind = this;
+    let cacheKey = templateEndPoint + '.template';
+    let template = undefined;
+    /* is this stored in our local template cache */
+
+    if (this.templates[templateEndPoint] !== undefined) {
+      /* yes it is so grab it */
+      template = this.templates[templateEndPoint];
+    } else if (storage !== undefined) {
+      /* is this stored in our cached data */
+      template = storage.getItem(cacheKey, undefined);
+      console.log('getItem', cacheKey, template);
+    }
+    /* have we already loaded the template? */
+
+
+    if (template !== undefined) {
+      this.replaceElement(template);
+
+      if (then) {
+        then();
+      }
+    } else {
+      /* setup retrieve model - success */
+      this.response.alter(200, function (data, status, xhr) {
+        /* if storage is setup than store a copy */
+        if (storage !== undefined) {
+          let cacheSeconds = data.template.cache ? data.template.cache : orangeBind.config.templateCache;
+          console.log('cache key set ' + cacheKey, cacheSeconds);
+          storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
+        }
+
+        orangeBind.replaceElement(data.template.source);
+
+        if (then) {
+          then();
+        }
+      });
+      let url = this.config.templateUrl + templateEndPoint;
+      console.log('loadTemplate ' + url);
+      this.request.get(url);
+    }
+
+    return this;
+    /* allow chaining */
+  }
+
+  loadModelAndTemplate(modelEndPoint, templateEndPoint, then) {
+    let orangeBind = this;
+    modelEndPoint = this.config.modelUrl + modelEndPoint;
+    console.log('loadModelAndTemplate ' + modelEndPoint);
+
+    if (templateEndPoint) {
+      /* load the template then the model */
+      this.loadTemplate(templateEndPoint, function () {
+        orangeBind.loadModel(modelEndPoint, then);
+      });
+    } else {
+      /* just load the model */
+      this.loadModel(modelEndPoint, then);
+    }
+
+    return this;
+    /* allow chaining */
+  }
+
+  replaceElement(html) {
+    this.getElementById().innerHTML = html;
+  }
+
+  getElementById() {
+    let element = document.getElementById(this.id);
+
+    if (element === null) {
+      console.error('Element Id "' + this.id + '" Not Found.');
+    } else {
+      console.log('"' + this.id + '" bound.');
+    }
+
+    return element;
+  }
+
+  refreshTinyBind(data, then) {
+    this.triggers.unbound();
+    /* unbind tinybind */
+
+    if (this.bound) {
+      this.bound.unbind();
+    }
+    /* update instance data */
+
+
+    if (data) {
+      this.setData(data);
+    }
+
+    this.bound = tinybind.bind(this.getElementById(), this);
+    /* tell everyone we now have new data */
+
+    this.triggers.bound();
+
+    if (then) {
+      then();
+    }
+  }
+
+  domReady() {
+    let orangeBind = this;
+
+    if (this.config.configUrl !== '') {
+      /* default init 200 callback */
+      this.response.alter(200, function (data, xhr) {
+        orangeBind.setData(data);
+        /* send into tinybind the configuration */
+
+        tinybind.configure(orangeBind.config.tinyBind);
+        /**
+         * Turn on the listener to match to see if the current route is something we are listening for
+         * if a match is found then trigger the callback with the url
+         * ie. callback('/foo/bar');
+         */
+
+        orangeBind.router.match();
+      });
+      /* Make a Request for the configuration url using the default 200 responds we just setup above */
+
+      this.request.get(this.config.configUrl);
+    } else {
+      /* do not make a ajax call so we will just use the config we already have */
+      tinybind.configure(this.config.tinyBind);
+      /* and then fire off the router matcher */
+
+      this.router.match();
+    }
+  }
+
+}
 /**
  *
  * Add Notification
@@ -3015,7 +2778,7 @@ Setup the Application global variable for the app "block"
 3. prefix all layout requests with...
 
 */
-var app = new orangeBinder.bind('appblock', '/get/configuration', '/get/layout');
+var app = new orangeBinder('appblock', '/get/configuration', '/get/layout');
 app.config.alter({
   defaults: {
     Precision: 2,
@@ -3028,74 +2791,74 @@ app.config.alter({
 });
 app.router.alter({
   'multi/edit/(:num)': function (primary_id) {
-    app.loadModel('/multi/edit/' + primary_id, '/multi/details');
+    app.loadModelAndTemplate('/multi/edit/' + primary_id, '/multi/details');
   },
   'multi/create': function () {
-    app.loadModel('/multi/create', '/multi/details');
+    app.loadModelAndTemplate('/multi/create', '/multi/details');
   },
   'multi/edit/(:num)': function (primary_id) {
-    app.loadModel('/multi/edit/' + primary_id, '/multi/details');
+    app.loadModelAndTemplate('/multi/edit/' + primary_id, '/multi/details');
   },
   'multi/create': function () {
-    app.loadModel('/multi/create', '/multi/details');
+    app.loadModelAndTemplate('/multi/create', '/multi/details');
   },
   'multi': function () {
-    app.loadModel('/multi/index', '/multi/index');
+    app.loadModelAndTemplate('/multi/index', '/multi/index');
   },
   'people/edit/(:num)': function (primary_id) {
-    app.loadModel('/people/edit/' + primary_id, '/people/details');
+    app.loadModelAndTemplate('/people/edit/' + primary_id, '/people/details');
   },
   'people/create': function () {
-    app.loadModel('/people/create', '/people/details');
+    app.loadModelAndTemplate('/people/create', '/people/details');
   },
   'people': function () {
-    app.loadModel('/people/index', '/people/index');
+    app.loadModelAndTemplate('/people/index', '/people/index');
   },
   'zipcodes/edit/(:num)': function (primary_id) {
-    app.loadModel('/zipcodes/edit/' + primary_id, '/zipcodes/details');
+    app.loadModelAndTemplate('/zipcodes/edit/' + primary_id, '/zipcodes/details');
   },
   'zipcodes/create': function () {
-    app.loadModel('/zipcodes/create', '/zipcodes/details');
+    app.loadModelAndTemplate('/zipcodes/create', '/zipcodes/details');
   },
   'zipcodes': function () {
-    app.loadModel('/zipcodes/index', '/zipcodes/index');
+    app.loadModelAndTemplate('/zipcodes/index', '/zipcodes/index');
   },
   'catalog/edit/(:num)': function (primary_id) {
-    app.loadModel('/catalog/edit/' + primary_id, '/catalog/details');
+    app.loadModelAndTemplate('/catalog/edit/' + primary_id, '/catalog/details');
   },
   'catalog/create': function () {
-    app.loadModel('/catalog/create', '/catalog/details');
+    app.loadModelAndTemplate('/catalog/create', '/catalog/details');
   },
   'catalog': function () {
-    app.loadModel('/catalog/index', '/catalog/index');
+    app.loadModelAndTemplate('/catalog/index', '/catalog/index');
   },
   'robot/edit/(:num)': function (primary_id) {
-    app.loadModel('/robot/edit/' + primary_id, '/robot/details', function () {
+    app.loadModelAndTemplate('/robot/edit/' + primary_id, '/robot/details', function () {
       DOMRefresh();
     });
   },
   'robot/create': function () {
-    app.loadModel('/robot/create', '/robot/details', function () {
+    app.loadModelAndTemplate('/robot/create', '/robot/details', function () {
       DOMRefresh();
     });
   },
   'robot': function () {
-    app.loadModel('/robot/index', '/robot/index');
+    app.loadModelAndTemplate('/robot/index', '/robot/index');
   },
 
   /* mpa example page - when this page loads load this model */
   'food/edit/(:num)': function (primary_id) {
-    app.loadModel('/food/edit/' + primary_id);
+    app.loadModelAndTemplate('/food/edit/' + primary_id);
   },
 
   /* mpa example page - when this page loads load this model */
   'food/create': function () {
-    app.loadModel('/food/create');
+    app.loadModelAndTemplate('/food/create');
   },
 
   /* mpa example page - when this page loads load this model */
   'food': function () {
-    app.loadModel('/food/index');
+    app.loadModelAndTemplate('/food/index');
   },
   '(.*)': function () {
     app.refresh();
@@ -3214,9 +2977,10 @@ Setup the nav global variable for the nav "block"
 2. then where to get it's config from the server
 
 */
-var nav = new orangeBinder.bind("navblock");
+var nav = new orangeBinder('navblock');
 nav.config.alter({
   nav: {
+    id: 'nav',
     open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/" target="_top">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
     close: "</ul></div></div>",
     item: {
@@ -3232,72 +2996,50 @@ nav.config.alter({
 /* for any page request use the same model and template */
 
 nav.router.alter("(.*)", function () {
-  nav.loadModel("/get/navModel", "navbar");
+  nav.loadModel("/get/navModel", function () {
+    nav.methods.updateBootstrapNav();
+  });
 });
-/**
- * nav.model[0].children[0].text = "Foobar";
- * nav.methods.updateNav();
- */
 
-nav.methods.alter("updateNav", function () {
-  tinybind.binders.bootstrapnav(document.getElementById("nav"), nav.model);
-});
-nav.methods.alter("bootstrap_nav", function (records) {
-  var html = "";
-  html += nav.config.nav.open;
-
-  var submenu = function (record, isRoot) {
-    var html = "";
-
-    if (Array.isArray(record.children)) {
-      if (record.text) {
-        html += isRoot ? nav.config.nav.item.open : nav.config.nav.item.openSub;
-        html += sprintf(nav.config.nav.item.rowSub, record.url, record.text);
-
-        for (var idx in record.children) {
-          if (record.children[idx]) {
-            html += submenu(record.children[idx], false);
-          }
-        }
-
-        html += nav.config.nav.item.close;
-      }
-    } else {
-      /* item */
-      if (record.text) {
-        record.target = record.target != null ? record.target : "";
-        html += record.text == "{hr}" ? nav.config.nav.item.hr : sprintf(nav.config.nav.item.rowSingle, record.url, record.text, record.target);
-      }
-    }
-
-    return html;
-  };
+nav.methods.updateBootstrapNav = function () {
+  let html = nav.config.nav.open;
   /* start with the navbar level */
 
-
-  for (var idx in records) {
-    if (records[idx]) {
-      html += submenu(records[idx], true);
+  for (let idx in nav.model) {
+    if (nav.model[idx]) {
+      html += nav.methods.bootstrap_nav_submenu(nav.model[idx], true);
     }
   }
 
-  html += nav.config.nav.close;
-  return html;
-});
-/*
-	bootstrap_nav
-	Returns: converts the passed javascript object (json) into bootstrap navigation. Using app.config values for the templating
-	targetL function
-	return: string
-	Example:
-		<nav class="navbar navbar-inverse navbar-fixed-top" rv-bootstrapnav="page.nav"></nav>
-*/
-
-tinybind.binders.bootstrapnav = function (el, value) {
-  el.innerHTML = nav.methods.bootstrap_nav(value);
+  document.getElementById(nav.config.nav.id).innerHTML = html + nav.config.nav.close;
 };
 
-nav.templates.alter("navbar", '<nav id="nav" class="navbar navbar-inverse navbar-fixed-top" rv-bootstrapnav="model"></nav>');
+nav.methods.bootstrap_nav_submenu = function (record, isRoot) {
+  let html = "";
+
+  if (Array.isArray(record.children)) {
+    if (record.text) {
+      html += isRoot ? nav.config.nav.item.open : nav.config.nav.item.openSub;
+      html += sprintf(nav.config.nav.item.rowSub, record.url, record.text);
+
+      for (var idx in record.children) {
+        if (record.children[idx]) {
+          html += nav.methods.bootstrap_nav_submenu(record.children[idx], false);
+        }
+      }
+
+      html += nav.config.nav.item.close;
+    }
+  } else {
+    /* item */
+    if (record.text) {
+      record.target = record.target != null ? record.target : "";
+      html += record.text == "{hr}" ? nav.config.nav.item.hr : sprintf(nav.config.nav.item.rowSingle, record.url, record.text, record.target);
+    }
+  }
+
+  return html;
+};
 /* jquery free */
 document.addEventListener("DOMContentLoaded", function (e) {
   app.domReady();

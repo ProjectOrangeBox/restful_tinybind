@@ -1,4 +1,3 @@
-var orangeBinder = {
 	/**
 	 * create the bind element
 	 * arguments:
@@ -7,92 +6,101 @@ var orangeBinder = {
 	 * template url - template url prefix
 	 * model url - model url prefix
 	 */
-	bind: function (id, configUrl, templateUrl, modelUrl) {
-		/* DOM element id */
-		this.id = id;
+	class orangeBinder {
+		constructor(id, configUrl, templateUrl, modelUrl) {
+			/* DOM element id */
+			this.id = id;
 
-		/* is tiny bound bound to anything? */
-		this.bound = undefined;
+			/* is tiny bound bound to anything? */
+			this.bound = undefined;
 
-		/**
-		 * do we have an error - boolean true/false
-		 * keep these exposed on app so tinybind can use them as a boolean
-		 */
-		this.error = false;
-		/**
-		 * "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}}
-		 * keep these exposed on app so tinybind can use them as a object
-		 */
-		this.errors = {};
+			/**
+			 * do we have an error - boolean true/false
+			 * keep these exposed on app so tinybind can use them as a boolean
+			 */
+			this.error = false;
+			/**
+			 * "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}}
+			 * keep these exposed on app so tinybind can use them as a object
+			 */
+			this.errors = {};
 
-		/**
-		 * actual model storage
-		 */
-		this.model = {};
+			/**
+			 * actual model storage
+			 */
+			this.model = {};
 
-		/**
-		 * when model is single records
-		 */
-		this.record = {};
+			/**
+			 * when model is single records
+			 */
+			this.record = {};
 
-		/**
-		 * when model is multiple records
-		 */
-		this.records = [];
+			/**
+			 * when model is multiple records
+			 */
+			this.records = [];
 
-		/**
-		 * collections - alter & collect
-		 */
-		this.page = new orangeBinder.collection();
-		this.form = new orangeBinder.collection();
-		this.user = new orangeBinder.collection();
-		this.local = new orangeBinder.collection();
+			/**
+			 * collections - alter & collect
+			 */
+			this.page = new orangeCollection();
+			this.form = new orangeCollection();
+			this.user = new orangeCollection();
+			this.local = new orangeCollection();
 
-		this.config = new orangeBinder.collection();
-		this.methods = new orangeBinder.collection();
-		this.events = new orangeBinder.collection();
-		this.triggers = new orangeBinder.collection();
-		this.templates = new orangeBinder.collection();
+			this.config = new orangeCollection({
+				settable: ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'],
+				gettable: ['page', 'form', 'error', 'errors', 'model'],
+				defaults: {},
+				configUrl: (configUrl || ''),
+				modelUrl: (modelUrl || ''),
+				templateUrl: (templateUrl || ''),
+				redirect: false,
+				ajaxTimeout: 5000,
+				routerRoot: '/',
+				storageCache: 0,
+				templateCache: 0,
+				clearCache: false,
+				ajaxCacheBuster: false,
+				tinyBind: {
+					prefix: 'rv',
+					preloadData: true,
+					rootInterface: '.',
+					templateDelimiters: ['{', '}'],
+				}
+			});
 
-		this.response = new orangeBinder.response(this);
-		this.request = new orangeBinder.request(this);
-		this.router = new orangeBinder.router(this);
+			this.triggers = new orangeCollection({
+				bound: function () {
+					jQuery('body').trigger('tiny-bind-bound');
+				},
+				unbound: function () {
+					jQuery('body').trigger('tiny-bind-unbound');
+				},
+				bindNavigate: function () {
+					jQuery('body').trigger('spa-navgate');
+				},
+			});
 
-		/**
-		 * set up the default configuration
-		 */
-		this.config.alter({
-			settable: ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'],
-			gettable: ['page', 'form', 'error', 'errors', 'model'],
-			defaults: {},
-			configUrl: (configUrl || ''),
-			modelUrl: (modelUrl || ''),
-			templateUrl: (templateUrl || ''),
-			redirect: false,
-			ajaxTimeout: 5000,
-			routerRoot: '/',
-			storageCache: 0,
-			templateCache: 0,
-			clearCache: false,
-			ajaxCacheBuster: false,
-			tinyBind: {
-				prefix: 'rv',
-				preloadData: true,
-				rootInterface: '.',
-				templateDelimiters: ['{', '}'],
-			}
-		});
+			this.methods = new orangeCollection();
+			this.events = new orangeCollection();
+			this.templates = new orangeCollection();
+
+			this.response = new orangeResponse(this);
+			this.request = new orangeRequest(this);
+			this.router = new orangeRouter(this);
+		}
 
 		/**
 		 * merge and replace data
 		 */
-		this.setData = function (data, settable) {
+		setData(data, settable) {
 			settable = settable || this.config.settable;
 
 			console.log('setData', data, settable);
 
-			for (var index in settable) {
-				var key = settable[index];
+			for (let index in settable) {
+				let key = settable[index];
 
 				if (data[key] !== undefined) {
 					console.log(key, data[key]);
@@ -118,23 +126,23 @@ var orangeBinder = {
 			this.record = this.model;
 
 			/* do any cache cleaning based on the sent in data */
-			this.cacheCleanUp(this.config);
+			this.processServerConfig(this.config);
 
 			return this; /* allow chaining */
-		};
+		}
 
 		/**
 		 * get the data about this element
 		 */
-		this.getData = function (gettable) {
+		getData(gettable) {
 			gettable = gettable || this.config.gettable;
 
 			console.log('getData', gettable);
 
-			var collection = {};
+			let collection = {};
 
-			for (var index in gettable) {
-				var key = gettable[index];
+			for (let index in gettable) {
+				let key = gettable[index];
 
 				collection[key] = (typeof this[key].collect === 'function') ? this[key].collect() : this[key];
 			}
@@ -142,16 +150,11 @@ var orangeBinder = {
 			console.log(collection);
 
 			return collection;
-		};
+		}
 
-		/**
-		 * preform garage collection based on the configuration sent in (usally from the server configuration value)
-		 * This uses my superStorage library to cache to the local browser application storage
-		 */
-		this.cacheCleanUp = function (config) {
+		processServerConfig(config) {
 			/* is it loaded? */
 			if (storage !== undefined) {
-				/* set clear everything */
 				if (config.clearCache) {
 					storage.clear();
 				}
@@ -163,32 +166,25 @@ var orangeBinder = {
 			}
 
 			return this; /* allow chaining */
-		};
+		}
 
-		this.loadModel = function (modelEndPoint, templateEndPoint, then) {
-			var _p = this;
+		loadModel(modelEndPoint, then) {
+			let orangeBind = this;
 
-			modelEndPoint = this.config.modelUrl + modelEndPoint;
+			this.response.alter(200, function (data, status, xhr) {
+				orangeBind.refreshTinyBind(data, then);
+			});
 
-			console.log('loadModel ' + modelEndPoint);
-
-			if (templateEndPoint) {
-				/* load the template then the model */
-				this.loadTemplate(templateEndPoint, function () {
-					_p._loadModel(modelEndPoint, then);
-				});
-			} else {
-				/* just load the model */
-				this._loadModel(modelEndPoint, then);
-			}
+			/* run the query */
+			this.request.get(modelEndPoint);
 
 			return this; /* allow chaining */
-		};
+		}
 
-		this.loadTemplate = function (templateEndPoint, then) {
-			var _p = this;
-			var cacheKey = templateEndPoint + '.template';
-			var template = undefined;
+		loadTemplate(templateEndPoint, then) {
+			let orangeBind = this;
+			let cacheKey = templateEndPoint + '.template';
+			let template = undefined;
 
 			/* is this stored in our local template cache */
 			if (this.templates[templateEndPoint] !== undefined) {
@@ -213,36 +209,56 @@ var orangeBinder = {
 				this.response.alter(200, function (data, status, xhr) {
 					/* if storage is setup than store a copy */
 					if (storage !== undefined) {
-						var cacheSeconds = data.template.cache ? data.template.cache : _p.config.templateCache;
+						let cacheSeconds = data.template.cache ? data.template.cache : orangeBind.config.templateCache;
 
 						console.log('cache key set ' + cacheKey, cacheSeconds);
 
 						storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
 					}
 
-					_p.replaceElement(data.template.source);
+					orangeBind.replaceElement(data.template.source);
 
 					if (then) {
 						then();
 					}
 				});
 
-				var url = this.config.templateUrl + templateEndPoint;
+				let url = this.config.templateUrl + templateEndPoint;
 
 				console.log('loadTemplate ' + url);
 
-				_p.request.get(url);
+				this.request.get(url);
 			}
 
 			return this; /* allow chaining */
-		};
+		}
 
-		this.replaceElement = function (html) {
+		loadModelAndTemplate(modelEndPoint, templateEndPoint, then) {
+			let orangeBind = this;
+
+			modelEndPoint = this.config.modelUrl + modelEndPoint;
+
+			console.log('loadModelAndTemplate ' + modelEndPoint);
+
+			if (templateEndPoint) {
+				/* load the template then the model */
+				this.loadTemplate(templateEndPoint, function () {
+					orangeBind.loadModel(modelEndPoint, then);
+				});
+			} else {
+				/* just load the model */
+				this.loadModel(modelEndPoint, then);
+			}
+
+			return this; /* allow chaining */
+		}
+
+		replaceElement(html) {
 			this.getElementById().innerHTML = html;
-		};
+		}
 
-		this.getElementById = function () {
-			var element = document.getElementById(this.id);
+		getElementById() {
+			let element = document.getElementById(this.id);
 
 			if (element === null) {
 				console.error('Element Id "' + this.id + '" Not Found.');
@@ -251,9 +267,9 @@ var orangeBinder = {
 			}
 
 			return element;
-		};
+		}
 
-		this.refresh = function (data, then) {
+		refreshTinyBind(data, then) {
 			this.triggers.unbound();
 
 			/* unbind tinybind */
@@ -274,38 +290,25 @@ var orangeBinder = {
 			if (then) {
 				then();
 			}
-		};
+		}
 
-		this._loadModel = function (modelEndPoint, then) {
-			var _p = this;
-
-			this.response.alter(200, function (data, status, xhr) {
-				_p.refresh(data, then);
-			});
-
-			/* run the query */
-			_p.request.get(modelEndPoint);
-
-			return this; /* allow chaining */
-		};
-
-		this.domReady = function () {
-			var _p = this;
+		domReady() {
+			let orangeBind = this;
 
 			if (this.config.configUrl !== '') {
 				/* default init 200 callback */
 				this.response.alter(200, function (data, xhr) {
-					_p.setData(data);
+					orangeBind.setData(data);
 
 					/* send into tinybind the configuration */
-					tinybind.configure(_p.config.tinyBind);
+					tinybind.configure(orangeBind.config.tinyBind);
 
 					/**
 					 * Turn on the listener to match to see if the current route is something we are listening for
 					 * if a match is found then trigger the callback with the url
 					 * ie. callback('/foo/bar');
 					 */
-					_p.router.match();
+					orangeBind.router.match();
 				});
 
 				/* Make a Request for the configuration url using the default 200 responds we just setup above */
@@ -319,367 +322,4 @@ var orangeBinder = {
 			}
 		}
 
-		/* attach our default triggers */
-		this.triggers.alter({
-			bound: function () {
-				jQuery('body').trigger('tiny-bind-bound');
-			},
-			unbound: function () {
-				jQuery('body').trigger('tiny-bind-unbound');
-			},
-			bindNavigate: function () {
-				jQuery('body').trigger('spa-navgate');
-			},
-		});
-	},
-	router: function (_p) {
-		this._p = _p;
-
-		/* array of routes */
-		this.routes = [];
-
-		/* reference to intervalID */
-		this.intervalID = undefined;
-
-		/* get and normalize the current page url */
-		this.getUrl = function () {
-			var url = this._clearSlashes(decodeURI(location.pathname + location.search));
-
-			url = url.replace(/\?(.*)$/, '');
-			url = this._p.config.routerRoot !== '/' ? url.replace(this._p.config.routerRoot, '') : url;
-
-			return this._clearSlashes(url);
-		};
-
-		/* match the router url and call the callback if a match is found */
-		this.match = function (url) {
-
-			/* do we have any routes to listen for? */
-			if (this.routes.length) {
-
-				/* did they send in a url? if not then get the current url */
-				url = url || this.getUrl();
-
-				console.log('match', url);
-
-				/* loop though the routes */
-				for (var key in this.routes) {
-					var parameters = url.match(this.routes[key].re);
-
-					if (parameters) {
-						console.log('matched', parameters, this.routes[key].re.toString());
-
-						/* remove matched url  */
-						parameters.shift();
-
-						/* call the route callback and pass in the parameters */
-						this.routes[key].callback.apply({}, parameters);
-
-						break; /* break from for loop */
-					}
-				}
-			}
-
-			return this; /* allow chaining */
-		};
-
-		/* add or change a route */
-		this.alter = function (regularExpression, callback) {
-			if (typeof regularExpression === 'object') {
-				for (var property in regularExpression) {
-					this.alter(property, regularExpression[property]);
-				}
-			} else {
-				/* add to the routes array */
-				this.routes.push({
-					re: this._normalizeRegularExpression(regularExpression),
-					callback: callback
-				});
-			}
-
-			/* turn on listening if it's not already */
-			if (!this.intervalID) {
-				this.listen();
-			}
-
-			return this; /* allow chaining */
-		};
-
-		/* remove a single route it's url regular expression */
-		this.remove = function (regularExpression) {
-			var re = this._normalizeRegularExpression(regularExpression);
-
-			for (var key in this.routes) {
-				if (re.toString() == this.routes[key].re.toString()) {
-					this.routes.splice(key, 1);
-				}
-			}
-
-			return this; /* allow chaining */
-		};
-
-		/*
-		normalize the regular expression
-		and convert (:any) (:num) (:hex) (:str) to actual expression values
-		*/
-		this._normalizeRegularExpression = function (regularExpression) {
-			/* trim / fore & aft */
-			regularExpression = this._clearSlashes(regularExpression);
-
-			/* escape / to \/ */
-			regularExpression = regularExpression.replace(
-				new RegExp('/', 'g'),
-				"\\/"
-			);
-
-			/* add CodeIgniter matches */
-			regularExpression = regularExpression.replace(
-				new RegExp(':any', 'g'),
-				'[^/]+'
-			); /* anything */
-			regularExpression = regularExpression.replace(
-				new RegExp(':num', 'g'),
-				'[0-9]+'
-			); /* number only */
-			regularExpression = regularExpression.replace(
-				new RegExp(':hex', 'g'),
-				'[0-9a-f]+'
-			); /* hex values */
-			regularExpression = regularExpression.replace(
-				new RegExp(':str', 'g'),
-				'[0-9a-zA-Z]+'
-			); /* str values */
-
-			return new RegExp(regularExpression);
-		};
-
-		/* delete all routes */
-		this.flush = function () {
-			this.routes = [];
-
-			return this.stopListening(); /* allow chaining */
-		};
-
-		this.stopListening = function () {
-			if (this.intervalID) {
-				clearInterval(this.intervalID);
-			}
-
-			return this; /* allow chaining */
-		}
-
-		/* start router listener matching for changes in the url */
-		this.listen = function () {
-			/* Do we have any routes to listen for? */
-			if (this.routes.length) {
-				/* if we are already listening let's just make sure we stop first */
-				this.stopListening();
-
-				/* we are now listening for url changes */
-				this.intervalID = setInterval(this.listener, 100, this);
-			}
-
-			return this; /* allow chaining */
-		};
-
-		/*
-		the interval listener
-		since interval is actually calling a function the reference to "this" doesn't work
-		*/
-		this.listener = function (router) {
-			var url = router.getUrl();
-
-			if (router._currentUrl != url) {
-
-				router._currentUrl = url;
-
-				router.match(url);
-			}
-		};
-
-		/* navigate to a new url optionally specifying it as a redirect or history change */
-		this.navigate = function (url, redirect) {
-			url = url ? this._p.config.routerRoot + this._clearSlashes(url) : '';
-			redirect = redirect ? redirect : this._p.config.redirect;
-
-			console.log('navigate', url, redirect);
-
-			/* trigger a redirect so other javascript code knows we are redirecting */
-			this._p.triggers.bindNavigate(url, redirect);
-
-			if (redirect) {
-				/* full page reload so trigger wouldn't even be picked up */
-				window.location.href = url;
-			} else {
-				/* adds a state to the browser's session history stack redirect */
-				history.pushState(null, null, url);
-			}
-
-			return this; /* allow chaining */
-		};
-
-		/* remove all slashes from the beginning and end of the passed url */
-		this._clearSlashes = function (url) {
-			return url.toString().replace(/\/$/, '').replace(/^\//, '');
-		};
-
-		/* what is our current url */
-		this._currentUrl = this.getUrl();
-	},
-	response: function (_p) {
-		this._p = _p;
-
-		this.callbacks = {};
-
-		this.defaultCallbacks = {
-			/* standard get layout or get model */
-			200: function (data, status, xhr) {
-				console.debug(arguments);
-				alert('200 (ok) callback');
-			},
-			/* success on create */
-			201: function (data, status, xhr) {
-				console.debug(arguments);
-				alert('201 (created) callback');
-			},
-			/* success on edit */
-			202: function (data, status, xhr) {
-				console.debug(arguments);
-				alert('202 (accepted) callback');
-			},
-			/* access to resource not allowed */
-			401: function (xhr, status, error) {
-				console.debug(arguments);
-				alert('401 (unauthorized) callback');
-			},
-			/* resource not found */
-			404: function (xhr, status, error) {
-				console.debug(arguments);
-				alert('404 (not found) callback');
-			},
-			/* error submitting resource (create, edit, delete) */
-			406: function (xhr, status, error) {
-				console.debug(arguments);
-				alert('406 (not accepted) callback');
-			},
-			/* resource conflict ie. trying to create a new resource with the same primary id */
-			409: function (xhr, status, error) {
-				console.debug(arguments);
-				alert('409 (conflict) callback');
-			},
-			/* internal server error */
-			500: function (xhr, status, error) {
-				console.debug(arguments);
-				alert('500 (server error) callback');
-			}
-		};
-
-		this.alter = function (code, callback) {
-			if (typeof code === 'object') {
-				for (var property in code) {
-					this.alter(property, code[property]);
-				}
-			} else if (Number.isInteger(code) && typeof callback === 'function') {
-				/* change the responds callback based on the returned http status code */
-				this.callbacks[code] = callback;
-			}
-
-			return this;
-		};
-
-		this.callbacks = this.defaultCallbacks;
-	},
-	request: function (_p) {
-		this._p = _p;
-
-		/* any method */
-		this.send = function (method, url, data, callbacks) {
-			console.log('request', method, url, data);
-
-			jQuery.ajax({
-				method: method,
-				url: url,
-				data: data,
-				dataType: 'json',
-				cache: !this._p.config.ajaxCacheBuster,
-				/* ajax cache buster? */
-				async: true,
-				/* always! */
-				timeout: this._p.config.ajaxTimeout,
-				/* 5 seconds */
-				statusCode: this._p.response.alter(callbacks).callbacks
-			});
-
-			return this;
-		};
-
-		/* REST / HTTP - get */
-		this.get = function (url, data, callbacks) {
-			return this.send('get', url, data, callbacks);
-		};
-
-		/* REST / HTTP  - post */
-		this.post = function (url, data, callbacks) {
-			return this.send('post', url, data, callbacks);
-		};
-
-		/* REST / HTTP  - patch */
-		this.patch = function (url, data, callbacks) {
-			return this.send('patch', url, data, callbacks);
-		};
-
-		/* CRUD / SQL / REST / HTTP  - delete */
-		this.delete = function (url, data, callbacks) {
-			return this.send('delete', url, data, callbacks);
-		};
-
-		/* CRUD - create */
-		this.create = function (url, data, callbacks) {
-			return this.send('post', url, data, callbacks);
-		};
-
-		/* CRUD - read */
-		this.read = function (url, data, callbacks) {
-			return this.send('get', url, data, callbacks);
-		};
-
-		/* CRUD / SQL - update */
-		this.update = function (url, data, callbacks) {
-			return this.send('patch', url, data, callbacks);
-		};
-
-		/* SQL - insert */
-		this.insert = function (url, data, callbacks) {
-			return this.send('post', url, data, callbacks);
-		};
-	},
-	/* collection class */
-	collection: function () {
-
-		/* add or change a collection property */
-		this.alter = function (name, value) {
-			if (typeof name === 'object') {
-				for (var property in name) {
-					this[property] = name[property];
-				}
-			} else {
-				this[name] = value;
-			}
-
-			return this;
-		};
-
-		/* collect the objects property for export */
-		this.collect = function () {
-			var collection = {};
-
-			for (var propertyName in this) {
-				if (typeof this[propertyName] !== 'function' && propertyName !== '_p') {
-					collection[propertyName] = this[propertyName];
-				}
-			}
-
-			return collection;
-		};
 	}
-};

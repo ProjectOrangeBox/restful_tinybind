@@ -43,12 +43,15 @@ let js = {
 		"node_modules/bootstrap3/dist/js/bootstrap.min.js",
 		"node_modules/bootstrap-select/dist/js/bootstrap-select.min.js",
 		"node_modules/tinysort/dist/tinysort.min.js",
-		"node_modules/bootbox/dist/bootbox.all.min.js"
+		"node_modules/bootbox/dist/bootbox.all.min.js",
+		"node_modules/sprintf-js/dist/sprintf.min.js"
 	],
 	user: [
 		"assets/plugins/orangeBind/superStorage.js",
-		/* 'assets/plugins/orangeBind/tinybind.js',*/
-		"assets/plugins/orangeBind/sprintf.js",
+		"assets/plugins/orangeBind/orangeCollection.js",
+		"assets/plugins/orangeBind/orangeRouter.js",
+		"assets/plugins/orangeBind/orangeRequest.js",
+		"assets/plugins/orangeBind/orangeResponse.js",
 		"assets/plugins/orangeBind/orangeBind.js",
 
 		"assets/plugins/notify/notify.js",

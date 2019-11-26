@@ -7,7 +7,7 @@ Setup the Application global variable for the app "block"
 
 */
 
-var app = new orangeBinder.bind('appblock', '/get/configuration', '/get/layout');
+var app = new orangeBinder('appblock', '/get/configuration', '/get/layout');
 
 app.config.alter({
 	defaults: {
@@ -22,71 +22,71 @@ app.config.alter({
 
 app.router.alter({
 	'multi/edit/(:num)': function (primary_id) {
-		app.loadModel('/multi/edit/' + primary_id, '/multi/details');
+		app.loadModelAndTemplate('/multi/edit/' + primary_id, '/multi/details');
 	},
 	'multi/create': function () {
-		app.loadModel('/multi/create', '/multi/details');
+		app.loadModelAndTemplate('/multi/create', '/multi/details');
 	},
 	'multi/edit/(:num)': function (primary_id) {
-		app.loadModel('/multi/edit/' + primary_id, '/multi/details');
+		app.loadModelAndTemplate('/multi/edit/' + primary_id, '/multi/details');
 	},
 	'multi/create': function () {
-		app.loadModel('/multi/create', '/multi/details');
+		app.loadModelAndTemplate('/multi/create', '/multi/details');
 	},
 	'multi': function () {
-		app.loadModel('/multi/index', '/multi/index');
+		app.loadModelAndTemplate('/multi/index', '/multi/index');
 	},
 	'people/edit/(:num)': function (primary_id) {
-		app.loadModel('/people/edit/' + primary_id, '/people/details');
+		app.loadModelAndTemplate('/people/edit/' + primary_id, '/people/details');
 	},
 	'people/create': function () {
-		app.loadModel('/people/create', '/people/details');
+		app.loadModelAndTemplate('/people/create', '/people/details');
 	},
 	'people': function () {
-		app.loadModel('/people/index', '/people/index');
+		app.loadModelAndTemplate('/people/index', '/people/index');
 	},
 	'zipcodes/edit/(:num)': function (primary_id) {
-		app.loadModel('/zipcodes/edit/' + primary_id, '/zipcodes/details');
+		app.loadModelAndTemplate('/zipcodes/edit/' + primary_id, '/zipcodes/details');
 	},
 	'zipcodes/create': function () {
-		app.loadModel('/zipcodes/create', '/zipcodes/details');
+		app.loadModelAndTemplate('/zipcodes/create', '/zipcodes/details');
 	},
 	'zipcodes': function () {
-		app.loadModel('/zipcodes/index', '/zipcodes/index');
+		app.loadModelAndTemplate('/zipcodes/index', '/zipcodes/index');
 	},
 	'catalog/edit/(:num)': function (primary_id) {
-		app.loadModel('/catalog/edit/' + primary_id, '/catalog/details');
+		app.loadModelAndTemplate('/catalog/edit/' + primary_id, '/catalog/details');
 	},
 	'catalog/create': function () {
-		app.loadModel('/catalog/create', '/catalog/details');
+		app.loadModelAndTemplate('/catalog/create', '/catalog/details');
 	},
 	'catalog': function () {
-		app.loadModel('/catalog/index', '/catalog/index');
+		app.loadModelAndTemplate('/catalog/index', '/catalog/index');
 	},
 	'robot/edit/(:num)': function (primary_id) {
-		app.loadModel('/robot/edit/' + primary_id, '/robot/details', function () {
+		app.loadModelAndTemplate('/robot/edit/' + primary_id, '/robot/details', function () {
 			DOMRefresh()
 		});
 	},
 	'robot/create': function () {
-		app.loadModel('/robot/create', '/robot/details', function () {
+		app.loadModelAndTemplate('/robot/create', '/robot/details', function () {
 			DOMRefresh()
 		});
 	},
 	'robot': function () {
-		app.loadModel('/robot/index', '/robot/index');
+		app.loadModelAndTemplate('/robot/index', '/robot/index');
 	},
 	/* mpa example page - when this page loads load this model */
 	'food/edit/(:num)': function (primary_id) {
-		app.loadModel('/food/edit/' + primary_id);
+		app.loadModelAndTemplate('/food/edit/' + primary_id);
 	},
 	/* mpa example page - when this page loads load this model */
 	'food/create': function () {
-		app.loadModel('/food/create');
+		app.loadModelAndTemplate('/food/create');
 	},
 	/* mpa example page - when this page loads load this model */
 	'food': function () {
-		app.loadModel('/food/index');
+		app.loadModelAndTemplate('/food/index');
 	},
 	'(.*)': function () {
 		app.refresh();
