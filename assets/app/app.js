@@ -7,7 +7,7 @@ Setup the Application global variable for the app "block"
 
 */
 
-var app = new orangeBinder('appblock', '/get/configuration', '/get/layout');
+var app = new orangeBinder('app', '/get/configuration', '/get/layout');
 
 app.config.alter({
 	defaults: {
@@ -22,78 +22,74 @@ app.config.alter({
 
 app.router.alter({
 	'multi/edit/(:num)': function (primary_id) {
-		app.loadModelAndTemplate('/multi/edit/' + primary_id, '/multi/details');
+		app.loadBlock('/multi/edit/' + primary_id, '/multi/details');
 	},
 	'multi/create': function () {
-		app.loadModelAndTemplate('/multi/create', '/multi/details');
+		app.loadBlock('/multi/create', '/multi/details');
 	},
 	'multi/edit/(:num)': function (primary_id) {
-		app.loadModelAndTemplate('/multi/edit/' + primary_id, '/multi/details');
+		app.loadBlock('/multi/edit/' + primary_id, '/multi/details');
 	},
 	'multi/create': function () {
-		app.loadModelAndTemplate('/multi/create', '/multi/details');
+		app.loadBlock('/multi/create', '/multi/details');
 	},
 	'multi': function () {
-		app.loadModelAndTemplate('/multi/index', '/multi/index');
+		app.loadBlock('/multi/index', '/multi/index');
 	},
 	'people/edit/(:num)': function (primary_id) {
-		app.loadModelAndTemplate('/people/edit/' + primary_id, '/people/details');
+		app.loadBlock('/people/edit/' + primary_id, '/people/details');
 	},
 	'people/create': function () {
-		app.loadModelAndTemplate('/people/create', '/people/details');
+		app.loadBlock('/people/create', '/people/details');
 	},
 	'people': function () {
-		app.loadModelAndTemplate('/people/index', '/people/index');
+		app.loadBlock('/people/index', '/people/index');
 	},
 	'zipcodes/edit/(:num)': function (primary_id) {
-		app.loadModelAndTemplate('/zipcodes/edit/' + primary_id, '/zipcodes/details');
+		app.loadBlock('/zipcodes/edit/' + primary_id, '/zipcodes/details');
 	},
 	'zipcodes/create': function () {
-		app.loadModelAndTemplate('/zipcodes/create', '/zipcodes/details');
+		app.loadBlock('/zipcodes/create', '/zipcodes/details');
 	},
 	'zipcodes': function () {
-		app.loadModelAndTemplate('/zipcodes/index', '/zipcodes/index');
+		app.loadBlock('/zipcodes/index', '/zipcodes/index');
 	},
 	'catalog/edit/(:num)': function (primary_id) {
-		app.loadModelAndTemplate('/catalog/edit/' + primary_id, '/catalog/details');
+		app.loadBlock('/catalog/edit/' + primary_id, '/catalog/details');
 	},
 	'catalog/create': function () {
-		app.loadModelAndTemplate('/catalog/create', '/catalog/details');
+		app.loadBlock('/catalog/create', '/catalog/details');
 	},
 	'catalog': function () {
-		app.loadModelAndTemplate('/catalog/index', '/catalog/index');
+		app.loadBlock('/catalog/index', '/catalog/index');
 	},
 	'robot/edit/(:num)': function (primary_id) {
-		app.loadModelAndTemplate('/robot/edit/' + primary_id, '/robot/details', function () {
-			DOMRefresh()
-		});
+		app.loadBlock('/robot/edit/' + primary_id, '/robot/details', DOMRefresh);
 	},
 	'robot/create': function () {
-		app.loadModelAndTemplate('/robot/create', '/robot/details', function () {
-			DOMRefresh()
-		});
+		app.loadBlock('/robot/create', '/robot/details', DOMRefresh);
 	},
 	'robot': function () {
-		app.loadModelAndTemplate('/robot/index', '/robot/index');
+		app.loadBlock('/robot/index', '/robot/index');
 	},
 	/* mpa example page - when this page loads load this model */
 	'food/edit/(:num)': function (primary_id) {
-		app.loadModelAndTemplate('/food/edit/' + primary_id);
+		app.loadBlock('/food/edit/' + primary_id);
 	},
 	/* mpa example page - when this page loads load this model */
 	'food/create': function () {
-		app.loadModelAndTemplate('/food/create');
+		app.loadBlock('/food/create');
 	},
 	/* mpa example page - when this page loads load this model */
 	'food': function () {
-		app.loadModelAndTemplate('/food/index');
+		app.loadBlock('/food/index');
 	},
 	'(.*)': function () {
-		app.refresh();
+		app.rebind();
 	}
 });
 
-//app.response.alter(404, function (xhr, status, error) {
+//app.request.on(404, function (xhr, status, error) {
 /* don't show the default alert() - instead show not found */
 //app.loadTemplate('/notfound');
 //});
@@ -109,7 +105,7 @@ app.methods.alter({
 	},
 	'submit': function (redirect) {
 		/* created record - create */
-		app.response.alter(201, function (data, status, xhr) {
+		app.request.on(201, function (data, status, xhr) {
 			/* good redirect */
 			notify.removeAll();
 
@@ -117,7 +113,7 @@ app.methods.alter({
 		});
 
 		/* accepted record - update */
-		app.response.alter(202, function (data, status, xhr) {
+		app.request.on(202, function (data, status, xhr) {
 			/* good redirect" */
 			notify.removeAll();
 
@@ -125,7 +121,7 @@ app.methods.alter({
 		});
 
 		/* not accepted - show errors */
-		app.response.alter(406, function (xhr, status, error) {
+		app.request.on(406, function (xhr, status, error) {
 			/* good show errors */
 			app.setData(xhr.responseJSON);
 
@@ -185,7 +181,7 @@ app.events.alter({
 			callback: function (confirm) {
 				if (confirm) {
 					/* accepted record - delete */
-					app.response.change(202, function (data, status, xhr) {
+					app.request.change(202, function (data, status, xhr) {
 						app.local.closest_tr.remove();
 					});
 

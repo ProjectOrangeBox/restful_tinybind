@@ -243,7 +243,7 @@ class orangeRouter {
     this.intervalID = undefined;
     /* what is our current url */
 
-    this._currentUrl = this.getUrl();
+    this.url = this.getUrl();
   }
   /* get and normalize the current page url */
 
@@ -365,12 +365,13 @@ class orangeRouter {
   */
 
 
-  listener(router) {
-    let url = router.getUrl();
+  listener(orangeRouter) {
+    let url = orangeRouter.getUrl();
 
-    if (router._currentUrl != url) {
-      router._currentUrl = url;
-      router.match(url);
+    if (orangeRouter.url != url) {
+      orangeRouter.url = url;
+      orangeRouter.app.triggers.routerChanged(url);
+      orangeRouter.match(url);
     }
   }
   /* navigate to a new url optionally specifying it as a redirect or history change */
@@ -436,64 +437,6 @@ class orangeRouter {
 class orangeRequest {
   constructor(app) {
     this.app = app;
-  }
-
-  send(method, url, data, callbacks) {
-    console.log('request', method, url, data);
-    jQuery.ajax({
-      method: method,
-      url: url,
-      data: data,
-      dataType: 'json',
-      cache: !this.app.config.ajaxCacheBuster,
-
-      /* ajax cache buster? */
-      async: true,
-
-      /* always! */
-      timeout: this.app.config.ajaxTimeout,
-
-      /* 5 seconds */
-      statusCode: this.app.response.alter(callbacks).callbacks
-    });
-    return this;
-  }
-
-  get(url, data, callbacks) {
-    return this.send('get', url, data, callbacks);
-  }
-
-  post(url, data, callbacks) {
-    return this.send('post', url, data, callbacks);
-  }
-
-  patch(url, data, callbacks) {
-    return this.send('patch', url, data, callbacks);
-  }
-
-  delete(url, data, callbacks) {
-    return this.send('delete', url, data, callbacks);
-  }
-
-  create(url, data, callbacks) {
-    return this.send('post', url, data, callbacks);
-  }
-
-  read(url, data, callbacks) {
-    return this.send('get', url, data, callbacks);
-  }
-
-  update(url, data, callbacks) {
-    return this.send('patch', url, data, callbacks);
-  }
-
-  insert(url, data, callbacks) {
-    return this.send('post', url, data, callbacks);
-  }
-
-}
-class orangeResponse {
-  constructor() {
     this.defaultCallbacks = {
       /* standard get layout or get model */
       200: function (data, status, xhr) {
@@ -546,10 +489,10 @@ class orangeResponse {
     this.callbacks = this.defaultCallbacks;
   }
 
-  alter(code, callback) {
+  on(code, callback) {
     if (typeof code === 'object') {
       for (let property in code) {
-        this.alter(property, code[property]);
+        this.on(property, code[property]);
       }
     } else if (Number.isInteger(code) && typeof callback === 'function') {
       /* change the responds callback based on the returned http status code */
@@ -557,6 +500,59 @@ class orangeResponse {
     }
 
     return this;
+  }
+
+  send(method, url, data, callbacks) {
+    console.log('request', method, url, data);
+    jQuery.ajax({
+      method: method,
+      url: url,
+      data: data,
+      dataType: 'json',
+      cache: !this.app.config.ajaxCacheBuster,
+
+      /* ajax cache buster? */
+      async: true,
+
+      /* always! */
+      timeout: this.app.config.ajaxTimeout,
+
+      /* 5 seconds */
+      statusCode: this.callbacks
+    });
+    return this;
+  }
+
+  get(url, data, callbacks) {
+    return this.send('get', url, data, callbacks);
+  }
+
+  post(url, data, callbacks) {
+    return this.send('post', url, data, callbacks);
+  }
+
+  patch(url, data, callbacks) {
+    return this.send('patch', url, data, callbacks);
+  }
+
+  delete(url, data, callbacks) {
+    return this.send('delete', url, data, callbacks);
+  }
+
+  create(url, data, callbacks) {
+    return this.send('post', url, data, callbacks);
+  }
+
+  read(url, data, callbacks) {
+    return this.send('get', url, data, callbacks);
+  }
+
+  update(url, data, callbacks) {
+    return this.send('patch', url, data, callbacks);
+  }
+
+  insert(url, data, callbacks) {
+    return this.send('post', url, data, callbacks);
   }
 
 }
@@ -610,6 +606,8 @@ class orangeBinder {
     this.form = new orangeCollection();
     this.user = new orangeCollection();
     this.local = new orangeCollection();
+    /* setup config with defaults */
+
     this.config = new orangeCollection({
       settable: ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'],
       gettable: ['page', 'form', 'error', 'errors', 'model'],
@@ -631,6 +629,8 @@ class orangeBinder {
         templateDelimiters: ['{', '}']
       }
     });
+    /* setup our default triggers */
+
     this.triggers = new orangeCollection({
       bound: function () {
         jQuery('body').trigger('tiny-bind-bound');
@@ -640,13 +640,28 @@ class orangeBinder {
       },
       bindNavigate: function () {
         jQuery('body').trigger('spa-navgate');
+      },
+      routerChanged: function () {
+        jQuery('body').trigger('spa-router-changed');
       }
     });
+    /* user methods storage */
+
     this.methods = new orangeCollection();
+    /**
+     * user storage for events
+     * <button class="btn btn-default" type="submit" rv-on-click="events.submit">Submit</button>
+     */
+
     this.events = new orangeCollection();
+    /* user storage for templates */
+
     this.templates = new orangeCollection();
-    this.response = new orangeResponse(this);
+    /* send ajax requests to the server */
+
     this.request = new orangeRequest(this);
+    /* Handle the changes of the browser URL  */
+
     this.router = new orangeRouter(this);
   }
   /**
@@ -729,8 +744,8 @@ class orangeBinder {
 
   loadModel(modelEndPoint, then) {
     let orangeBind = this;
-    this.response.alter(200, function (data, status, xhr) {
-      orangeBind.refreshTinyBind(data, then);
+    this.request.on(200, function (data, status, xhr) {
+      orangeBind.rebind(data, then);
     });
     /* run the query */
 
@@ -764,7 +779,7 @@ class orangeBinder {
       }
     } else {
       /* setup retrieve model - success */
-      this.response.alter(200, function (data, status, xhr) {
+      this.request.on(200, function (data, status, xhr) {
         /* if storage is setup than store a copy */
         if (storage !== undefined) {
           let cacheSeconds = data.template.cache ? data.template.cache : orangeBind.config.templateCache;
@@ -787,10 +802,10 @@ class orangeBinder {
     /* allow chaining */
   }
 
-  loadModelAndTemplate(modelEndPoint, templateEndPoint, then) {
+  loadBlock(modelEndPoint, templateEndPoint, then) {
     let orangeBind = this;
     modelEndPoint = this.config.modelUrl + modelEndPoint;
-    console.log('loadModelAndTemplate ' + modelEndPoint);
+    console.log('loadBlock ' + modelEndPoint);
 
     if (templateEndPoint) {
       /* load the template then the model */
@@ -822,7 +837,7 @@ class orangeBinder {
     return element;
   }
 
-  refreshTinyBind(data, then) {
+  rebind(data, then) {
     this.triggers.unbound();
     /* unbind tinybind */
 
@@ -851,7 +866,7 @@ class orangeBinder {
 
     if (this.config.configUrl !== '') {
       /* default init 200 callback */
-      this.response.alter(200, function (data, xhr) {
+      this.request.on(200, function (data, xhr) {
         orangeBind.setData(data);
         /* send into tinybind the configuration */
 
@@ -2778,7 +2793,7 @@ Setup the Application global variable for the app "block"
 3. prefix all layout requests with...
 
 */
-var app = new orangeBinder('appblock', '/get/configuration', '/get/layout');
+var app = new orangeBinder('app', '/get/configuration', '/get/layout');
 app.config.alter({
   defaults: {
     Precision: 2,
@@ -2791,79 +2806,75 @@ app.config.alter({
 });
 app.router.alter({
   'multi/edit/(:num)': function (primary_id) {
-    app.loadModelAndTemplate('/multi/edit/' + primary_id, '/multi/details');
+    app.loadBlock('/multi/edit/' + primary_id, '/multi/details');
   },
   'multi/create': function () {
-    app.loadModelAndTemplate('/multi/create', '/multi/details');
+    app.loadBlock('/multi/create', '/multi/details');
   },
   'multi/edit/(:num)': function (primary_id) {
-    app.loadModelAndTemplate('/multi/edit/' + primary_id, '/multi/details');
+    app.loadBlock('/multi/edit/' + primary_id, '/multi/details');
   },
   'multi/create': function () {
-    app.loadModelAndTemplate('/multi/create', '/multi/details');
+    app.loadBlock('/multi/create', '/multi/details');
   },
   'multi': function () {
-    app.loadModelAndTemplate('/multi/index', '/multi/index');
+    app.loadBlock('/multi/index', '/multi/index');
   },
   'people/edit/(:num)': function (primary_id) {
-    app.loadModelAndTemplate('/people/edit/' + primary_id, '/people/details');
+    app.loadBlock('/people/edit/' + primary_id, '/people/details');
   },
   'people/create': function () {
-    app.loadModelAndTemplate('/people/create', '/people/details');
+    app.loadBlock('/people/create', '/people/details');
   },
   'people': function () {
-    app.loadModelAndTemplate('/people/index', '/people/index');
+    app.loadBlock('/people/index', '/people/index');
   },
   'zipcodes/edit/(:num)': function (primary_id) {
-    app.loadModelAndTemplate('/zipcodes/edit/' + primary_id, '/zipcodes/details');
+    app.loadBlock('/zipcodes/edit/' + primary_id, '/zipcodes/details');
   },
   'zipcodes/create': function () {
-    app.loadModelAndTemplate('/zipcodes/create', '/zipcodes/details');
+    app.loadBlock('/zipcodes/create', '/zipcodes/details');
   },
   'zipcodes': function () {
-    app.loadModelAndTemplate('/zipcodes/index', '/zipcodes/index');
+    app.loadBlock('/zipcodes/index', '/zipcodes/index');
   },
   'catalog/edit/(:num)': function (primary_id) {
-    app.loadModelAndTemplate('/catalog/edit/' + primary_id, '/catalog/details');
+    app.loadBlock('/catalog/edit/' + primary_id, '/catalog/details');
   },
   'catalog/create': function () {
-    app.loadModelAndTemplate('/catalog/create', '/catalog/details');
+    app.loadBlock('/catalog/create', '/catalog/details');
   },
   'catalog': function () {
-    app.loadModelAndTemplate('/catalog/index', '/catalog/index');
+    app.loadBlock('/catalog/index', '/catalog/index');
   },
   'robot/edit/(:num)': function (primary_id) {
-    app.loadModelAndTemplate('/robot/edit/' + primary_id, '/robot/details', function () {
-      DOMRefresh();
-    });
+    app.loadBlock('/robot/edit/' + primary_id, '/robot/details', DOMRefresh);
   },
   'robot/create': function () {
-    app.loadModelAndTemplate('/robot/create', '/robot/details', function () {
-      DOMRefresh();
-    });
+    app.loadBlock('/robot/create', '/robot/details', DOMRefresh);
   },
   'robot': function () {
-    app.loadModelAndTemplate('/robot/index', '/robot/index');
+    app.loadBlock('/robot/index', '/robot/index');
   },
 
   /* mpa example page - when this page loads load this model */
   'food/edit/(:num)': function (primary_id) {
-    app.loadModelAndTemplate('/food/edit/' + primary_id);
+    app.loadBlock('/food/edit/' + primary_id);
   },
 
   /* mpa example page - when this page loads load this model */
   'food/create': function () {
-    app.loadModelAndTemplate('/food/create');
+    app.loadBlock('/food/create');
   },
 
   /* mpa example page - when this page loads load this model */
   'food': function () {
-    app.loadModelAndTemplate('/food/index');
+    app.loadBlock('/food/index');
   },
   '(.*)': function () {
-    app.refresh();
+    app.rebind();
   }
-}); //app.response.alter(404, function (xhr, status, error) {
+}); //app.request.on(404, function (xhr, status, error) {
 
 /* don't show the default alert() - instead show not found */
 //app.loadTemplate('/notfound');
@@ -2878,21 +2889,21 @@ app.methods.alter({
   },
   'submit': function (redirect) {
     /* created record - create */
-    app.response.alter(201, function (data, status, xhr) {
+    app.request.on(201, function (data, status, xhr) {
       /* good redirect */
       notify.removeAll();
       app.router.navigate(app.page.path, redirect);
     });
     /* accepted record - update */
 
-    app.response.alter(202, function (data, status, xhr) {
+    app.request.on(202, function (data, status, xhr) {
       /* good redirect" */
       notify.removeAll();
       app.router.navigate(app.page.path, redirect);
     });
     /* not accepted - show errors */
 
-    app.response.alter(406, function (xhr, status, error) {
+    app.request.on(406, function (xhr, status, error) {
       /* good show errors */
       app.setData(xhr.responseJSON);
 
@@ -2953,7 +2964,7 @@ app.events.alter({
       callback: function (confirm) {
         if (confirm) {
           /* accepted record - delete */
-          app.response.change(202, function (data, status, xhr) {
+          app.request.change(202, function (data, status, xhr) {
             app.local.closest_tr.remove();
           });
           app.request.delete(url + '/delete/' + primaryId);
@@ -2977,10 +2988,9 @@ Setup the nav global variable for the nav "block"
 2. then where to get it's config from the server
 
 */
-var nav = new orangeBinder('navblock');
+var nav = new orangeBinder('nav');
 nav.config.alter({
   nav: {
-    id: 'nav',
     open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/" target="_top">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
     close: "</ul></div></div>",
     item: {
@@ -3011,7 +3021,7 @@ nav.methods.updateBootstrapNav = function () {
     }
   }
 
-  document.getElementById(nav.config.nav.id).innerHTML = html + nav.config.nav.close;
+  document.getElementById(nav.id).innerHTML = html + nav.config.nav.close;
 };
 
 nav.methods.bootstrap_nav_submenu = function (record, isRoot) {

@@ -51,7 +51,6 @@ let js = {
 		"assets/plugins/orangeBind/orangeCollection.js",
 		"assets/plugins/orangeBind/orangeRouter.js",
 		"assets/plugins/orangeBind/orangeRequest.js",
-		"assets/plugins/orangeBind/orangeResponse.js",
 		"assets/plugins/orangeBind/orangeBind.js",
 
 		"assets/plugins/notify/notify.js",

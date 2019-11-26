@@ -10,7 +10,7 @@
 			this.intervalID = undefined;
 
 			/* what is our current url */
-			this._currentUrl = this.getUrl();
+			this.url = this.getUrl();
 		}
 
 		/* get and normalize the current page url */
@@ -122,14 +122,15 @@
 		the interval listener
 		since interval is actually calling a function the reference to "this" doesn't work
 		*/
-		listener(router) {
-			let url = router.getUrl();
+		listener(orangeRouter) {
+			let url = orangeRouter.getUrl();
 
-			if (router._currentUrl != url) {
+			if (orangeRouter.url != url) {
+				orangeRouter.url = url;
 
-				router._currentUrl = url;
+				orangeRouter.app.triggers.routerChanged(url);
 
-				router.match(url);
+				orangeRouter.match(url);
 			}
 		}
 

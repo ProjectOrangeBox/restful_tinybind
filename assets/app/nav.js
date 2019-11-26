@@ -5,11 +5,10 @@ Setup the nav global variable for the nav "block"
 2. then where to get it's config from the server
 
 */
-var nav = new orangeBinder('navblock');
+var nav = new orangeBinder('nav');
 
 nav.config.alter({
 	nav: {
-		id: 'nav',
 		open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/" target="_top">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
 		close: "</ul></div></div>",
 		item: {
@@ -40,7 +39,7 @@ nav.methods.updateBootstrapNav = function () {
 		}
 	}
 
-	document.getElementById(nav.config.nav.id).innerHTML = html + nav.config.nav.close;
+	document.getElementById(nav.id).innerHTML = html + nav.config.nav.close;
 }
 
 nav.methods.bootstrap_nav_submenu = function (record, isRoot) {
@@ -63,10 +62,7 @@ nav.methods.bootstrap_nav_submenu = function (record, isRoot) {
 		/* item */
 		if (record.text) {
 			record.target = record.target != null ? record.target : "";
-			html +=
-				record.text == "{hr}" ?
-				nav.config.nav.item.hr :
-				sprintf(nav.config.nav.item.rowSingle, record.url, record.text, record.target);
+			html += record.text == "{hr}" ? nav.config.nav.item.hr : sprintf(nav.config.nav.item.rowSingle, record.url, record.text, record.target);
 		}
 	}
 

@@ -48,6 +48,7 @@
 			this.user = new orangeCollection();
 			this.local = new orangeCollection();
 
+			/* setup config with defaults */
 			this.config = new orangeCollection({
 				settable: ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'],
 				gettable: ['page', 'form', 'error', 'errors', 'model'],
@@ -70,6 +71,7 @@
 				}
 			});
 
+			/* setup our default triggers */
 			this.triggers = new orangeCollection({
 				bound: function () {
 					jQuery('body').trigger('tiny-bind-bound');
@@ -80,14 +82,27 @@
 				bindNavigate: function () {
 					jQuery('body').trigger('spa-navgate');
 				},
+				routerChanged: function () {
+					jQuery('body').trigger('spa-router-changed');
+				}
 			});
 
+			/* user methods storage */
 			this.methods = new orangeCollection();
+
+			/**
+			 * user storage for events
+			 * <button class="btn btn-default" type="submit" rv-on-click="events.submit">Submit</button>
+			 */
 			this.events = new orangeCollection();
+
+			/* user storage for templates */
 			this.templates = new orangeCollection();
 
-			this.response = new orangeResponse(this);
+			/* send ajax requests to the server */
 			this.request = new orangeRequest(this);
+
+			/* Handle the changes of the browser URL  */
 			this.router = new orangeRouter(this);
 		}
 
@@ -171,8 +186,8 @@
 		loadModel(modelEndPoint, then) {
 			let orangeBind = this;
 
-			this.response.alter(200, function (data, status, xhr) {
-				orangeBind.refreshTinyBind(data, then);
+			this.request.on(200, function (data, status, xhr) {
+				orangeBind.rebind(data, then);
 			});
 
 			/* run the query */
@@ -206,7 +221,7 @@
 				}
 			} else {
 				/* setup retrieve model - success */
-				this.response.alter(200, function (data, status, xhr) {
+				this.request.on(200, function (data, status, xhr) {
 					/* if storage is setup than store a copy */
 					if (storage !== undefined) {
 						let cacheSeconds = data.template.cache ? data.template.cache : orangeBind.config.templateCache;
@@ -233,12 +248,12 @@
 			return this; /* allow chaining */
 		}
 
-		loadModelAndTemplate(modelEndPoint, templateEndPoint, then) {
+		loadBlock(modelEndPoint, templateEndPoint, then) {
 			let orangeBind = this;
 
 			modelEndPoint = this.config.modelUrl + modelEndPoint;
 
-			console.log('loadModelAndTemplate ' + modelEndPoint);
+			console.log('loadBlock ' + modelEndPoint);
 
 			if (templateEndPoint) {
 				/* load the template then the model */
@@ -269,7 +284,7 @@
 			return element;
 		}
 
-		refreshTinyBind(data, then) {
+		rebind(data, then) {
 			this.triggers.unbound();
 
 			/* unbind tinybind */
@@ -297,7 +312,7 @@
 
 			if (this.config.configUrl !== '') {
 				/* default init 200 callback */
-				this.response.alter(200, function (data, xhr) {
+				this.request.on(200, function (data, xhr) {
 					orangeBind.setData(data);
 
 					/* send into tinybind the configuration */
