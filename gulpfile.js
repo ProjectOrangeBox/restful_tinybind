@@ -49,6 +49,7 @@ let js = {
 	user: [
 		"assets/plugins/orangeBind/superStorage.js",
 		"assets/plugins/orangeBind/orangeCollection.js",
+		"assets/plugins/orangeBind/orangeLoader.js",
 		"assets/plugins/orangeBind/orangeRouter.js",
 		"assets/plugins/orangeBind/orangeRequest.js",
 		"assets/plugins/orangeBind/orangeBind.js",

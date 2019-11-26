@@ -127,7 +127,7 @@
 			if (orangeRouter._url != url) {
 				orangeRouter._url = url;
 
-				orangeRouter.app.triggers.routerChanged(url);
+				orangeRouter.app.trigger('spa-changed', [url]);
 
 				orangeRouter.match(url);
 			}
@@ -141,7 +141,7 @@
 			console.log('navigate', url, redirect);
 
 			/* trigger a redirect so other javascript code knows we are redirecting */
-			this.app.triggers.bindNavigate(url, redirect);
+			this.app.trigger('spa-router-navgate', [url, redirect]);
 
 			if (redirect) {
 				/* full page reload so trigger wouldn't even be picked up */

@@ -46,24 +46,23 @@ Use the following to create the distro files
 
 # Required Node Modules
 
-	"dependencies": {
-		"bootbox": "^5.3.4",
-		"bootstrap-select": "^1.13.12",
-		"bootstrap3": "^3.3.5",
-		"del": "^4.1.1",
-		"font-awesome": "^4.7.0",
-		"handlebars": "^4.5.3",
-		"jquery": "^3.4.1",
-		"jstorage": "^0.4.8",
-		"keymaster": "^1.6.2",
-		"localstorage-fifo": "^2.0.1",
-		"popper.js": "^1.16.0",
-		"roboto-fontface": "^0.10.0",
-		"sprintf-js": "^1.1.2",
-		"tinybind": "^1.0.0",
-		"tinysort": "^3.2.5"
-	},
-
+    "dependencies": {
+    	"bootbox": "^5.3.4",
+    	"bootstrap-select": "^1.13.12",
+    	"bootstrap3": "^3.3.5",
+    	"del": "^4.1.1",
+    	"font-awesome": "^4.7.0",
+    	"handlebars": "^4.5.3",
+    	"jquery": "^3.4.1",
+    	"jstorage": "^0.4.8",
+    	"keymaster": "^1.6.2",
+    	"localstorage-fifo": "^2.0.1",
+    	"popper.js": "^1.16.0",
+    	"roboto-fontface": "^0.10.0",
+    	"sprintf-js": "^1.1.2",
+    	"tinybind": "^1.0.0",
+    	"tinysort": "^3.2.5"
+    },
 
 ## sprintf.js
 
@@ -193,16 +192,16 @@ jQuery("body").on("something-happened", function() {
 
 `get(data,gettable)` return the current application data on default settable values or provided array of properties
 
-`loadModel(modelEndPoint, then)` load a model from the server or load a template then a model from the server
+`load.model(modelEndPoint, then)` load a model from the server or load a template then a model from the server
 
-`loadTemplate(templateEndPoint, then)` load a model from the server (or locally from the browser if cached) then call something else
+`load.template(templateEndPoint, then)` load a model from the server (or locally from the browser if cached) then call something else
 
-`loadBlock(modelEndPoint, templateEndPoint, then)` load a model from the server or load a template then a model from the server
+`load.block(modelEndPoint, templateEndPoint, then)` load a model from the server or load a template then a model from the server
 
 `rebind(data, then)` unbind the model from the DOM set the new data then rebind the "new" model back on the DOM then call something else
 
 `replace(html)` replace the DOM element id
- 
+
 `element()` get the DOM element for the provided id
 
 ## superStorage.js

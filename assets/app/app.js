@@ -22,67 +22,67 @@ app.config.alter({
 
 app.router.alter({
 	'multi/edit/(:num)': function (primary_id) {
-		app.loadBlock('/multi/edit/' + primary_id, '/multi/details');
+		app.load.block('/multi/edit/' + primary_id, '/multi/details');
 	},
 	'multi/create': function () {
-		app.loadBlock('/multi/create', '/multi/details');
+		app.load.block('/multi/create', '/multi/details');
 	},
 	'multi/edit/(:num)': function (primary_id) {
-		app.loadBlock('/multi/edit/' + primary_id, '/multi/details');
+		app.load.block('/multi/edit/' + primary_id, '/multi/details');
 	},
 	'multi/create': function () {
-		app.loadBlock('/multi/create', '/multi/details');
+		app.load.block('/multi/create', '/multi/details');
 	},
 	'multi': function () {
-		app.loadBlock('/multi/index', '/multi/index');
+		app.load.block('/multi/index', '/multi/index');
 	},
 	'people/edit/(:num)': function (primary_id) {
-		app.loadBlock('/people/edit/' + primary_id, '/people/details');
+		app.load.block('/people/edit/' + primary_id, '/people/details');
 	},
 	'people/create': function () {
-		app.loadBlock('/people/create', '/people/details');
+		app.load.block('/people/create', '/people/details');
 	},
 	'people': function () {
-		app.loadBlock('/people/index', '/people/index');
+		app.load.block('/people/index', '/people/index');
 	},
 	'zipcodes/edit/(:num)': function (primary_id) {
-		app.loadBlock('/zipcodes/edit/' + primary_id, '/zipcodes/details');
+		app.load.block('/zipcodes/edit/' + primary_id, '/zipcodes/details');
 	},
 	'zipcodes/create': function () {
-		app.loadBlock('/zipcodes/create', '/zipcodes/details');
+		app.load.block('/zipcodes/create', '/zipcodes/details');
 	},
 	'zipcodes': function () {
-		app.loadBlock('/zipcodes/index', '/zipcodes/index');
+		app.load.block('/zipcodes/index', '/zipcodes/index');
 	},
 	'catalog/edit/(:num)': function (primary_id) {
-		app.loadBlock('/catalog/edit/' + primary_id, '/catalog/details');
+		app.load.block('/catalog/edit/' + primary_id, '/catalog/details');
 	},
 	'catalog/create': function () {
-		app.loadBlock('/catalog/create', '/catalog/details');
+		app.load.block('/catalog/create', '/catalog/details');
 	},
 	'catalog': function () {
-		app.loadBlock('/catalog/index', '/catalog/index');
+		app.load.block('/catalog/index', '/catalog/index');
 	},
 	'robot/edit/(:num)': function (primary_id) {
-		app.loadBlock('/robot/edit/' + primary_id, '/robot/details', DOMRefresh);
+		app.load.block('/robot/edit/' + primary_id, '/robot/details', DOMRefresh);
 	},
 	'robot/create': function () {
-		app.loadBlock('/robot/create', '/robot/details', DOMRefresh);
+		app.load.block('/robot/create', '/robot/details', DOMRefresh);
 	},
 	'robot': function () {
-		app.loadBlock('/robot/index', '/robot/index');
+		app.load.block('/robot/index', '/robot/index');
 	},
 	/* mpa example page - when this page loads load this model */
 	'food/edit/(:num)': function (primary_id) {
-		app.loadBlock('/food/edit/' + primary_id);
+		app.load.block('/food/edit/' + primary_id);
 	},
 	/* mpa example page - when this page loads load this model */
 	'food/create': function () {
-		app.loadBlock('/food/create');
+		app.load.block('/food/create');
 	},
 	/* mpa example page - when this page loads load this model */
 	'food': function () {
-		app.loadBlock('/food/index');
+		app.load.block('/food/index');
 	},
 	'(.*)': function () {
 		app.rebind();
@@ -91,7 +91,7 @@ app.router.alter({
 
 //app.request.on(404, function (xhr, status, error) {
 /* don't show the default alert() - instead show not found */
-//app.loadTemplate('/notfound');
+//app.load.template('/notfound');
 //});
 
 app.methods.alter({

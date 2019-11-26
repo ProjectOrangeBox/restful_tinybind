@@ -232,6 +232,88 @@ class orangeCollection {
   }
 
 }
+class orangeLoader {
+  constructor(app) {
+    this.app = app;
+  }
+
+  model(modelEndPoint, then) {
+    let orangeLoader = this;
+    this.app.request.on(200, function (data, status, xhr) {
+      orangeLoader.app.rebind(data, then);
+    }).get(modelEndPoint);
+    return this;
+    /* allow chaining */
+  }
+
+  template(templateEndPoint, then) {
+    let orangeLoader = this;
+    let cacheKey = templateEndPoint + '.template';
+    let template = undefined;
+    /* is this stored in our local template cache */
+
+    if (this.app.templates[templateEndPoint] !== undefined) {
+      /* yes it is so grab it */
+      template = this.app.templates[templateEndPoint];
+    } else if (storage !== undefined) {
+      /* is this stored in our cached data */
+      template = storage.getItem(cacheKey, undefined);
+      console.log('getItem', cacheKey, template);
+    }
+    /* have we already loaded the template? */
+
+
+    if (template !== undefined) {
+      this.app.replace(template);
+
+      if (then) {
+        then();
+      }
+    } else {
+      let url = this.app.config.templateUrl + templateEndPoint;
+      console.log('load.template ' + url);
+      /* setup retrieve model - success */
+
+      this.app.request.on(200, function (data, status, xhr) {
+        /* if storage is setup than store a copy */
+        if (storage !== undefined) {
+          let cacheSeconds = data.template.cache ? data.template.cache : orangeLoader.app.config.templateCache;
+          console.log('cache key set ' + cacheKey, cacheSeconds);
+          storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
+        }
+
+        orangeLoader.app.replace(data.template.source);
+
+        if (then) {
+          then();
+        }
+      }).get(url);
+    }
+
+    return this;
+    /* allow chaining */
+  }
+
+  block(modelEndPoint, templateEndPoint, then) {
+    let orangeLoader = this;
+    modelEndPoint = this.app.config.modelUrl + modelEndPoint;
+    console.log('load.block ' + modelEndPoint);
+
+    if (templateEndPoint) {
+      /* load the template then the model */
+      this.template(templateEndPoint, function () {
+        orangeLoader.model(modelEndPoint, then);
+      });
+    } else {
+      /* just load the model */
+      this.model(modelEndPoint, then);
+    }
+
+    return this;
+    /* allow chaining */
+  }
+
+}
 class orangeRouter {
   constructor(app) {
     this.app = app;
@@ -371,7 +453,7 @@ class orangeRouter {
 
     if (orangeRouter._url != url) {
       orangeRouter._url = url;
-      orangeRouter.app.triggers.routerChanged(url);
+      orangeRouter.app.trigger('spa-changed', [url]);
       orangeRouter.match(url);
     }
   }
@@ -384,7 +466,7 @@ class orangeRouter {
     console.log('navigate', url, redirect);
     /* trigger a redirect so other javascript code knows we are redirecting */
 
-    this.app.triggers.bindNavigate(url, redirect);
+    this.app.trigger('spa-router-navgate', [url, redirect]);
 
     if (redirect) {
       /* full page reload so trigger wouldn't even be picked up */
@@ -637,22 +719,9 @@ class orangeBinder {
         templateDelimiters: ['{', '}']
       }
     });
-    /* setup our default triggers */
+    /* customer trigger storage */
 
-    this.triggers = new orangeCollection({
-      bound: function () {
-        jQuery('body').trigger('tiny-bind-bound');
-      },
-      unbound: function () {
-        jQuery('body').trigger('tiny-bind-unbound');
-      },
-      bindNavigate: function () {
-        jQuery('body').trigger('spa-navgate');
-      },
-      routerChanged: function () {
-        jQuery('body').trigger('spa-router-changed');
-      }
-    });
+    this.triggers = new orangeCollection();
     /* user methods storage */
 
     this.methods = new orangeCollection();
@@ -671,10 +740,25 @@ class orangeBinder {
     /* Handle the changes of the browser URL  */
 
     this.router = new orangeRouter(this);
+    this.load = new orangeLoader(this);
     var parent = this;
     document.addEventListener("DOMContentLoaded", function (e) {
       parent._DOMContentLoaded(parent);
     });
+  }
+  /**
+   * handle simple triggers
+   *
+   * - listener
+   * jQuery('body').on('foobar', function(event, arg1, arg2) {
+   * 	alert( arg1 + "\n" + arg2 );
+   * });
+   *
+   */
+
+
+  trigger(msg, args) {
+    jQuery('body').trigger(msg, args);
   }
   /**
    * Called once the DOM is ready
@@ -771,82 +855,6 @@ class orangeBinder {
     return collection;
   }
 
-  loadModel(modelEndPoint, then) {
-    let orangeBind = this;
-    this.request.on(200, function (data, status, xhr) {
-      orangeBind.rebind(data, then);
-    }).get(modelEndPoint);
-    return this;
-    /* allow chaining */
-  }
-
-  loadTemplate(templateEndPoint, then) {
-    let orangeBind = this;
-    let cacheKey = templateEndPoint + '.template';
-    let template = undefined;
-    /* is this stored in our local template cache */
-
-    if (this.templates[templateEndPoint] !== undefined) {
-      /* yes it is so grab it */
-      template = this.templates[templateEndPoint];
-    } else if (storage !== undefined) {
-      /* is this stored in our cached data */
-      template = storage.getItem(cacheKey, undefined);
-      console.log('getItem', cacheKey, template);
-    }
-    /* have we already loaded the template? */
-
-
-    if (template !== undefined) {
-      this.replace(template);
-
-      if (then) {
-        then();
-      }
-    } else {
-      let url = this.config.templateUrl + templateEndPoint;
-      console.log('loadTemplate ' + url);
-      /* setup retrieve model - success */
-
-      this.request.on(200, function (data, status, xhr) {
-        /* if storage is setup than store a copy */
-        if (storage !== undefined) {
-          let cacheSeconds = data.template.cache ? data.template.cache : orangeBind.config.templateCache;
-          console.log('cache key set ' + cacheKey, cacheSeconds);
-          storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
-        }
-
-        orangeBind.replace(data.template.source);
-
-        if (then) {
-          then();
-        }
-      }).get(url);
-    }
-
-    return this;
-    /* allow chaining */
-  }
-
-  loadBlock(modelEndPoint, templateEndPoint, then) {
-    let orangeBind = this;
-    modelEndPoint = this.config.modelUrl + modelEndPoint;
-    console.log('loadBlock ' + modelEndPoint);
-
-    if (templateEndPoint) {
-      /* load the template then the model */
-      this.loadTemplate(templateEndPoint, function () {
-        orangeBind.loadModel(modelEndPoint, then);
-      });
-    } else {
-      /* just load the model */
-      this.loadModel(modelEndPoint, then);
-    }
-
-    return this;
-    /* allow chaining */
-  }
-
   replace(html) {
     this.element().innerHTML = html;
   }
@@ -864,7 +872,7 @@ class orangeBinder {
   }
 
   rebind(data, then) {
-    this.triggers.unbound();
+    this.trigger('tiny-bind-unbound', [data, then]);
     /* unbind tinybind */
 
     if (this.bound) {
@@ -880,7 +888,7 @@ class orangeBinder {
     this.bound = tinybind.bind(this.element(), this);
     /* tell everyone we now have new data */
 
-    this.triggers.bound();
+    this.trigger('tiny-bind-bound', [data, then]);
 
     if (then) {
       then();
@@ -2802,70 +2810,70 @@ app.config.alter({
 });
 app.router.alter({
   'multi/edit/(:num)': function (primary_id) {
-    app.loadBlock('/multi/edit/' + primary_id, '/multi/details');
+    app.load.block('/multi/edit/' + primary_id, '/multi/details');
   },
   'multi/create': function () {
-    app.loadBlock('/multi/create', '/multi/details');
+    app.load.block('/multi/create', '/multi/details');
   },
   'multi/edit/(:num)': function (primary_id) {
-    app.loadBlock('/multi/edit/' + primary_id, '/multi/details');
+    app.load.block('/multi/edit/' + primary_id, '/multi/details');
   },
   'multi/create': function () {
-    app.loadBlock('/multi/create', '/multi/details');
+    app.load.block('/multi/create', '/multi/details');
   },
   'multi': function () {
-    app.loadBlock('/multi/index', '/multi/index');
+    app.load.block('/multi/index', '/multi/index');
   },
   'people/edit/(:num)': function (primary_id) {
-    app.loadBlock('/people/edit/' + primary_id, '/people/details');
+    app.load.block('/people/edit/' + primary_id, '/people/details');
   },
   'people/create': function () {
-    app.loadBlock('/people/create', '/people/details');
+    app.load.block('/people/create', '/people/details');
   },
   'people': function () {
-    app.loadBlock('/people/index', '/people/index');
+    app.load.block('/people/index', '/people/index');
   },
   'zipcodes/edit/(:num)': function (primary_id) {
-    app.loadBlock('/zipcodes/edit/' + primary_id, '/zipcodes/details');
+    app.load.block('/zipcodes/edit/' + primary_id, '/zipcodes/details');
   },
   'zipcodes/create': function () {
-    app.loadBlock('/zipcodes/create', '/zipcodes/details');
+    app.load.block('/zipcodes/create', '/zipcodes/details');
   },
   'zipcodes': function () {
-    app.loadBlock('/zipcodes/index', '/zipcodes/index');
+    app.load.block('/zipcodes/index', '/zipcodes/index');
   },
   'catalog/edit/(:num)': function (primary_id) {
-    app.loadBlock('/catalog/edit/' + primary_id, '/catalog/details');
+    app.load.block('/catalog/edit/' + primary_id, '/catalog/details');
   },
   'catalog/create': function () {
-    app.loadBlock('/catalog/create', '/catalog/details');
+    app.load.block('/catalog/create', '/catalog/details');
   },
   'catalog': function () {
-    app.loadBlock('/catalog/index', '/catalog/index');
+    app.load.block('/catalog/index', '/catalog/index');
   },
   'robot/edit/(:num)': function (primary_id) {
-    app.loadBlock('/robot/edit/' + primary_id, '/robot/details', DOMRefresh);
+    app.load.block('/robot/edit/' + primary_id, '/robot/details', DOMRefresh);
   },
   'robot/create': function () {
-    app.loadBlock('/robot/create', '/robot/details', DOMRefresh);
+    app.load.block('/robot/create', '/robot/details', DOMRefresh);
   },
   'robot': function () {
-    app.loadBlock('/robot/index', '/robot/index');
+    app.load.block('/robot/index', '/robot/index');
   },
 
   /* mpa example page - when this page loads load this model */
   'food/edit/(:num)': function (primary_id) {
-    app.loadBlock('/food/edit/' + primary_id);
+    app.load.block('/food/edit/' + primary_id);
   },
 
   /* mpa example page - when this page loads load this model */
   'food/create': function () {
-    app.loadBlock('/food/create');
+    app.load.block('/food/create');
   },
 
   /* mpa example page - when this page loads load this model */
   'food': function () {
-    app.loadBlock('/food/index');
+    app.load.block('/food/index');
   },
   '(.*)': function () {
     app.rebind();
@@ -2873,7 +2881,7 @@ app.router.alter({
 }); //app.request.on(404, function (xhr, status, error) {
 
 /* don't show the default alert() - instead show not found */
-//app.loadTemplate('/notfound');
+//app.load.template('/notfound');
 //});
 
 app.methods.alter({
@@ -3002,7 +3010,7 @@ nav.config.alter({
 /* for any page request use the same model and template */
 
 nav.router.alter("(.*)", function () {
-  nav.loadModel("/get/navModel", function () {
+  nav.load.model("/get/navModel", function () {
     nav.methods.updateBootstrapNav();
   });
 });

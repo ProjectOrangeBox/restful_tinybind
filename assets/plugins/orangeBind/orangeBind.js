@@ -71,21 +71,8 @@
 				}
 			});
 
-			/* setup our default triggers */
-			this.triggers = new orangeCollection({
-				bound: function () {
-					jQuery('body').trigger('tiny-bind-bound');
-				},
-				unbound: function () {
-					jQuery('body').trigger('tiny-bind-unbound');
-				},
-				bindNavigate: function () {
-					jQuery('body').trigger('spa-navgate');
-				},
-				routerChanged: function () {
-					jQuery('body').trigger('spa-router-changed');
-				}
-			});
+			/* customer trigger storage */
+			this.triggers = new orangeCollection();
 
 			/* user methods storage */
 			this.methods = new orangeCollection();
@@ -105,11 +92,26 @@
 			/* Handle the changes of the browser URL  */
 			this.router = new orangeRouter(this);
 
+			this.load = new orangeLoader(this);
+
 			var parent = this;
 
 			document.addEventListener("DOMContentLoaded", function (e) {
 				parent._DOMContentLoaded(parent);
 			});
+		}
+
+		/**
+		 * handle simple triggers
+		 *
+		 * - listener
+		 * jQuery('body').on('foobar', function(event, arg1, arg2) {
+		 * 	alert( arg1 + "\n" + arg2 );
+		 * });
+		 *
+		 */
+		trigger(msg, args) {
+			jQuery('body').trigger(msg, args);
 		}
 
 		/**
@@ -204,86 +206,6 @@
 			return collection;
 		}
 
-		loadModel(modelEndPoint, then) {
-			let orangeBind = this;
-
-			this.request.on(200, function (data, status, xhr) {
-				orangeBind.rebind(data, then);
-			}).get(modelEndPoint);
-
-			return this; /* allow chaining */
-		}
-
-		loadTemplate(templateEndPoint, then) {
-			let orangeBind = this;
-			let cacheKey = templateEndPoint + '.template';
-			let template = undefined;
-
-			/* is this stored in our local template cache */
-			if (this.templates[templateEndPoint] !== undefined) {
-				/* yes it is so grab it */
-				template = this.templates[templateEndPoint];
-			} else if (storage !== undefined) {
-				/* is this stored in our cached data */
-				template = storage.getItem(cacheKey, undefined);
-
-				console.log('getItem', cacheKey, template);
-			}
-
-			/* have we already loaded the template? */
-			if (template !== undefined) {
-				this.replace(template);
-
-				if (then) {
-					then();
-				}
-			} else {
-				let url = this.config.templateUrl + templateEndPoint;
-
-				console.log('loadTemplate ' + url);
-
-				/* setup retrieve model - success */
-				this.request.on(200, function (data, status, xhr) {
-					/* if storage is setup than store a copy */
-					if (storage !== undefined) {
-						let cacheSeconds = data.template.cache ? data.template.cache : orangeBind.config.templateCache;
-
-						console.log('cache key set ' + cacheKey, cacheSeconds);
-
-						storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
-					}
-
-					orangeBind.replace(data.template.source);
-
-					if (then) {
-						then();
-					}
-				}).get(url);
-			}
-
-			return this; /* allow chaining */
-		}
-
-		loadBlock(modelEndPoint, templateEndPoint, then) {
-			let orangeBind = this;
-
-			modelEndPoint = this.config.modelUrl + modelEndPoint;
-
-			console.log('loadBlock ' + modelEndPoint);
-
-			if (templateEndPoint) {
-				/* load the template then the model */
-				this.loadTemplate(templateEndPoint, function () {
-					orangeBind.loadModel(modelEndPoint, then);
-				});
-			} else {
-				/* just load the model */
-				this.loadModel(modelEndPoint, then);
-			}
-
-			return this; /* allow chaining */
-		}
-
 		replace(html) {
 			this.element().innerHTML = html;
 		}
@@ -301,7 +223,7 @@
 		}
 
 		rebind(data, then) {
-			this.triggers.unbound();
+			this.trigger('tiny-bind-unbound', [data, then]);
 
 			/* unbind tinybind */
 			if (this.bound) {
@@ -316,7 +238,7 @@
 			this.bound = tinybind.bind(this.element(), this);
 
 			/* tell everyone we now have new data */
-			this.triggers.bound();
+			this.trigger('tiny-bind-bound', [data, then]);
 
 			if (then) {
 				then();
