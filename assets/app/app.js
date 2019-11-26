@@ -123,7 +123,7 @@ app.methods.alter({
 		/* not accepted - show errors */
 		app.request.on(406, function (xhr, status, error) {
 			/* good show errors */
-			app.setData(xhr.responseJSON);
+			app.set(xhr.responseJSON);
 
 			if (app.error) {
 				notify.removeAll();
@@ -136,7 +136,7 @@ app.methods.alter({
 			}
 		});
 
-		app.request[app.form.method](app.form.action, app.getData());
+		app.request[app.form.method](app.form.action, app.get());
 	}
 });
 

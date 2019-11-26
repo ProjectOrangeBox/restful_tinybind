@@ -44,22 +44,56 @@ Use the following to create the distro files
 
 ---
 
-# Orange Bind
+# Required Node Modules
 
-In you `javascript` `app` is declared as a global variable in `orangeBind/orangeBind.js`
+	"dependencies": {
+		"bootbox": "^5.3.4",
+		"bootstrap-select": "^1.13.12",
+		"bootstrap3": "^3.3.5",
+		"del": "^4.1.1",
+		"font-awesome": "^4.7.0",
+		"handlebars": "^4.5.3",
+		"jquery": "^3.4.1",
+		"jstorage": "^0.4.8",
+		"keymaster": "^1.6.2",
+		"localstorage-fifo": "^2.0.1",
+		"popper.js": "^1.16.0",
+		"roboto-fontface": "^0.10.0",
+		"sprintf-js": "^1.1.2",
+		"tinybind": "^1.0.0",
+		"tinysort": "^3.2.5"
+	},
+
+
+## sprintf.js
+
+`sprintf(format,mixed...)`
+
+https://www.npmjs.com/package/sprintf-js
+
+## tinyBind.js
+
+Lightweight and powerful data binding + templating solution for building modern web applications.
+The espiritual sucessor of Rivets.js
+
+https://blikblum.github.io/tinybind/
+
+---
+
+# Orange Bind
 
 # /assets/plugins/orangeBind/\*
 
 ## orangeBind.js
-
-### The Model <-> View Binder with support for a URL Router
 
 #### orangeBind properties and methods
 
 Relies on jQuery for:
 
 `.ajax(url,{settings as object})` - request.send() ajax calls
+
 `.extend()` - setData() object merge
+
 `.trigger()` - calling custom DOM triggers others can pick up
 
 ```javascript
@@ -71,9 +105,9 @@ jQuery("body").on("something-happened", function() {
 
 ---
 
-`id` the applications div wrapper id (default is app)
+### Properties
 
-`init()` application init
+`id` the applications div wrapper id (default is app)
 
 ---
 
@@ -83,7 +117,15 @@ jQuery("body").on("something-happened", function() {
 
 ---
 
+`page: {}` storage for page bound variables
+
+`form: {}` storage for form bound variables
+
+`user: {}` storage for user bound variables
+
 `local: {}` local app storage (not saved between full page refreshes)
+
+---
 
 `model: {}` storage for the currently bound model (record OR records)
 
@@ -91,53 +133,23 @@ jQuery("body").on("something-happened", function() {
 
 `record: {}` storage for a currently bound record
 
-`page: {}` storage for page bound variables
+---
 
-`form: {}` storage for form bound variables
+`config: {}` storage for application configuration collection\*
+
+`trigger: {}` storage for application specific DOM triggers collection\*
+
+`method: {}` storage for user methods collection\*
+
+`events: {}` storage for tinybind events collection\*
+
+`templates: {}` storage for templates collection\*
 
 ---
 
-`config: {}` storage for application configuration
+`router.match()` check the current URL and preform the callback found if any
 
-`config.alter(name|object,value)` add or change a configuration value(s)
-
----
-
-`trigger: {}` storage for application specific DOM triggers
-
-`trigger.bound` trigger DOM bound event
-
-`trigger.unbound` trigger DOM unbound event
-
-`trigger.alter(name|object, callback)` add or change a trigger(s)
-
----
-
-`events: {}` storage for tinybind events
-
-`event.alter(name|object, callback)` add or change a tinybind event(s)
-
-```html
-<a
-	class="btn btn-default btn-sm js-esc"
-	rv-on-click="events.navigate | wrap page.path"
-	><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a
->
-```
-
-https://blikblum.github.io/tinybind/docs/reference/#on-[event]
-
----
-
-`method: {}` storage for user methods
-
-`method.alter(name|object, callback)` add or change a user method(s)
-
----
-
-`router.check()` check the current URL and preform the callback found if any
-
-`router.getUrl()` get the current url
+`router.url()` get the current url
 
 `router.alter(regularExpression, callback)` add or change a route
 
@@ -147,15 +159,15 @@ https://blikblum.github.io/tinybind/docs/reference/#on-[event]
 
 `router.listen()` turn on the route listener
 
+`router.listener()` the actual listener method
+
 `router.navigate(url, redirect)` navigate to a different url
 
----
-
-`response.alter(code|object, callback)` add or change a response codes action(s)
-
-`response.merge(callbacks)` add multiple callbacks at once
+`router.stopListening()` turn off the route listener
 
 ---
+
+`request.on(code|object, callback)` add or change a response codes action(s)
 
 `request.send(method, url, data, callbacks)` send a raw request
 
@@ -177,37 +189,21 @@ https://blikblum.github.io/tinybind/docs/reference/#on-[event]
 
 ---
 
-`setData(data)` merge passed data with the current application data
+`set(data,settable)` set data based on default settable values or provided array of properties
 
-- error
-- errors
-- model
-- page
-- form
-- config
-- record
-- records
-- config
+`get(data,gettable)` return the current application data on default settable values or provided array of properties
 
-`getData(data)` return the current application data
-
-- error
-- errors
-- models
-- page
-- form
-- values
-
-`cacheCleanUp(config)` clean up the cached based on passed class
-
-- clearCache = boolean
-- olderThanCache seconds (integer)
-
-`loadModel(modelEndPoint, templateEndPoint)` load a model from the server or load a template then a model from the server
+`loadModel(modelEndPoint, then)` load a model from the server or load a template then a model from the server
 
 `loadTemplate(templateEndPoint, then)` load a model from the server (or locally from the browser if cached) then call something else
 
-`refresh(data, then)` unbind the model from the DOM set the new data then rebind the "new" model back on the DOM then call something else
+`loadBlock(modelEndPoint, templateEndPoint, then)` load a model from the server or load a template then a model from the server
+
+`rebind(data, then)` unbind the model from the DOM set the new data then rebind the "new" model back on the DOM then call something else
+
+`replace(html)` replace the DOM element id
+ 
+`element()` get the DOM element for the provided id
 
 ## superStorage.js
 
@@ -237,23 +233,6 @@ remove cached items older than X seconds
 set a browser cached item based on it's key. if no seconds provided then the default will be used (1 year)
 
 ### Note: if you try to set a item an your browsers maximum storage for cached items has been reached the oldest records will automatically be removed to make enough room.
-
-## sprintf.js
-
-`sprintf(format,mixed...)`
-Javascript Implementation of sprintf
-
-https://www.tutorialspoint.com/c_standard_library/c_function_sprintf.htm
-https://github.com/kvz/locutus/blob/master/src/php/strings/sprintf.js
-
-## tinyBind.js
-
-Lightweight and powerful data binding + templating solution for building modern web applications.
-The espiritual sucessor of Rivets.js
-
-https://blikblum.github.io/tinybind/
-
----
 
 # /assets/app/app.js
 

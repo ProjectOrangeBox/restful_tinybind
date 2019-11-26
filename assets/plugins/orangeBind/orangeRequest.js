@@ -65,6 +65,12 @@ class orangeRequest {
 	send(method, url, data, callbacks) {
 		console.log('request', method, url, data);
 
+		/* did they send in any callbacks? */
+		if (typeof callbacks === 'object') {
+			/* adjust the current callbacks */
+			this.on(callbacks);
+		}
+
 		jQuery.ajax({
 			method: method,
 			url: url,
@@ -76,7 +82,7 @@ class orangeRequest {
 			/* always! */
 			timeout: this.app.config.ajaxTimeout,
 			/* 5 seconds */
-			statusCode: this.callbacks
+			statusCode: this.callbacks,
 		});
 
 		return this;

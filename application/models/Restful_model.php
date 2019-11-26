@@ -93,7 +93,7 @@ class Restful_model
 	public function __construct()
 	{
 		/* send back the same stuff sent to us */
-		$this->payload = get_instance()->input->request();
+		//$this->payload = get_instance()->input->request();
 	}
 
 	public function __call($name, $arguments)

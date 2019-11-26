@@ -1,5 +1,2 @@
 /* jquery free */
-document.addEventListener("DOMContentLoaded", function (e) {
-	app.domReady();
-	nav.domReady();
-});
+document.addEventListener("DOMContentLoaded", function (e) {});

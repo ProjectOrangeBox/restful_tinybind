@@ -10,11 +10,11 @@
 			this.intervalID = undefined;
 
 			/* what is our current url */
-			this.url = this.getUrl();
+			this._url = this.url();
 		}
 
 		/* get and normalize the current page url */
-		getUrl() {
+		url() {
 			let url = this._clearSlashes(decodeURI(location.pathname + location.search));
 
 			url = url.replace(/\?(.*)$/, '');
@@ -25,12 +25,11 @@
 
 		/* match the router url and call the callback if a match is found */
 		match(url) {
+			/* did they send in a url? if not then get the current url */
+			url = url || this.url();
+
 			/* do we have any routes to listen for? */
 			if (this.routes.length) {
-
-				/* did they send in a url? if not then get the current url */
-				url = url || this.getUrl();
-
 				console.log('match', url);
 
 				/* loop though the routes */
@@ -123,10 +122,10 @@
 		since interval is actually calling a function the reference to "this" doesn't work
 		*/
 		listener(orangeRouter) {
-			let url = orangeRouter.getUrl();
+			let url = orangeRouter.url();
 
-			if (orangeRouter.url != url) {
-				orangeRouter.url = url;
+			if (orangeRouter._url != url) {
+				orangeRouter._url = url;
 
 				orangeRouter.app.triggers.routerChanged(url);
 
@@ -171,28 +170,13 @@
 			regularExpression = this._clearSlashes(regularExpression);
 
 			/* escape / to \/ */
-			regularExpression = regularExpression.replace(
-				new RegExp('/', 'g'),
-				"\\/"
-			);
+			regularExpression = regularExpression.replace(new RegExp('/', 'g'), "\\/");
 
 			/* add CodeIgniter matches */
-			regularExpression = regularExpression.replace(
-				new RegExp(':any', 'g'),
-				'[^/]+'
-			); /* anything */
-			regularExpression = regularExpression.replace(
-				new RegExp(':num', 'g'),
-				'[0-9]+'
-			); /* number only */
-			regularExpression = regularExpression.replace(
-				new RegExp(':hex', 'g'),
-				'[0-9a-f]+'
-			); /* hex values */
-			regularExpression = regularExpression.replace(
-				new RegExp(':str', 'g'),
-				'[0-9a-zA-Z]+'
-			); /* str values */
+			regularExpression = regularExpression.replace(new RegExp(':any', 'g'), '[^/]+'); /* anything */
+			regularExpression = regularExpression.replace(new RegExp(':num', 'g'), '[0-9]+'); /* number only */
+			regularExpression = regularExpression.replace(new RegExp(':hex', 'g'), '[0-9a-f]+'); /* hex values */
+			regularExpression = regularExpression.replace(new RegExp(':str', 'g'), '[0-9a-zA-Z]+'); /* str values */
 
 			return new RegExp(regularExpression);
 		}

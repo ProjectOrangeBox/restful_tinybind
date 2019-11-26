@@ -104,15 +104,42 @@
 
 			/* Handle the changes of the browser URL  */
 			this.router = new orangeRouter(this);
+
+			var parent = this;
+
+			document.addEventListener("DOMContentLoaded", function (e) {
+				parent._DOMContentLoaded(parent);
+			});
+		}
+
+		/**
+		 * Called once the DOM is ready
+		 *
+		 * private
+		 *
+		 */
+		_DOMContentLoaded(orangeBind) {
+			/* Setup TinyBind */
+			tinybind.configure(orangeBind.config.tinyBind);
+
+			if (orangeBind.config.configUrl !== '') {
+				/* default init 200 callback */
+				orangeBind.request.on(200, function (data, xhr) {
+					orangeBind.set(data);
+					orangeBind.router.match();
+				}).get(orangeBind.config.configUrl);
+			} else {
+				orangeBind.router.match();
+			}
 		}
 
 		/**
 		 * merge and replace data
 		 */
-		setData(data, settable) {
+		set(data, settable) {
 			settable = settable || this.config.settable;
 
-			console.log('setData', data, settable);
+			console.log('set', data, settable);
 
 			for (let index in settable) {
 				let key = settable[index];
@@ -141,7 +168,17 @@
 			this.record = this.model;
 
 			/* do any cache cleaning based on the sent in data */
-			this.processServerConfig(this.config);
+			/* is it loaded? */
+			if (storage !== undefined) {
+				if (this.config.clearCache) {
+					storage.clear();
+				}
+
+				/* if set clear older than X seconds... */
+				if (this.config.olderThanCache !== undefined) {
+					storage.removeOlderThan(this.config.olderThanCache);
+				}
+			}
 
 			return this; /* allow chaining */
 		}
@@ -149,10 +186,10 @@
 		/**
 		 * get the data about this element
 		 */
-		getData(gettable) {
+		get(gettable) {
 			gettable = gettable || this.config.gettable;
 
-			console.log('getData', gettable);
+			console.log('get', gettable);
 
 			let collection = {};
 
@@ -167,31 +204,12 @@
 			return collection;
 		}
 
-		processServerConfig(config) {
-			/* is it loaded? */
-			if (storage !== undefined) {
-				if (config.clearCache) {
-					storage.clear();
-				}
-
-				/* if set clear older than X seconds... */
-				if (config.olderThanCache !== undefined) {
-					storage.removeOlderThan(config.olderThanCache);
-				}
-			}
-
-			return this; /* allow chaining */
-		}
-
 		loadModel(modelEndPoint, then) {
 			let orangeBind = this;
 
 			this.request.on(200, function (data, status, xhr) {
 				orangeBind.rebind(data, then);
-			});
-
-			/* run the query */
-			this.request.get(modelEndPoint);
+			}).get(modelEndPoint);
 
 			return this; /* allow chaining */
 		}
@@ -214,12 +232,16 @@
 
 			/* have we already loaded the template? */
 			if (template !== undefined) {
-				this.replaceElement(template);
+				this.replace(template);
 
 				if (then) {
 					then();
 				}
 			} else {
+				let url = this.config.templateUrl + templateEndPoint;
+
+				console.log('loadTemplate ' + url);
+
 				/* setup retrieve model - success */
 				this.request.on(200, function (data, status, xhr) {
 					/* if storage is setup than store a copy */
@@ -231,18 +253,12 @@
 						storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
 					}
 
-					orangeBind.replaceElement(data.template.source);
+					orangeBind.replace(data.template.source);
 
 					if (then) {
 						then();
 					}
-				});
-
-				let url = this.config.templateUrl + templateEndPoint;
-
-				console.log('loadTemplate ' + url);
-
-				this.request.get(url);
+				}).get(url);
 			}
 
 			return this; /* allow chaining */
@@ -268,11 +284,11 @@
 			return this; /* allow chaining */
 		}
 
-		replaceElement(html) {
-			this.getElementById().innerHTML = html;
+		replace(html) {
+			this.element().innerHTML = html;
 		}
 
-		getElementById() {
+		element() {
 			let element = document.getElementById(this.id);
 
 			if (element === null) {
@@ -294,46 +310,16 @@
 
 			/* update instance data */
 			if (data) {
-				this.setData(data);
+				this.set(data);
 			}
 
-			this.bound = tinybind.bind(this.getElementById(), this);
+			this.bound = tinybind.bind(this.element(), this);
 
 			/* tell everyone we now have new data */
 			this.triggers.bound();
 
 			if (then) {
 				then();
-			}
-		}
-
-		domReady() {
-			let orangeBind = this;
-
-			if (this.config.configUrl !== '') {
-				/* default init 200 callback */
-				this.request.on(200, function (data, xhr) {
-					orangeBind.setData(data);
-
-					/* send into tinybind the configuration */
-					tinybind.configure(orangeBind.config.tinyBind);
-
-					/**
-					 * Turn on the listener to match to see if the current route is something we are listening for
-					 * if a match is found then trigger the callback with the url
-					 * ie. callback('/foo/bar');
-					 */
-					orangeBind.router.match();
-				});
-
-				/* Make a Request for the configuration url using the default 200 responds we just setup above */
-				this.request.get(this.config.configUrl);
-			} else {
-				/* do not make a ajax call so we will just use the config we already have */
-				tinybind.configure(this.config.tinyBind);
-
-				/* and then fire off the router matcher */
-				this.router.match();
 			}
 		}
 
