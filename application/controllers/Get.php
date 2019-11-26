@@ -2,8 +2,8 @@
 
 class Get extends CI_Controller
 {
-	protected $superStorageCacheSeconds = 600;
-	protected $cache = true;
+	protected $superStorageCacheSeconds = 6000;
+	protected $cache = false;
 
 	/* default empty */
 	public function index(): void
@@ -28,7 +28,7 @@ class Get extends CI_Controller
 	public function navModel(): void
 	{
 		$this->Restful_model
-			->page('nav', $this->Nav_model->get(2))
+			->model($this->Nav_model->get(2))
 			->send(200);
 	}
 

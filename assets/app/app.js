@@ -7,7 +7,7 @@ Setup the Application global variable for the app "block"
 
 */
 
-var app = new orangeBinder.bind('app', '/get/configuration', '/get/layout');
+var app = new orangeBinder.bind('appblock', '/get/configuration', '/get/layout');
 
 app.config.alter({
 	defaults: {
@@ -64,10 +64,14 @@ app.router.alter({
 		app.loadModel('/catalog/index', '/catalog/index');
 	},
 	'robot/edit/(:num)': function (primary_id) {
-		app.loadModel('/robot/edit/' + primary_id, '/robot/details');
+		app.loadModel('/robot/edit/' + primary_id, '/robot/details', function () {
+			DOMRefresh()
+		});
 	},
 	'robot/create': function () {
-		app.loadModel('/robot/create', '/robot/details');
+		app.loadModel('/robot/create', '/robot/details', function () {
+			DOMRefresh()
+		});
 	},
 	'robot': function () {
 		app.loadModel('/robot/index', '/robot/index');

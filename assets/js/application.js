@@ -48,3 +48,9 @@ $(document).on('click', '[appNavigate]', function (event) {
 $(document).on('tiny-bind-bound', function () {
 	$('select').selectpicker();
 });
+
+function DOMRefresh(which) {
+	console.log('DOMRefresh');
+
+	$('.form-control').selectpicker('refresh');
+}

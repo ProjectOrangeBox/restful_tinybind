@@ -175,15 +175,11 @@ var orangeBinder = {
 			if (templateEndPoint) {
 				/* load the template then the model */
 				this.loadTemplate(templateEndPoint, function () {
-					_p._loadModel(modelEndPoint);
+					_p._loadModel(modelEndPoint, then);
 				});
 			} else {
 				/* just load the model */
-				this._loadModel(modelEndPoint);
-			}
-
-			if (then) {
-				then();
+				this._loadModel(modelEndPoint, then);
 			}
 
 			return this; /* allow chaining */
@@ -194,17 +190,20 @@ var orangeBinder = {
 			var cacheKey = templateEndPoint + '.template';
 			var template = undefined;
 
-			/* is this storaged in our local template cache */
+			/* is this stored in our local template cache */
 			if (this.templates[templateEndPoint] !== undefined) {
+				/* yes it is so grab it */
 				template = this.templates[templateEndPoint];
 			} else if (storage !== undefined) {
-				/* Get bind template from browser local session storage? */
+				/* is this stored in our cached data */
 				template = storage.getItem(cacheKey, undefined);
+
+				console.log('getItem', cacheKey, template);
 			}
 
 			/* have we already loaded the template? */
 			if (template !== undefined) {
-				this.replaceHtml(template);
+				this.replaceElement(template);
 
 				if (then) {
 					then();
@@ -212,16 +211,16 @@ var orangeBinder = {
 			} else {
 				/* setup retrieve model - success */
 				this.response.alter(200, function (data, status, xhr) {
-					var cacheSeconds = data.template.cache ? data.template.cache : _p.config.templateCache;
-
+					/* if storage is setup than store a copy */
 					if (storage !== undefined) {
-						storage.setItem(cacheKey, data.template.source, cacheSeconds);
+						var cacheSeconds = data.template.cache ? data.template.cache : _p.config.templateCache;
+
+						console.log('cache key set ' + cacheKey, cacheSeconds);
+
+						storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
 					}
 
-					/* attach it locally */
-					_p.templates.alter(templateEndPoint, data.template.source);
-
-					_p.replaceHtml(data.template.source);
+					_p.replaceElement(data.template.source);
 
 					if (then) {
 						then();
@@ -238,9 +237,7 @@ var orangeBinder = {
 			return this; /* allow chaining */
 		};
 
-		this.replaceHtml = function (html) {
-			console.log('replaceHtml', html);
-
+		this.replaceElement = function (html) {
 			this.getElementById().innerHTML = html;
 		};
 
