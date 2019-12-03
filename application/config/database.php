@@ -75,9 +75,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '192.168.64.65',
-	'username' => 'developer',
-	'password' => 'developer',
+	'hostname' => '',
+	'username' => '',
+	'password' => '',
 	'database' => BASEPATH . '/../sqllite3.db',
 	'dbdriver' => 'sqlite3',
 	'dbprefix' => '',
