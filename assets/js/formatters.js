@@ -849,20 +849,27 @@ tinybind.formatters.join = function (target, val) {
 
 /*
 	wrap
-	Returns a new function which will call target with the arguments given to wrap and with the arguments used in the event caller. The arguments passed to wrap can be accessed as the first arguments
+	Returns a new function which will call target with the arguments given to wrap and with the arguments used in the event caller.
+	The arguments passed to wrap can be accessed as the first arguments on the called function
+
 	target: function
 	variadic: any
 	return: function
 	Example:
 
 	<div rv-each-item="collection">
-		<div rv-on-click="aClickHandler | wrap item"></div>
+		<div rv-on-click="aClickHandler | wrap collectionItem"></div>
 	</div>
-	Result:
 
-	function aClickHandler(item, event) {
-		// a function with those arguments will be called
-}
+	function aClickHandler(collectionItem, event) {
+		...
+	}
+
+	<div rv-on-click="events.clicker | app.page.url">
+
+	events.clicker = function(appPageUrl, event) {
+		...
+	}
 */
 tinybind.formatters.wrap = function (target) {
 	var args = Array.prototype.slice.call(arguments);

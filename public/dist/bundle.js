@@ -308,7 +308,7 @@ class orangeLoader {
    */
 
 
-  block(modelEndPoint, templateEndPoint, then) {
+  block(templateEndPoint, modelEndPoint, then) {
     let orangeLoader = this;
     modelEndPoint = this.app.config.modelUrl + modelEndPoint;
     console.log('load.block ' + modelEndPoint);
@@ -2658,20 +2658,27 @@ tinybind.formatters.join = function (target, val) {
 
 /*
 	wrap
-	Returns a new function which will call target with the arguments given to wrap and with the arguments used in the event caller. The arguments passed to wrap can be accessed as the first arguments
+	Returns a new function which will call target with the arguments given to wrap and with the arguments used in the event caller.
+	The arguments passed to wrap can be accessed as the first arguments on the called function
+
 	target: function
 	variadic: any
 	return: function
 	Example:
 
 	<div rv-each-item="collection">
-		<div rv-on-click="aClickHandler | wrap item"></div>
+		<div rv-on-click="aClickHandler | wrap collectionItem"></div>
 	</div>
-	Result:
 
-	function aClickHandler(item, event) {
-		// a function with those arguments will be called
-}
+	function aClickHandler(collectionItem, event) {
+		...
+	}
+
+	<div rv-on-click="events.clicker | app.page.url">
+
+	events.clicker = function(appPageUrl, event) {
+		...
+	}
 */
 
 
@@ -2825,52 +2832,52 @@ app.config.alter({
 });
 app.router.alter({
   'multi/edit/(:num)': function (primary_id) {
-    app.load.block('/multi/edit/' + primary_id, '/multi/details');
+    app.load.block('/multi/details', '/multi/edit/' + primary_id);
   },
   'multi/create': function () {
-    app.load.block('/multi/create', '/multi/details');
+    app.load.block('/multi/details', '/multi/create');
   },
   'multi/edit/(:num)': function (primary_id) {
     app.load.block('/multi/edit/' + primary_id, '/multi/details');
   },
   'multi/create': function () {
-    app.load.block('/multi/create', '/multi/details');
+    app.load.block('/multi/details', '/multi/create');
   },
   'multi': function () {
     app.load.block('/multi/index', '/multi/index');
   },
   'people/edit/(:num)': function (primary_id) {
-    app.load.block('/people/edit/' + primary_id, '/people/details');
+    app.load.block('/people/details', '/people/edit/' + primary_id);
   },
   'people/create': function () {
-    app.load.block('/people/create', '/people/details');
+    app.load.block('/people/details', '/people/create');
   },
   'people': function () {
     app.load.block('/people/index', '/people/index');
   },
   'zipcodes/edit/(:num)': function (primary_id) {
-    app.load.block('/zipcodes/edit/' + primary_id, '/zipcodes/details');
+    app.load.block('/zipcodes/details', '/zipcodes/edit/' + primary_id);
   },
   'zipcodes/create': function () {
-    app.load.block('/zipcodes/create', '/zipcodes/details');
+    app.load.block('/zipcodes/details', '/zipcodes/create');
   },
   'zipcodes': function () {
     app.load.block('/zipcodes/index', '/zipcodes/index');
   },
   'catalog/edit/(:num)': function (primary_id) {
-    app.load.block('/catalog/edit/' + primary_id, '/catalog/details');
+    app.load.block('/catalog/details', '/catalog/edit/' + primary_id);
   },
   'catalog/create': function () {
-    app.load.block('/catalog/create', '/catalog/details');
+    app.load.block('/catalog/details', '/catalog/create');
   },
   'catalog': function () {
     app.load.block('/catalog/index', '/catalog/index');
   },
   'robot/edit/(:num)': function (primary_id) {
-    app.load.block('/robot/edit/' + primary_id, '/robot/details', DOMRefresh);
+    app.load.block('/robot/details', '/robot/edit/' + primary_id, DOMRefresh);
   },
   'robot/create': function () {
-    app.load.block('/robot/create', '/robot/details', DOMRefresh);
+    app.load.block('/robot/details', '/robot/create', DOMRefresh);
   },
   'robot': function () {
     app.load.block('/robot/index', '/robot/index');
@@ -2878,20 +2885,21 @@ app.router.alter({
 
   /* mpa example page - when this page loads load this model */
   'food/edit/(:num)': function (primary_id) {
-    app.load.block('/food/edit/' + primary_id);
+    app.load.model('/food/edit/' + primary_id);
   },
 
   /* mpa example page - when this page loads load this model */
   'food/create': function () {
-    app.load.block('/food/create');
+    app.load.model('/food/create');
   },
 
   /* mpa example page - when this page loads load this model */
   'food': function () {
-    app.load.block('/food/index');
+    app.load.model('/food/index');
   },
-  '(.*)': function () {
-    app.rebind();
+
+  /* default route / action */
+  '(.*)': function () {//app.rebind();
   }
 }); //app.request.on(404, function (xhr, status, error) {
 
@@ -2899,15 +2907,27 @@ app.router.alter({
 //app.load.template('/notfound');
 //});
 
+/* avaiable methods on app */
+
 app.methods.alter({
+  /* let url = app.methods.buildUrl('/foo/%s/bar','123'); */
   'buildUrl': function (args) {
-    var that = args.pop();
-    var event = args.pop();
+    let that = args.pop();
+    let event = args.pop();
     event.preventDefault();
     return sprintf.apply(args[0], args);
   },
-  'submit': function (redirect) {
+
+  /**
+   * submit this.get() object to action (app.form.action) using method (app.form.method)
+   * app.method.submit(true)
+   */
+  'submit': function (redirect, method, action, data) {
+    method = method || app.form.method;
+    action = action || app.form.action;
+    data = data || this.get();
     /* created record - create */
+
     app.request.on(201, function (data, status, xhr) {
       /* good redirect */
       notify.removeAll();
@@ -2937,10 +2957,14 @@ app.methods.alter({
         }
       }
     });
-    app.request[app.form.method](app.form.action, app.get());
+    app.request[method](action, data);
   }
 });
-/* Button Events */
+/**
+ * Button Events
+ *
+ * <a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i	class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
+ */
 
 app.events.alter({
   create: function (url, event) {
@@ -2954,6 +2978,19 @@ app.events.alter({
   navigate: function () {
     /* spa navigate - to the first argument passed */
     app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), false);
+  },
+
+  /*
+  <a class="btn btn-default btn-sm js-esc" rv-path="page.path" rv-on-click="events.inspect">
+  	<i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back
+  </a>
+  */
+  inspect: function (element, rootObject) {
+    /* get an attribute from a DOM element */
+    console.log(element.target.getAttribute('path'));
+    /* root Orange Bind Element */
+
+    console.log(rootObject);
   },
   redirect: function () {
     /* mpa redirect - to the first argument passed */

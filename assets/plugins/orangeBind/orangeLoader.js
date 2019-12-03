@@ -72,7 +72,7 @@ class orangeLoader {
 	/**
 	 * load a template and then a model then...
 	 */
-	block(modelEndPoint, templateEndPoint, then) {
+	block(templateEndPoint, modelEndPoint, then) {
 		let orangeLoader = this;
 
 		modelEndPoint = this.app.config.modelUrl + modelEndPoint;
