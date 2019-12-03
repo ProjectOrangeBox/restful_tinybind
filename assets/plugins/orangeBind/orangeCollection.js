@@ -1,5 +1,5 @@
 class orangeCollection {
-
+	/* on construction */
 	constructor(defaults) {
 		if (defaults) {
 			this.alter(defaults);

@@ -197,6 +197,7 @@ var storage = {
   }
 };
 class orangeCollection {
+  /* on construction */
   constructor(defaults) {
     if (defaults) {
       this.alter(defaults);
@@ -233,9 +234,14 @@ class orangeCollection {
 
 }
 class orangeLoader {
+  /* on construction */
   constructor(app) {
     this.app = app;
   }
+  /**
+   * load just a model then...
+   */
+
 
   model(modelEndPoint, then) {
     let orangeLoader = this;
@@ -245,6 +251,10 @@ class orangeLoader {
     return this;
     /* allow chaining */
   }
+  /**
+   * load just a template then...
+   */
+
 
   template(templateEndPoint, then) {
     let orangeLoader = this;
@@ -293,6 +303,10 @@ class orangeLoader {
     return this;
     /* allow chaining */
   }
+  /**
+   * load a template and then a model then...
+   */
+
 
   block(modelEndPoint, templateEndPoint, then) {
     let orangeLoader = this;
@@ -518,6 +532,7 @@ class orangeRouter {
 
 }
 class orangeRequest {
+  /* on construction */
   constructor(app) {
     this.app = app;
     this.defaultCallbacks = {
