@@ -535,6 +535,8 @@ class orangeRequest {
   /* on construction */
   constructor(app) {
     this.app = app;
+    this.status = 0;
+    this.statusMsg = 'INIT';
     this.defaultCallbacks = {
       /* standard get layout or get model */
       200: function (data, status, xhr) {
@@ -587,6 +589,16 @@ class orangeRequest {
     this.callbacks = this.defaultCallbacks;
   }
 
+  setStatus(code, msg) {
+    this.status = code || 0;
+
+    if (msg) {
+      this.statusMsg = msg.toUpperCase();
+    } else {
+      this.statusMsg = 'UNKNOWN';
+    }
+  }
+
   on(code, callback) {
     if (typeof code === 'object') {
       for (let property in code) {
@@ -605,7 +617,7 @@ class orangeRequest {
     /* did they send in any callbacks? */
 
     if (typeof callbacks === 'object') {
-      /* adjust the current callbacks */
+      /* alter the current callbacks */
       this.on(callbacks);
     }
 
@@ -757,6 +769,8 @@ class orangeBinder {
     this.router = new orangeRouter(this);
     this.load = new orangeLoader(this);
     var parent = this;
+    /* jQuery less DOM ready */
+
     document.addEventListener("DOMContentLoaded", function (e) {
       parent._DOMContentLoaded(parent);
     });
@@ -786,14 +800,19 @@ class orangeBinder {
   _DOMContentLoaded(orangeBind) {
     /* Setup TinyBind */
     tinybind.configure(orangeBind.config.tinyBind);
+    /* do we have a config url? */
 
     if (orangeBind.config.configUrl !== '') {
       /* default init 200 callback */
       orangeBind.request.on(200, function (data, xhr) {
+        /* merge the returned data with the blocks data */
         orangeBind.set(data);
+        /* start the router */
+
         orangeBind.router.match();
       }).get(orangeBind.config.configUrl);
     } else {
+      /* start the router */
       orangeBind.router.match();
     }
   }
@@ -805,6 +824,7 @@ class orangeBinder {
   set(data, settable) {
     settable = settable || this.config.settable;
     console.log('set', data, settable);
+    this.request.setStatus(data.status, data.statusMsg);
 
     for (let index in settable) {
       let key = settable[index];

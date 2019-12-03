@@ -96,6 +96,7 @@
 
 			var parent = this;
 
+			/* jQuery less DOM ready */
 			document.addEventListener("DOMContentLoaded", function (e) {
 				parent._DOMContentLoaded(parent);
 			});
@@ -124,13 +125,18 @@
 			/* Setup TinyBind */
 			tinybind.configure(orangeBind.config.tinyBind);
 
+			/* do we have a config url? */
 			if (orangeBind.config.configUrl !== '') {
 				/* default init 200 callback */
 				orangeBind.request.on(200, function (data, xhr) {
+					/* merge the returned data with the blocks data */
 					orangeBind.set(data);
+
+					/* start the router */
 					orangeBind.router.match();
 				}).get(orangeBind.config.configUrl);
 			} else {
+				/* start the router */
 				orangeBind.router.match();
 			}
 		}
@@ -142,6 +148,8 @@
 			settable = settable || this.config.settable;
 
 			console.log('set', data, settable);
+
+			this.request.setStatus(data.status, data.statusMsg);
 
 			for (let index in settable) {
 				let key = settable[index];

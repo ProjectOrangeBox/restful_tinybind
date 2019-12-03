@@ -11,7 +11,7 @@ class Get extends CI_Controller
 		$this->load->view('index.html');
 	}
 
-	/* get bind templates */
+	/* get binable template */
 	public function layout(): void
 	{
 		/* simple clean up */
@@ -25,13 +25,21 @@ class Get extends CI_Controller
 			->send(200);
 	}
 
+	/*
+	get the nav model data
+	*/
 	public function navModel(): void
 	{
 		$this->Restful_model
-			->model($this->Nav_model->get(2))
+			->model($this->nav_model->get(2))
 			->send(200);
 	}
 
+	/*
+	return block configuration values
+
+	these are merged directly with the blocks config object properties
+	*/
 	public function configuration(): void
 	{
 		$this->Restful_model
