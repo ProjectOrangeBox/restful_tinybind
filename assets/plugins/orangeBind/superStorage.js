@@ -5,7 +5,7 @@ var storage = {
 	storage: undefined,
 	/* local reference */
 	config: {
-		dbPrefix: 'ss.',
+		dbPrefix: 'sbs',
 		/* every key must start with this */
 		storage: 'localStorage',
 		/* which storage to use localStorage or sessionStorage */
@@ -40,6 +40,9 @@ var storage = {
 	/* clear all of the storage key that match our prefix passing no argument uses right now as the timestamp */
 	clear: function () {
 		this.removeOlderThan();
+	},
+	getKeys: function () {
+		return this.storage;
 	},
 	getDetailed: function (key) {
 		return this._getByComplete(this.config.dbPrefix + key);
