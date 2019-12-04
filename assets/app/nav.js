@@ -5,6 +5,7 @@ Setup the nav global variable for the nav "block"
 2. then where to get it's config from the server
 
 */
+
 var nav = new orangeBinder('nav');
 
 nav.config.alter({

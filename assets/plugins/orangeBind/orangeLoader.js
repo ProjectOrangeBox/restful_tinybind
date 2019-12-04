@@ -9,6 +9,12 @@ class orangeLoader {
 	model(modelEndPoint, then) {
 		let orangeLoader = this;
 
+		modelEndPoint = this.app.config.modelUrl + modelEndPoint;
+
+		if (DEBUG) {
+			console.log('load model ' + modelEndPoint);
+		}
+
 		this.app.request.on(200, function (data, status, xhr) {
 			orangeLoader.app.unbind().set(data).bind();
 
@@ -28,6 +34,10 @@ class orangeLoader {
 		let cacheKey = templateEndPoint + '.template';
 		let template = undefined;
 
+		if (DEBUG) {
+			console.log('load template ' + templateEndPoint);
+		}
+
 		/* is this stored in our local template cache */
 		if (this.app.templates[templateEndPoint] !== undefined) {
 			/* yes it is so grab it */
@@ -35,8 +45,6 @@ class orangeLoader {
 		} else if (storage !== undefined) {
 			/* is this stored in our cached data */
 			template = storage.getItem(cacheKey, undefined);
-
-			console.log('getItem', cacheKey, template);
 		}
 
 		/* have we already loaded the template? */
@@ -49,15 +57,11 @@ class orangeLoader {
 		} else {
 			let url = this.app.config.templateUrl + templateEndPoint;
 
-			console.log('load.template ' + url);
-
 			/* setup retrieve model - success */
 			this.app.request.on(200, function (data, status, xhr) {
 				/* if storage is setup than store a copy */
 				if (storage !== undefined) {
 					let cacheSeconds = data.template.cache ? data.template.cache : orangeLoader.app.config.templateCache;
-
-					console.log('cache key set ' + cacheKey, cacheSeconds);
 
 					storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
 				}
@@ -79,10 +83,6 @@ class orangeLoader {
 	block(templateEndPoint, modelEndPoint, then) {
 		let orangeLoader = this;
 
-		modelEndPoint = this.app.config.modelUrl + modelEndPoint;
-
-		console.log('load.block ' + modelEndPoint);
-
 		if (templateEndPoint) {
 			/* load the template then the model */
 			this.template(templateEndPoint, function () {
@@ -96,4 +96,4 @@ class orangeLoader {
 		return this; /* allow chaining */
 	}
 
-}
+} /* end class */

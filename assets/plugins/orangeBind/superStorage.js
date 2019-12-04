@@ -34,8 +34,6 @@ var storage = {
 			/* if they didn't send in the complete key build it */
 			key = (completeKey) ? key : this.config.dbPrefix + key;
 
-			console.debug('removing', key);
-
 			this.storage.removeItem(key);
 		}
 	},
@@ -99,8 +97,6 @@ var storage = {
 		var record = this._emptyRecord();
 
 		if (this.capable()) {
-			console.debug('reading', completeKey);
-
 			var jsonData = this.storage[completeKey];
 
 			record = (jsonData) ? JSON.parse(jsonData) : record;

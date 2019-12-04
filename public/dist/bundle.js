@@ -73,7 +73,6 @@ var storage = {
     if (this.capable()) {
       /* if they didn't send in the complete key build it */
       key = completeKey ? key : this.config.dbPrefix + key;
-      console.debug('removing', key);
       this.storage.removeItem(key);
     }
   },
@@ -139,7 +138,6 @@ var storage = {
     var record = this._emptyRecord();
 
     if (this.capable()) {
-      console.debug('reading', completeKey);
       var jsonData = this.storage[completeKey];
       record = jsonData ? JSON.parse(jsonData) : record;
     }
@@ -248,6 +246,12 @@ class orangeLoader {
 
   model(modelEndPoint, then) {
     let orangeLoader = this;
+    modelEndPoint = this.app.config.modelUrl + modelEndPoint;
+
+    if (DEBUG) {
+      console.log('load model ' + modelEndPoint);
+    }
+
     this.app.request.on(200, function (data, status, xhr) {
       orangeLoader.app.unbind().set(data).bind();
 
@@ -267,7 +271,12 @@ class orangeLoader {
     let orangeLoader = this;
     let cacheKey = templateEndPoint + '.template';
     let template = undefined;
+
+    if (DEBUG) {
+      console.log('load template ' + templateEndPoint);
+    }
     /* is this stored in our local template cache */
+
 
     if (this.app.templates[templateEndPoint] !== undefined) {
       /* yes it is so grab it */
@@ -275,7 +284,6 @@ class orangeLoader {
     } else if (storage !== undefined) {
       /* is this stored in our cached data */
       template = storage.getItem(cacheKey, undefined);
-      console.log('getItem', cacheKey, template);
     }
     /* have we already loaded the template? */
 
@@ -288,14 +296,12 @@ class orangeLoader {
       }
     } else {
       let url = this.app.config.templateUrl + templateEndPoint;
-      console.log('load.template ' + url);
       /* setup retrieve model - success */
 
       this.app.request.on(200, function (data, status, xhr) {
         /* if storage is setup than store a copy */
         if (storage !== undefined) {
           let cacheSeconds = data.template.cache ? data.template.cache : orangeLoader.app.config.templateCache;
-          console.log('cache key set ' + cacheKey, cacheSeconds);
           storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
         }
 
@@ -317,8 +323,6 @@ class orangeLoader {
 
   block(templateEndPoint, modelEndPoint, then) {
     let orangeLoader = this;
-    modelEndPoint = this.app.config.modelUrl + modelEndPoint;
-    console.log('load.block ' + modelEndPoint);
 
     if (templateEndPoint) {
       /* load the template then the model */
@@ -335,6 +339,7 @@ class orangeLoader {
   }
 
 }
+/* end class */
 class orangeRouter {
   constructor(app) {
     this.app = app;
@@ -367,15 +372,21 @@ class orangeRouter {
     /* do we have any routes to listen for? */
 
     if (this.routes.length) {
-      console.log('match', url);
+      if (DEBUG) {
+        console.log('router match', url);
+      }
       /* loop though the routes */
+
 
       for (let key in this.routes) {
         let parameters = url.match(this.routes[key].re);
 
         if (parameters) {
-          console.log('matched', parameters, this.routes[key].re.toString());
+          if (DEBUG) {
+            console.log('router matched', parameters, this.routes[key].re.toString());
+          }
           /* remove matched url  */
+
 
           parameters.shift();
           /* call the route callback and pass in the parameters */
@@ -484,8 +495,12 @@ class orangeRouter {
   navigate(url, redirect) {
     url = url ? this.app.config.routerRoot + this._clearSlashes(url) : '';
     redirect = redirect ? redirect : this.app.config.redirect;
-    console.log('navigate', url, redirect);
+
+    if (DEBUG) {
+      console.log('router navigate', url, redirect);
+    }
     /* trigger a redirect so other javascript code knows we are redirecting */
+
 
     this.app.trigger('orange-router-navgate', [url, redirect]);
 
@@ -538,58 +553,50 @@ class orangeRouter {
   }
 
 }
+/* end class */
 class orangeRequest {
   /* on construction */
   constructor(app) {
     this.app = app;
-    this.self = this;
     this.setStatus(0, 'init');
     this.defaultCallbacks = {
       /* standard get layout or get model */
       200: function (data, status, xhr) {
-        console.debug(arguments);
         alert('200 (ok) callback');
       },
 
       /* success on create */
       201: function (data, status, xhr) {
-        console.debug(arguments);
         alert('201 (created) callback');
       },
 
       /* success on edit */
       202: function (data, status, xhr) {
-        console.debug(arguments);
         alert('202 (accepted) callback');
       },
 
       /* access to resource not allowed */
       401: function (xhr, status, error) {
-        console.debug(arguments);
         alert('401 (unauthorized) callback');
       },
 
       /* resource not found */
       404: function (xhr, status, error) {
-        console.debug(arguments);
         alert('404 (not found) callback');
       },
 
       /* error submitting resource (create, edit, delete) */
       406: function (xhr, status, error) {
-        console.debug(arguments);
         alert('406 (not accepted) callback');
       },
 
       /* resource conflict ie. trying to create a new resource with the same primary id */
       409: function (xhr, status, error) {
-        console.debug(arguments);
         alert('409 (conflict) callback');
       },
 
       /* internal server error */
       500: function (xhr, status, error) {
-        console.debug(arguments);
         alert('500 (server error) callback');
       }
     };
@@ -627,8 +634,11 @@ class orangeRequest {
   }
 
   send(method, url, data, callbacks) {
-    console.log('request', method, url, data);
+    if (DEBUG) {
+      console.log('request', method, url, data);
+    }
     /* did they send in any callbacks? */
+
 
     if (typeof callbacks === 'object') {
       /* alter the current callbacks */
@@ -688,6 +698,7 @@ class orangeRequest {
   }
 
 }
+/* end class */
 /**
  * These are attached directly to tinybind
  *
@@ -1908,7 +1919,8 @@ class orangeBinder {
    * Setup Listener
    *
    * app.listener('foobar', function (e) {
-   * 	console.log('args',e.args);
+   * 	this.log('args')
+   *  this.log(e.args);
    * });
    *
    * wrapper for jQuery on
@@ -1925,18 +1937,15 @@ class orangeBinder {
 
   set(data, settable) {
     settable = settable || this.config.settable;
-    console.log("set", data, settable);
 
     for (let index in settable) {
       let key = settable[index];
 
       if (data[key] !== undefined) {
-        console.log(key, data[key]);
-        /*
-        	if they have alter then send them in as objects and let alter merge the contents
-        	else they replace the entire variable
-        	*/
-
+        /**
+         * if they have alter then send them in as objects and let alter merge the contents
+         * else they replace the entire variable
+         */
         if (typeof this[key].alter === "function") {
           this[key].alter(data[key]);
         } else {
@@ -1986,7 +1995,6 @@ class orangeBinder {
       collection[key] = typeof this[key].collect === "function" ? this[key].collect() : this[key];
     }
 
-    console.log(collection);
     return collection;
   }
 
@@ -1999,8 +2007,6 @@ class orangeBinder {
 
     if (element === null) {
       console.error('Element Id "' + this.id + '" Not Found.');
-    } else {
-      console.log('"' + this.id + '" bound.');
     }
 
     return element;
@@ -2039,6 +2045,7 @@ class orangeBinder {
   }
 
 }
+/* end class */
 /**
  *
  * Add Notification
@@ -2863,6 +2870,7 @@ Setup the Application global variable for the app "block"
 3. prefix all layout requests with...
 
 */
+var DEBUG = true;
 var app = new orangeBinder('app', '/get/configuration', '/get/layout');
 app.config.alter({
   defaults: {

@@ -131,7 +131,8 @@ class orangeBinder {
 	 * Setup Listener
 	 *
 	 * app.listener('foobar', function (e) {
-	 * 	console.log('args',e.args);
+	 * 	this.log('args')
+	 *  this.log(e.args);
 	 * });
 	 *
 	 * wrapper for jQuery on
@@ -146,18 +147,14 @@ class orangeBinder {
 	set(data, settable) {
 		settable = settable || this.config.settable;
 
-		console.log("set", data, settable);
-
 		for (let index in settable) {
 			let key = settable[index];
 
 			if (data[key] !== undefined) {
-				console.log(key, data[key]);
-
-				/*
-					if they have alter then send them in as objects and let alter merge the contents
-					else they replace the entire variable
-					*/
+				/**
+				 * if they have alter then send them in as objects and let alter merge the contents
+				 * else they replace the entire variable
+				 */
 				if (typeof this[key].alter === "function") {
 					this[key].alter(data[key]);
 				} else {
@@ -204,8 +201,6 @@ class orangeBinder {
 			collection[key] = typeof this[key].collect === "function" ? this[key].collect() : this[key];
 		}
 
-		console.log(collection);
-
 		return collection;
 	}
 
@@ -218,8 +213,6 @@ class orangeBinder {
 
 		if (element === null) {
 			console.error('Element Id "' + this.id + '" Not Found.');
-		} else {
-			console.log('"' + this.id + '" bound.');
 		}
 
 		return element;
@@ -259,4 +252,4 @@ class orangeBinder {
 
 		return this;
 	}
-}
+} /* end class */

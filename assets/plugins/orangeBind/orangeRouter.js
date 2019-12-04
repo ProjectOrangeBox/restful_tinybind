@@ -30,14 +30,18 @@
 
 			/* do we have any routes to listen for? */
 			if (this.routes.length) {
-				console.log('match', url);
+				if (DEBUG) {
+					console.log('router match', url);
+				}
 
 				/* loop though the routes */
 				for (let key in this.routes) {
 					let parameters = url.match(this.routes[key].re);
 
 					if (parameters) {
-						console.log('matched', parameters, this.routes[key].re.toString());
+						if (DEBUG) {
+							console.log('router matched', parameters, this.routes[key].re.toString());
+						}
 
 						/* remove matched url  */
 						parameters.shift();
@@ -138,7 +142,9 @@
 			url = url ? this.app.config.routerRoot + this._clearSlashes(url) : '';
 			redirect = redirect ? redirect : this.app.config.redirect;
 
-			console.log('navigate', url, redirect);
+			if (DEBUG) {
+				console.log('router navigate', url, redirect);
+			}
 
 			/* trigger a redirect so other javascript code knows we are redirecting */
 			this.app.trigger('orange-router-navgate', [url, redirect]);
@@ -180,4 +186,5 @@
 
 			return new RegExp(regularExpression);
 		}
-	}
+
+	} /* end class */
