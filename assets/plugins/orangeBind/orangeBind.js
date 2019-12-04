@@ -44,17 +44,7 @@ class orangeBinder {
 
 		/* setup config with defaults */
 		this.config = new orangeCollection(this, {
-			settable: [
-				"page",
-				"form",
-				"user",
-				"local",
-				"config",
-				"templates",
-				"error",
-				"errors",
-				"model"
-			],
+			settable: ["page", "form", "user", "local", "config", "templates", "error", "errors", "model"],
 			gettable: ["page", "form", "error", "errors", "model"],
 			defaults: {},
 			configUrl: configUrl || "",
