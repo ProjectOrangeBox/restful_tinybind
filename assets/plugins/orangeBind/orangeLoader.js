@@ -12,7 +12,7 @@ class orangeLoader {
 		modelEndPoint = this.app.config.modelUrl + modelEndPoint;
 
 		if (DEBUG) {
-			console.log('load model ' + modelEndPoint);
+			console.log('#' + this.app.id + ' loader::model ' + modelEndPoint);
 		}
 
 		this.app.request.on(200, function (data, status, xhr) {
@@ -35,7 +35,7 @@ class orangeLoader {
 		let template = undefined;
 
 		if (DEBUG) {
-			console.log('load template ' + templateEndPoint);
+			console.log('#' + this.app.id + ' loader::template ' + templateEndPoint);
 		}
 
 		/* is this stored in our local template cache */

@@ -249,7 +249,7 @@ class orangeLoader {
     modelEndPoint = this.app.config.modelUrl + modelEndPoint;
 
     if (DEBUG) {
-      console.log('load model ' + modelEndPoint);
+      console.log('#' + this.app.id + ' loader::model ' + modelEndPoint);
     }
 
     this.app.request.on(200, function (data, status, xhr) {
@@ -273,7 +273,7 @@ class orangeLoader {
     let template = undefined;
 
     if (DEBUG) {
-      console.log('load template ' + templateEndPoint);
+      console.log('#' + this.app.id + ' loader::template ' + templateEndPoint);
     }
     /* is this stored in our local template cache */
 
@@ -373,7 +373,7 @@ class orangeRouter {
 
     if (this.routes.length) {
       if (DEBUG) {
-        console.log('router match', url);
+        console.log('#' + this.app.id + ' router::match', url);
       }
       /* loop though the routes */
 
@@ -383,7 +383,7 @@ class orangeRouter {
 
         if (parameters) {
           if (DEBUG) {
-            console.log('router matched', parameters, this.routes[key].re.toString());
+            console.log('#' + this.app.id + ' router::match::matched', parameters, this.routes[key].re.toString());
           }
 
           this.app.trigger('orange-route-matched', [key, this.routes[key], parameters]);
@@ -498,7 +498,7 @@ class orangeRouter {
     redirect = redirect ? redirect : this.app.config.redirect;
 
     if (DEBUG) {
-      console.log('router navigate', url, redirect);
+      console.log('#' + this.app.id + ' router::navigate ', url, redirect);
     }
     /* trigger a redirect so other javascript code knows we are redirecting */
 
@@ -636,7 +636,7 @@ class orangeRequest {
 
   send(method, url, data, callbacks) {
     if (DEBUG) {
-      console.log('request', method, url, data);
+      console.log('#' + this.app.id + ' request::send', method, url, data);
     }
     /* did they send in any callbacks? */
 
@@ -1915,7 +1915,7 @@ class orangeBinder {
 
   trigger(msg, args) {
     if (DEBUG) {
-      console.log('trigger #' + this.id + ' ' + msg);
+      console.log('#' + this.id + ' bind::trigger ' + msg);
     }
 
     jQuery('body').trigger(msg, args);

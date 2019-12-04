@@ -31,7 +31,7 @@
 			/* do we have any routes to listen for? */
 			if (this.routes.length) {
 				if (DEBUG) {
-					console.log('router match', url);
+					console.log('#' + this.app.id + ' router::match', url);
 				}
 
 				/* loop though the routes */
@@ -40,7 +40,7 @@
 
 					if (parameters) {
 						if (DEBUG) {
-							console.log('router matched', parameters, this.routes[key].re.toString());
+							console.log('#' + this.app.id + ' router::match::matched', parameters, this.routes[key].re.toString());
 						}
 
 						this.app.trigger('orange-route-matched', [key, this.routes[key], parameters]);
@@ -145,7 +145,7 @@
 			redirect = redirect ? redirect : this.app.config.redirect;
 
 			if (DEBUG) {
-				console.log('router navigate', url, redirect);
+				console.log('#' + this.app.id + ' router::navigate ', url, redirect);
 			}
 
 			/* trigger a redirect so other javascript code knows we are redirecting */

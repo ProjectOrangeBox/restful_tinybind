@@ -125,7 +125,7 @@ class orangeBinder {
 	 */
 	trigger(msg, args) {
 		if (DEBUG) {
-			console.log('trigger #' + this.id + ' ' + msg);
+			console.log('#' + this.id + ' bind::trigger ' + msg);
 		}
 
 		jQuery('body').trigger(msg, args);
