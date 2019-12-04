@@ -52,6 +52,8 @@ let js = {
 		"assets/plugins/orangeBind/orangeLoader.js",
 		"assets/plugins/orangeBind/orangeRouter.js",
 		"assets/plugins/orangeBind/orangeRequest.js",
+		"assets/plugins/orangeBind/orangeBinders.js",
+		"assets/plugins/orangeBind/orangeFormatters.js",
 		"assets/plugins/orangeBind/orangeBind.js",
 
 		"assets/plugins/notify/notify.js",
@@ -61,8 +63,6 @@ let js = {
 		"assets/plugins/table_sticky_header/jquery.stickytableheaders.js",
 
 		"assets/js/application.js",
-		"assets/js/binders.js",
-		"assets/js/formatters.js",
 
 		"assets/app/app.js",
 		"assets/app/nav.js",

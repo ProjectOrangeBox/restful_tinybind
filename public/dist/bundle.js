@@ -198,7 +198,9 @@ var storage = {
 };
 class orangeCollection {
   /* on construction */
-  constructor(defaults) {
+  constructor(app, defaults) {
+    this.app = app;
+
     if (defaults) {
       this.alter(defaults);
     }
@@ -672,1077 +674,6 @@ class orangeRequest {
     return this.send('post', url, data, callbacks);
   }
 
-}
-/**
- * create the bind element
- * arguments:
- * id - DOM element id ie. <div id="foobar"></div>
- * configuration url - url requested to get the "base" configuration
- * template url - template url prefix
- * model url - model url prefix
- */
-class orangeBinder {
-  constructor(id, configUrl, templateUrl, modelUrl) {
-    /* DOM element id */
-    this.id = id;
-    /* is tiny bound bound to anything? */
-
-    this.bound = undefined;
-    /**
-     * do we have an error - boolean true/false
-     * keep these exposed on app so tinybind can use them as a boolean
-     */
-
-    this.error = false;
-    /**
-     * "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}}
-     * keep these exposed on app so tinybind can use them as a object
-     */
-
-    this.errors = {};
-    /**
-     * actual model storage
-     */
-
-    this.model = {};
-    /**
-     * when model is single records
-     */
-
-    this.record = {};
-    /**
-     * when model is multiple records
-     */
-
-    this.records = [];
-    /**
-     * collections - alter & collect
-     */
-
-    this.page = new orangeCollection();
-    this.form = new orangeCollection();
-    this.user = new orangeCollection();
-    this.local = new orangeCollection();
-    /* setup config with defaults */
-
-    this.config = new orangeCollection({
-      settable: ['page', 'form', 'user', 'local', 'config', 'templates', 'error', 'errors', 'model'],
-      gettable: ['page', 'form', 'error', 'errors', 'model'],
-      defaults: {},
-      configUrl: configUrl || '',
-      modelUrl: modelUrl || '',
-      templateUrl: templateUrl || '',
-      redirect: false,
-      ajaxTimeout: 5000,
-      routerRoot: '/',
-      storageCache: 0,
-      templateCache: 0,
-      clearCache: false,
-      ajaxCacheBuster: false,
-      tinyBind: {
-        prefix: 'rv',
-        preloadData: true,
-        rootInterface: '.',
-        templateDelimiters: ['{', '}']
-      }
-    });
-    /* customer trigger storage */
-
-    this.triggers = new orangeCollection();
-    /* user methods storage */
-
-    this.methods = new orangeCollection();
-    /**
-     * user storage for events
-     * <button class="btn btn-default" type="submit" rv-on-click="events.submit">Submit</button>
-     */
-
-    this.events = new orangeCollection();
-    /* user storage for templates */
-
-    this.templates = new orangeCollection();
-    /* send ajax requests to the server */
-
-    this.request = new orangeRequest(this);
-    /* Handle the changes of the browser URL  */
-
-    this.router = new orangeRouter(this);
-    this.load = new orangeLoader(this);
-    var parent = this;
-    /* jQuery less DOM ready */
-
-    document.addEventListener("DOMContentLoaded", function (e) {
-      parent._DOMContentLoaded(parent);
-    });
-  }
-  /**
-   * handle simple triggers
-   *
-   * - listener
-   * jQuery('body').on('foobar', function(event, arg1, arg2) {
-   * 	alert( arg1 + "\n" + arg2 );
-   * });
-   *
-   */
-
-
-  trigger(msg, args) {
-    jQuery('body').trigger(msg, args);
-  }
-  /**
-   * Called once the DOM is ready
-   *
-   * private
-   *
-   */
-
-
-  _DOMContentLoaded(orangeBind) {
-    /* Setup TinyBind */
-    tinybind.configure(orangeBind.config.tinyBind);
-    /* do we have a config url? */
-
-    if (orangeBind.config.configUrl !== '') {
-      /* default init 200 callback */
-      orangeBind.request.on(200, function (data, xhr) {
-        /* merge the returned data with the blocks data */
-        orangeBind.set(data);
-        /* start the router */
-
-        orangeBind.router.match();
-      }).get(orangeBind.config.configUrl);
-    } else {
-      /* start the router */
-      orangeBind.router.match();
-    }
-  }
-  /**
-   * merge and replace data
-   */
-
-
-  set(data, settable) {
-    settable = settable || this.config.settable;
-    console.log('set', data, settable);
-    this.request.setStatus(data.status, data.statusMsg);
-
-    for (let index in settable) {
-      let key = settable[index];
-
-      if (data[key] !== undefined) {
-        console.log(key, data[key]);
-        /*
-        if they have alter then send them in as objects and let alter merge the contents
-        else they replace the entire variable
-        */
-
-        if (typeof this[key].alter === 'function') {
-          this[key].alter(data[key]);
-        } else {
-          this[key] = data[key];
-        }
-      }
-    }
-    /**
-     * these are references to the actual model
-     * so the view can use records or record
-     * or you can still use model
-     */
-
-
-    this.records = this.model;
-    this.record = this.model;
-    /* do any cache cleaning based on the sent in data */
-
-    /* is it loaded? */
-
-    if (storage !== undefined) {
-      if (this.config.clearCache) {
-        storage.clear();
-      }
-      /* if set clear older than X seconds... */
-
-
-      if (this.config.olderThanCache !== undefined) {
-        storage.removeOlderThan(this.config.olderThanCache);
-      }
-    }
-
-    return this;
-    /* allow chaining */
-  }
-  /**
-   * get the data about this element
-   */
-
-
-  get(gettable) {
-    gettable = gettable || this.config.gettable;
-    console.log('get', gettable);
-    let collection = {};
-
-    for (let index in gettable) {
-      let key = gettable[index];
-      collection[key] = typeof this[key].collect === 'function' ? this[key].collect() : this[key];
-    }
-
-    console.log(collection);
-    return collection;
-  }
-
-  replace(html) {
-    this.element().innerHTML = html;
-  }
-
-  element() {
-    let element = document.getElementById(this.id);
-
-    if (element === null) {
-      console.error('Element Id "' + this.id + '" Not Found.');
-    } else {
-      console.log('"' + this.id + '" bound.');
-    }
-
-    return element;
-  }
-
-  rebind(data, then) {
-    this.trigger('tiny-bind-unbound', [data, then]);
-    /* unbind tinybind */
-
-    if (this.bound) {
-      this.bound.unbind();
-    }
-    /* update instance data */
-
-
-    if (data) {
-      this.set(data);
-    }
-
-    this.bound = tinybind.bind(this.element(), this);
-    /* tell everyone we now have new data */
-
-    this.trigger('tiny-bind-bound', [data, then]);
-
-    if (then) {
-      then();
-    }
-  }
-
-}
-/**
- *
- * Add Notification
- * optional redirect (see add examples)
- *
- * notify.info('Ya!')
- * notify.success('Saved')
- * notify.error('Oh Darn!')
- *
- * Show message on the Screen
- * notify.show('Oh No!','info')
- * notify.show('Oh No!','danger')
- * notify.show('Oh No!','warning')
- *
- * Save a message to display at a later time
- * optional redirect
- * notify.add('Oh No!','success')
- * notify.add('Oh No!','warning','@back')
- * notify.add('Oh No!','danger','/people/index')
- *
- * Show all variable and saved notifications
- * notify.showAll()
- *
- * Remove all of the notices on the screen
- * notify.removeAll()
- *
- * Flushes all variable and saved notifications
- * notify.flush()
- *
- * Redirect to another page
- * notify.redirect('@back')
- * notify.redirect('/people/index')
- *
- */
-var messages = messages || [];
-var notify = {
-  stayTime: 3,
-
-  /* seconds */
-  storageKey: 'notifyMsg',
-  defaultMsg: 'No Message Giving.',
-  defaultStyle: 'info',
-  noticeWrapAll: undefined,
-  map: {
-    red: 'danger',
-    yellow: 'warning',
-    blue: 'info',
-    green: 'success',
-    danger: 'danger',
-    warning: 'warning',
-    info: 'info',
-    success: 'info',
-    error: 'danger',
-    failure: 'danger'
-  },
-  stay: ['danger'],
-  init: function () {
-    var _parent = this;
-
-    if (!this.noticeWrapAll) {
-      this.noticeWrapAll = jQuery('<div></div>').addClass('notice-wrap').appendTo('body');
-    }
-
-    jQuery('body').on('spa-navgate', function () {
-      _parent.removeAll();
-    });
-    return this.showAll();
-  },
-  showAll: function () {
-    /* show all saved and variable messages */
-    return this.loadFromStorage().loadFromVariable();
-  },
-  info: function (msg, redirect) {
-    return this._autoDetect(msg, this.map.info, redirect);
-  },
-  success: function (msg, redirect) {
-    return this._autoDetect(msg, this.map.success, redirect);
-  },
-  error: function (msg, redirect) {
-    return this._autoDetect(msg, this.map.error, redirect);
-  },
-  show: function (msg, style) {
-    /* immediately show a notification */
-    return this._show(this.msgObj(msg, style));
-  },
-  add: function (msg, style, redirect) {
-    /**
-     * Save the notification for the next page load
-     * if you included a optional redirect then redirect to it
-     */
-    return this.save(this.msgObj(msg, style)).redirect(redirect);
-  },
-  redirect: function (redirect) {
-    if (redirect) {
-      if (redirect === '@back') {
-        window.history.back();
-      } else {
-        window.location.href = redirect;
-      }
-    }
-
-    return this;
-  },
-  removeAll: function () {
-    /* remove from screen */
-    jQuery('.notice-item-wrapper').each(function () {
-      $(this).remove();
-    });
-    return this;
-  },
-  flush: function () {
-    /* on page */
-    messages = [];
-    /* in storage */
-
-    storage.removeItem(this.storageKey);
-    return this;
-  },
-  loadFromStorage: function () {
-    /**
-     * Any message saved in cold storage?
-     */
-    var inStorageMessages = storage.getItem(this.storageKey, false);
-    /* clear out */
-
-    storage.removeItem(this.storageKey);
-    return this._asArray(inStorageMessages);
-  },
-  loadFromVariable: function () {
-    /**
-     * Any messages attached to the
-     * javascript global variable message on the page?
-     * this is inserted into the page from the server code
-     *
-     * <script>var messages = [{msg:'Foo',style:'success'},{msg:'Bar',style:'danger'}];</script>
-     */
-    var onPageMessages = messages;
-    /* clear out */
-
-    messages = [];
-    return this._asArray(onPageMessages);
-  },
-  msgObj: function (msg, style) {
-    var msgObj = {};
-    msgObj.msg = msg || this.defaultMsg;
-    msgObj.style = this.map.hasOwnProperty(style) ? this.map[style] : this.defaultStyle;
-    return msgObj;
-  },
-  save: function (msgObj) {
-    var inStorageMessages = storage.getItem(this.storageKey, []);
-    inStorageMessages.push(msgObj);
-    storage.setItem(this.storageKey, inStorageMessages);
-    return this;
-  },
-
-  /* "Internal" Functions */
-  _show: function (msgObj) {
-    var parent = this;
-    var noticeItemOuter, noticeItemInner, noticeItemClose;
-    noticeItemOuter = jQuery('<div></div>').addClass('notice-item-wrapper');
-    noticeItemInner = jQuery('<div></div>').hide().addClass('notice-item alert alert-' + msgObj.style).attr('data-dismiss', 'alert').appendTo(this.noticeWrapAll).html(msgObj.msg).animate({
-      opacity: 'show'
-    }, 600).wrap(noticeItemOuter);
-    noticeItemClose = jQuery('<div></div>').addClass('close').prependTo(noticeItemInner).html('&times;').click(function (event) {
-      event.stopPropagation();
-
-      parent._remove(noticeItemInner);
-    });
-    /* if it's NOT in the stay array set the timer to hide it */
-
-    if (this.stay.indexOf(msgObj.style) === -1) {
-      setTimeout(function () {
-        parent._remove(noticeItemInner);
-      }, this.stayTime * 1000
-      /* convert to milliseconds */
-      );
-    }
-
-    return this;
-  },
-  _remove: function (obj) {
-    obj.animate({
-      opacity: '0'
-    }, 600, function () {
-      obj.parent().animate({
-        height: '0px'
-      }, 300, function () {
-        obj.parent().remove();
-      });
-    });
-    return this;
-  },
-  _asArray: function (messages) {
-    for (var index in messages) {
-      if (messages.hasOwnProperty(index)) {
-        this._show(messages[index]);
-      }
-    }
-
-    return this;
-  },
-  _autoDetect: function (msg, style, redirect) {
-    return redirect ? this.add(msg, style, redirect) : this.show(msg, style);
-  }
-};
-notify.init();
-/* Create the object to hold the search properties and methods */
-var BoundTableSearch = {
-  storageKey: '.search',
-  bound: false,
-  fieldSelector: '#bound-table-search-field',
-  tableSelector: 'table.bound-table-search',
-  countSelector: '#table-search-field-count',
-  highlightColor: '#F0F2F7',
-  highlightIcon: 'text-info',
-  triggerOnSearch: 'BoundTableSearch',
-  element: {},
-  init: function () {
-    if (!this.bound) {
-      var parent = this;
-      /* Save DOM elements for "quick" access */
-
-      this.element.table = this.tableSelector + ' tbody tr';
-      this.element.field = $(this.fieldSelector);
-      /* register text field search with debounce */
-
-      this.element.field.on('keyup', debounce(function () {
-        parent.search();
-      }, 500));
-      /* load anything saved into the search field */
-
-      this.load();
-      /* do search */
-
-      this.search();
-      this.bound = true;
-    }
-  },
-  uninit: function () {
-    this.bound = false;
-  },
-
-  /* Do the actual search */
-  search: function () {
-    var searchTerm = this.getField();
-
-    if (typeof searchTerm === 'string') {
-      if (searchTerm.length > 0) {
-        /* run regular expression search on table text */
-
-        /* hide the tr's */
-        $(this.element.table).hide();
-        /* wildcard - still needs to be in order of the columns */
-
-        /* build javascript regular expression object */
-
-        var searchReg = searchTerm.replace(/[-[\]{}()+?.,\\^$|#\s]/g, '\\$&');
-        searchReg = searchReg.replace(/\*/gi, '(.*)');
-        console.debug('filter regular expression ' + searchReg);
-        var rex = new RegExp(searchReg, 'img');
-        /* filter them */
-
-        $(this.element.table).filter(function () {
-          return rex.test($(this).text().replace(/(\r\n|\n|\r)/gm, " "));
-        }).show();
-        /* show this row again */
-      } else {
-        /* show all */
-        $(this.element.table).show();
-      }
-
-      jQuery('body').trigger(this.triggerOnSearch, searchTerm);
-      this.save(searchTerm);
-      this.determineIcons(searchTerm);
-      this.updateCount(searchTerm);
-    }
-  },
-  updateCount: function (searchTerm) {
-    var vis = $(this.element.table + ':visible').length;
-    var all = $(this.element.table).length;
-    var shown = vis !== all ? vis + ' of ' + all : all;
-    $(this.countSelector).html(shown);
-    console.debug('bound table search filtering on "' + searchTerm + '" showing ' + shown);
-  },
-
-  /* Load the search term into the input field and do the search */
-  load: function () {
-    var data = storage.getItem(window.location.pathname + this.storageKey, {});
-
-    if (typeof data.search === 'string') {
-      this.setField(data.search);
-    }
-  },
-
-  /* Place the last search into the search box change the background color as needed */
-  save: function (search) {
-    storage.setItem(window.location.pathname + this.storageKey, {
-      search: search
-    });
-  },
-
-  /* Set and Get the search from the search field */
-  setField: function (searchTerm) {
-    this.element.field.val(searchTerm);
-  },
-  getField: function () {
-    return this.element.field ? this.element.field.val() : false;
-  },
-  determineIcons: function (searchTerm) {
-    if (searchTerm.length > 0) {
-      this.element.field.css({
-        'background-color': this.highlightColor
-      });
-      this.element.field.next().addClass(this.highlightIcon);
-    } else {
-      this.element.field.css({
-        'background-color': ''
-      });
-      this.element.field.next().removeClass(this.highlightIcon);
-    }
-  }
-};
-$('body').on('tiny-bind-bound', function () {
-  BoundTableSearch.init();
-});
-$('body').on('tiny-bind-unbound', function () {
-  BoundTableSearch.uninit();
-});
-/**
- *
- * Save the Windows Scroll Location
- *
- */
-$(window).scroll(function () {
-  storage.setItem(window.location.pathname + '.scroll_pos', $(window).scrollTop());
-});
-$('body').on('tiny-bind-bound', function () {
-  var ypos = storage.getItem(window.location.pathname + '.scroll_pos', null);
-
-  if (ypos > 0) {
-    $(window).scrollTop(ypos);
-  }
-});
-/* Create the object to hold the properties and methods */
-var tableSort = {
-  /* Default direction */
-  storageKey: '.sort',
-  bound: false,
-  class: 'table.table-sort',
-  triggerOnSort: 'tableSort',
-  dir: undefined,
-  index: undefined,
-  init: function () {
-    if (!this.bound) {
-      var parent = this;
-      this.addSortIcons();
-      /* handle clicks */
-
-      $(this.class + ' thead tr th:not(.nosort)').on('click', function () {
-        /* which direction are we going now? */
-        parent.dir = parent.dir === 'asc' ? 'desc' : 'asc';
-        parent.index = $(parent.class + ' thead tr th').index(this) + 1;
-        /* find out which column we clicked and send in the dir */
-
-        parent.sort(parent.index, parent.dir);
-      });
-      this.bound = true;
-      this.load();
-    }
-  },
-  uninit: function () {
-    this.bound = false;
-    $('.tablesorticon').remove();
-  },
-
-  /* Do the actual sort */
-  sort: function (index, dir) {
-    if (index > 0) {
-      console.debug('Sorting column:' + index + ' direction:' + dir + ' sorting:' + $(this.class + ' tbody tr').length);
-      this.determineIcons(index, dir);
-
-      if ($(this.class + ' tbody tr').length) {
-        tinysort(this.class + ' tbody tr', {
-          selector: 'td:nth-child(' + index + ')',
-          order: dir,
-          data: 'value'
-        }, {
-          selector: 'td:nth-child(' + index + ')',
-          order: dir
-        });
-        jQuery('body').trigger(this.triggerOnSort, 'sort');
-      }
-    }
-
-    this.save(index, dir);
-  },
-  addSortIcons: function () {
-    if (!$('.tablesorticon').length) {
-      $(this.class + ' thead tr th:not(.nosort)').prepend('<i class="fa fa-sort tablesorticon"></i> ');
-    }
-  },
-  determineIcons: function (index, dir) {
-    /* remove all previous arrows and such */
-    $(this.class + ' thead tr th i').removeClass('fa-sort-asc').removeClass('fa-sort-desc').addClass('fa-sort');
-    /* remove previous highlighted column */
-
-    $(this.class + ' thead tr th').removeClass('active');
-    /* add the correct classes to the header */
-
-    $(this.class + ' thead tr th:nth-child(' + index + ') i').addClass('fa-sort-' + dir).removeClass('fa-sort');
-    $(this.class + ' thead tr th:nth-child(' + index + ')').addClass('active');
-  },
-
-  /* Load the last sort if any */
-  load: function () {
-    if (this.exists()) {
-      var saved = storage.getItem(this.getKey(), {});
-      this.index = saved.index;
-      this.dir = saved.dir;
-      this.sort(this.index, this.dir);
-    }
-  },
-
-  /* Save the Last Sort */
-  save: function (index, dir) {
-    if (this.exists()) {
-      storage.setItem(this.getKey(), {
-        index: index,
-        dir: dir
-      });
-    }
-  },
-  getKey: function () {
-    return window.location.pathname + this.storageKey;
-  },
-  exists: function () {
-    return $(this.class + ' thead tr th:not(.nosort)').length > 0;
-  }
-};
-$('body').on('tiny-bind-bound', function () {
-  tableSort.init();
-});
-$('body').on('tiny-bind-unbound', function () {
-  tableSort.uninit();
-});
-/*! Copyright (c) Jonas Mosbech - https://github.com/jmosbech/StickyTableHeaders
-	MIT license info: https://github.com/jmosbech/StickyTableHeaders/blob/master/license.txt */
-;
-
-(function ($, window, undefined) {
-  'use strict';
-
-  var name = 'stickyTableHeaders',
-      id = 0,
-      defaults = {
-    fixedOffset: 0,
-    leftOffset: 0,
-    marginTop: 0,
-    objDocument: document,
-    objHead: 'head',
-    objWindow: window,
-    scrollableArea: window,
-    cacheHeaderHeight: false,
-    zIndex: 3
-  };
-
-  function Plugin(el, options) {
-    // To avoid scope issues, use 'base' instead of 'this'
-    // to reference this class from internal events and functions.
-    var base = this; // Access to jQuery and DOM versions of element
-
-    base.$el = $(el);
-    base.el = el;
-    base.id = id++; // Listen for destroyed, call teardown
-
-    base.$el.bind('destroyed', $.proxy(base.teardown, base)); // Cache DOM refs for performance reasons
-
-    base.$clonedHeader = null;
-    base.$originalHeader = null; // Cache header height for performance reasons
-
-    base.cachedHeaderHeight = null; // Keep track of state
-
-    base.isSticky = false;
-    base.hasBeenSticky = false;
-    base.leftOffset = null;
-    base.topOffset = null;
-
-    base.init = function () {
-      base.setOptions(options);
-      base.$el.each(function () {
-        var $this = $(this); // remove padding on <table> to fix issue #7
-
-        $this.css('padding', 0);
-        base.$originalHeader = $('thead:first', this);
-        base.$clonedHeader = base.$originalHeader.clone();
-        $this.trigger('clonedHeader.' + name, [base.$clonedHeader]);
-        base.$clonedHeader.addClass('tableFloatingHeader');
-        base.$clonedHeader.css({
-          display: 'none',
-          opacity: 0.0
-        });
-        base.$originalHeader.addClass('tableFloatingHeaderOriginal');
-        base.$originalHeader.after(base.$clonedHeader);
-        base.$printStyle = $('<style type="text/css" media="print">' + '.tableFloatingHeader{display:none !important;}' + '.tableFloatingHeaderOriginal{position:static !important;}' + '</style>');
-        base.$head.append(base.$printStyle);
-      });
-      base.$clonedHeader.find("input, select").attr("disabled", true);
-      base.updateWidth();
-      base.toggleHeaders();
-      base.bind();
-    };
-
-    base.destroy = function () {
-      base.$el.unbind('destroyed', base.teardown);
-      base.teardown();
-    };
-
-    base.teardown = function () {
-      if (base.isSticky) {
-        base.$originalHeader.css('position', 'static');
-      }
-
-      $.removeData(base.el, 'plugin_' + name);
-      base.unbind();
-      base.$clonedHeader.remove();
-      base.$originalHeader.removeClass('tableFloatingHeaderOriginal');
-      base.$originalHeader.css('visibility', 'visible');
-      base.$printStyle.remove();
-      base.el = null;
-      base.$el = null;
-    };
-
-    base.bind = function () {
-      base.$scrollableArea.on('scroll.' + name, base.toggleHeaders);
-
-      if (!base.isWindowScrolling) {
-        base.$window.on('scroll.' + name + base.id, base.setPositionValues);
-        base.$window.on('resize.' + name + base.id, base.toggleHeaders);
-      }
-
-      base.$scrollableArea.on('resize.' + name, base.toggleHeaders);
-      base.$scrollableArea.on('resize.' + name, base.updateWidth);
-    };
-
-    base.unbind = function () {
-      // unbind window events by specifying handle so we don't remove too much
-      base.$scrollableArea.off('.' + name, base.toggleHeaders);
-
-      if (!base.isWindowScrolling) {
-        base.$window.off('.' + name + base.id, base.setPositionValues);
-        base.$window.off('.' + name + base.id, base.toggleHeaders);
-      }
-
-      base.$scrollableArea.off('.' + name, base.updateWidth);
-    }; // We debounce the functions bound to the scroll and resize events
-
-
-    base.debounce = function (fn, delay) {
-      var timer = null;
-      return function () {
-        var context = this,
-            args = arguments;
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-          fn.apply(context, args);
-        }, delay);
-      };
-    };
-
-    base.toggleHeaders = base.debounce(function () {
-      if (base.$el) {
-        base.$el.each(function () {
-          var $this = $(this),
-              newLeft,
-              newTopOffset = base.isWindowScrolling ? isNaN(base.options.fixedOffset) ? base.options.fixedOffset.outerHeight() : base.options.fixedOffset : base.$scrollableArea.offset().top + (!isNaN(base.options.fixedOffset) ? base.options.fixedOffset : 0),
-              offset = $this.offset(),
-              scrollTop = base.$scrollableArea.scrollTop() + newTopOffset,
-              scrollLeft = base.$scrollableArea.scrollLeft(),
-              headerHeight,
-              scrolledPastTop = base.isWindowScrolling ? scrollTop > offset.top : newTopOffset > offset.top,
-              notScrolledPastBottom;
-
-          if (scrolledPastTop) {
-            headerHeight = base.options.cacheHeaderHeight ? base.cachedHeaderHeight : base.$clonedHeader.height();
-            notScrolledPastBottom = (base.isWindowScrolling ? scrollTop : 0) < offset.top + $this.height() - headerHeight - (base.isWindowScrolling ? 0 : newTopOffset);
-          }
-
-          if (scrolledPastTop && notScrolledPastBottom) {
-            newLeft = offset.left - scrollLeft + base.options.leftOffset;
-            var nav = document.getElementsByTagName('nav')[0];
-            var navHeight = nav ? nav.offsetHeight : base.options.marginTop;
-            base.$originalHeader.css({
-              'position': 'fixed',
-              'margin-top': navHeight,
-              'top': 0,
-              'left': newLeft,
-              'z-index': base.options.zIndex
-            });
-            base.leftOffset = newLeft;
-            base.topOffset = newTopOffset;
-            base.$clonedHeader.css('display', '');
-
-            if (!base.isSticky) {
-              base.isSticky = true; // make sure the width is correct: the user might have resized the browser while in static mode
-
-              base.updateWidth();
-              $this.trigger('enabledStickiness.' + name);
-            }
-
-            base.setPositionValues();
-          } else if (base.isSticky) {
-            base.$originalHeader.css('position', 'static');
-            base.$clonedHeader.css('display', 'none');
-            base.isSticky = false;
-            base.resetWidth($('td,th', base.$clonedHeader), $('td,th', base.$originalHeader));
-            $this.trigger('disabledStickiness.' + name);
-          }
-        });
-      }
-    }, 0);
-    base.setPositionValues = base.debounce(function () {
-      var winScrollTop = base.$window.scrollTop(),
-          winScrollLeft = base.$window.scrollLeft();
-
-      if (!base.isSticky || winScrollTop < 0 || winScrollTop + base.$window.height() > base.$document.height() || winScrollLeft < 0 || winScrollLeft + base.$window.width() > base.$document.width()) {
-        return;
-      }
-
-      base.$originalHeader.css({
-        'top': base.topOffset - (base.isWindowScrolling ? 0 : winScrollTop),
-        'left': base.leftOffset - (base.isWindowScrolling ? 0 : winScrollLeft)
-      });
-    }, 0);
-    base.updateWidth = base.debounce(function () {
-      if (!base.isSticky) {
-        return;
-      } // Copy cell widths from clone
-
-
-      if (!base.$originalHeaderCells) {
-        base.$originalHeaderCells = $('th,td', base.$originalHeader);
-      }
-
-      if (!base.$clonedHeaderCells) {
-        base.$clonedHeaderCells = $('th,td', base.$clonedHeader);
-      }
-
-      var cellWidths = base.getWidth(base.$clonedHeaderCells);
-      base.setWidth(cellWidths, base.$clonedHeaderCells, base.$originalHeaderCells); // Copy row width from whole table
-
-      base.$originalHeader.css('width', base.$clonedHeader.width()); // If we're caching the height, we need to update the cached value when the width changes
-
-      if (base.options.cacheHeaderHeight) {
-        base.cachedHeaderHeight = base.$clonedHeader.height();
-      }
-    }, 0);
-
-    base.getWidth = function ($clonedHeaders) {
-      var widths = [];
-      $clonedHeaders.each(function (index) {
-        var width,
-            $this = $(this);
-
-        if ($this.css('box-sizing') === 'border-box') {
-          var boundingClientRect = $this[0].getBoundingClientRect();
-
-          if (boundingClientRect.width) {
-            width = boundingClientRect.width; // #39: border-box bug
-          } else {
-            width = boundingClientRect.right - boundingClientRect.left; // ie8 bug: getBoundingClientRect() does not have a width property
-          }
-        } else {
-          var $origTh = $('th', base.$originalHeader);
-
-          if ($origTh.css('border-collapse') === 'collapse') {
-            if (window.getComputedStyle) {
-              width = parseFloat(window.getComputedStyle(this, null).width);
-            } else {
-              // ie8 only
-              var leftPadding = parseFloat($this.css('padding-left'));
-              var rightPadding = parseFloat($this.css('padding-right')); // Needs more investigation - this is assuming constant border around this cell and it's neighbours.
-
-              var border = parseFloat($this.css('border-width'));
-              width = $this.outerWidth() - leftPadding - rightPadding - border;
-            }
-          } else {
-            width = $this.width();
-          }
-        }
-
-        widths[index] = width;
-      });
-      return widths;
-    };
-
-    base.setWidth = function (widths, $clonedHeaders, $origHeaders) {
-      $clonedHeaders.each(function (index) {
-        var width = widths[index];
-        $origHeaders.eq(index).css({
-          'min-width': width,
-          'max-width': width
-        });
-      });
-    };
-
-    base.resetWidth = function ($clonedHeaders, $origHeaders) {
-      $clonedHeaders.each(function (index) {
-        var $this = $(this);
-        $origHeaders.eq(index).css({
-          'min-width': $this.css('min-width'),
-          'max-width': $this.css('max-width')
-        });
-      });
-    };
-
-    base.setOptions = function (options) {
-      base.options = $.extend({}, defaults, options);
-      base.$window = $(base.options.objWindow);
-      base.$head = $(base.options.objHead);
-      base.$document = $(base.options.objDocument);
-      base.$scrollableArea = $(base.options.scrollableArea);
-      base.isWindowScrolling = base.$scrollableArea[0] === base.$window[0];
-    };
-
-    base.updateOptions = function (options) {
-      base.setOptions(options); // scrollableArea might have changed
-
-      base.unbind();
-      base.bind();
-      base.updateWidth();
-      base.toggleHeaders();
-    }; // Run initializer
-
-
-    base.init();
-  } // A plugin wrapper around the constructor,
-  // preventing against multiple instantiations
-
-
-  $.fn[name] = function (options) {
-    return this.each(function () {
-      var instance = $.data(this, 'plugin_' + name);
-
-      if (instance) {
-        if (typeof options === 'string') {
-          instance[options].apply(instance);
-        } else {
-          instance.updateOptions(options);
-        }
-      } else if (options !== 'destroy') {
-        $.data(this, 'plugin_' + name, new Plugin(this, options));
-      }
-    });
-  };
-})(jQuery, window);
-
-$('body').on('tiny-bind-bound', function () {
-  console.log('bind sticky header ' + $('.navbar-fixed-top').outerHeight());
-  $('.table-sticky-header').stickyTableHeaders({
-    marginTop: $('.navbar-fixed-top')
-  });
-});
-/**
- *
- * example:
- * text field search with debounce
- *
- * table_search_field.field.on('keyup',debounce(function(){
- *   table_search_field.search(table_search_field.get_field());
- * },500));
- *
- */
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function () {
-    var context = this,
-        args = arguments;
-
-    var later = function () {
-      timeout = null;
-
-      if (!immediate) {
-        func.apply(context, args);
-      }
-    };
-
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-
-    if (callNow) {
-      func.apply(context, args);
-    }
-  };
-}
-
-$(document).on('click', '[appNavigate]', function (event) {
-  event.preventDefault();
-  var href = $(this).attr('href');
-  var redirect = $(this).attr('target') == '_top';
-
-  if (href) {
-    nav.router.navigate(href, redirect);
-  }
-});
-$(document).on('tiny-bind-bound', function () {
-  $('select').selectpicker();
-});
-
-function DOMRefresh(which) {
-  console.log('DOMRefresh');
-  $('.form-control').selectpicker('refresh');
 }
 /**
  * These are attached directly to tinybind
@@ -2831,6 +1762,1077 @@ tinybind.formatters.isLowerEqual = tinybind.formatters.isLessEqual;
 tinybind.formatters.stringFormat = sprintf();
 tinybind.formatters.inject = sprintf();
 tinybind.formatters.sprintf = sprintf();
+/**
+ * create the bind element
+ * arguments:
+ * id - DOM element id ie. <div id="foobar"></div>
+ * configuration url - url requested to get the "base" configuration
+ * template url - template url prefix
+ * model url - model url prefix
+ */
+class orangeBinder {
+  constructor(id, configUrl, templateUrl, modelUrl) {
+    var parent = this;
+    /* DOM element id */
+
+    this.id = id;
+    /* is tiny bound bound to anything? */
+
+    this.bound = undefined;
+    /**
+     * do we have an error - boolean true/false
+     * keep these exposed on app so tinybind can use them as a boolean
+     */
+
+    this.error = false;
+    /**
+     * "errors":{"robots":{"Name":"Name is required.","Year":"Year is required."}}}
+     * keep these exposed on app so tinybind can use them as a object
+     */
+
+    this.errors = {};
+    /**
+     * actual model storage
+     */
+
+    this.model = {};
+    /**
+     * when model is single records
+     */
+
+    this.record = {};
+    /**
+     * when model is multiple records
+     */
+
+    this.records = [];
+    /* setup config with defaults */
+
+    this.config = new orangeCollection(this, {
+      settable: ["page", "form", "user", "local", "config", "templates", "error", "errors", "model"],
+      gettable: ["page", "form", "error", "errors", "model"],
+      defaults: {},
+      configUrl: configUrl || "",
+      modelUrl: modelUrl || "",
+      templateUrl: templateUrl || "",
+      redirect: false,
+      ajaxTimeout: 5000,
+      routerRoot: "/",
+      storageCache: 0,
+      templateCache: 0,
+      clearCache: false,
+      ajaxCacheBuster: false,
+      tinyBind: {
+        prefix: "rv",
+        preloadData: true,
+        rootInterface: ".",
+        templateDelimiters: ["{", "}"]
+      }
+    });
+    /**
+     * collections - alter & collect
+     */
+
+    this.page = new orangeCollection(this);
+    this.form = new orangeCollection(this);
+    this.user = new orangeCollection(this);
+    this.local = new orangeCollection(this);
+    /* user methods storage */
+
+    this.methods = new orangeCollection(this);
+    /**
+     * user storage for events
+     * <button class="btn btn-default" type="submit" rv-on-click="events.submit">Submit</button>
+     */
+
+    this.events = new orangeCollection(this);
+    /* user storage for templates */
+
+    this.templates = new orangeCollection(this);
+    /* send ajax requests to the server */
+
+    this.request = new orangeRequest(this);
+    /* Handle the changes of the browser URL  */
+
+    this.router = new orangeRouter(this);
+    this.load = new orangeLoader(this);
+    /* jQuery less DOM ready */
+
+    document.addEventListener("DOMContentLoaded", function (e) {
+      /* Setup TinyBind */
+      tinybind.configure(parent.config.tinyBind);
+      /* do we have a config url? */
+
+      if (parent.config.configUrl !== "") {
+        /* setup the 200 callback */
+        parent.request.on(200, function (data, xhr) {
+          /* merge the returned data with the blocks data */
+          parent.set(data);
+          /* start the router */
+
+          parent.router.match();
+          /* get the config from the server */
+        }).get(parent.config.configUrl);
+      } else {
+        /* no config url so simply start the router */
+        parent.router.match();
+      }
+    });
+  }
+  /**
+   * "Trigger" an event
+   *
+   * app.trigger('error',['we have a problem','foobar function']);
+   *
+   * wrapper for jQuery trigger
+   */
+
+
+  trigger(msg, args) {
+    jQuery('body').trigger(msg, args);
+  }
+  /**
+   * Setup Listener
+   *
+   * app.listener('foobar', function (e) {
+   * 	console.log('args',e.args);
+   * });
+   *
+   * wrapper for jQuery on
+   */
+
+
+  listener(msg, callback) {
+    jQuery('body').on(msg, callback);
+  }
+  /**
+   * merge and replace data
+   */
+
+
+  set(data, settable) {
+    settable = settable || this.config.settable;
+    console.log("set", data, settable);
+    this.request.setStatus(data.status, data.statusMsg);
+
+    for (let index in settable) {
+      let key = settable[index];
+
+      if (data[key] !== undefined) {
+        console.log(key, data[key]);
+        /*
+        	if they have alter then send them in as objects and let alter merge the contents
+        	else they replace the entire variable
+        	*/
+
+        if (typeof this[key].alter === "function") {
+          this[key].alter(data[key]);
+        } else {
+          this[key] = data[key];
+        }
+      }
+    }
+    /**
+     * these are references to the actual model
+     * so the view can use records or record
+     * or you can still use model
+     */
+
+
+    this.records = this.model;
+    this.record = this.model;
+    /* do any cache cleaning based on the sent in data */
+
+    /* is it loaded? */
+
+    if (storage !== undefined) {
+      if (this.config.clearCache) {
+        storage.clear();
+      }
+      /* if set clear older than X seconds... */
+
+
+      if (this.config.olderThanCache !== undefined) {
+        storage.removeOlderThan(this.config.olderThanCache);
+      }
+    }
+
+    return this;
+    /* allow chaining */
+  }
+  /**
+   * get the data about this element
+   */
+
+
+  get(gettable) {
+    gettable = gettable || this.config.gettable;
+    console.log("get", gettable);
+    let collection = {};
+
+    for (let index in gettable) {
+      let key = gettable[index];
+      collection[key] = typeof this[key].collect === "function" ? this[key].collect() : this[key];
+    }
+
+    console.log(collection);
+    return collection;
+  }
+
+  replace(html) {
+    this.element().innerHTML = html;
+  }
+
+  element() {
+    let element = document.getElementById(this.id);
+
+    if (element === null) {
+      console.error('Element Id "' + this.id + '" Not Found.');
+    } else {
+      console.log('"' + this.id + '" bound.');
+    }
+
+    return element;
+  }
+
+  rebind(data, then) {
+    this.trigger("tiny-bind-unbound", [data, then]);
+    /* unbind tinybind */
+
+    if (this.bound) {
+      this.bound.unbind();
+    }
+    /* update instance data */
+
+
+    if (data) {
+      this.set(data);
+    }
+
+    this.bound = tinybind.bind(this.element(), this);
+    /* tell everyone we now have new data */
+
+    this.trigger("tiny-bind-bound", [data, then]);
+
+    if (then) {
+      then();
+    }
+  }
+
+}
+/**
+ *
+ * Add Notification
+ * optional redirect (see add examples)
+ *
+ * notify.info('Ya!')
+ * notify.success('Saved')
+ * notify.error('Oh Darn!')
+ *
+ * Show message on the Screen
+ * notify.show('Oh No!','info')
+ * notify.show('Oh No!','danger')
+ * notify.show('Oh No!','warning')
+ *
+ * Save a message to display at a later time
+ * optional redirect
+ * notify.add('Oh No!','success')
+ * notify.add('Oh No!','warning','@back')
+ * notify.add('Oh No!','danger','/people/index')
+ *
+ * Show all variable and saved notifications
+ * notify.showAll()
+ *
+ * Remove all of the notices on the screen
+ * notify.removeAll()
+ *
+ * Flushes all variable and saved notifications
+ * notify.flush()
+ *
+ * Redirect to another page
+ * notify.redirect('@back')
+ * notify.redirect('/people/index')
+ *
+ */
+var messages = messages || [];
+var notify = {
+  stayTime: 3,
+
+  /* seconds */
+  storageKey: 'notifyMsg',
+  defaultMsg: 'No Message Giving.',
+  defaultStyle: 'info',
+  noticeWrapAll: undefined,
+  map: {
+    red: 'danger',
+    yellow: 'warning',
+    blue: 'info',
+    green: 'success',
+    danger: 'danger',
+    warning: 'warning',
+    info: 'info',
+    success: 'info',
+    error: 'danger',
+    failure: 'danger'
+  },
+  stay: ['danger'],
+  init: function () {
+    var _parent = this;
+
+    if (!this.noticeWrapAll) {
+      this.noticeWrapAll = jQuery('<div></div>').addClass('notice-wrap').appendTo('body');
+    }
+
+    jQuery('body').on('spa-navgate', function () {
+      _parent.removeAll();
+    });
+    return this.showAll();
+  },
+  showAll: function () {
+    /* show all saved and variable messages */
+    return this.loadFromStorage().loadFromVariable();
+  },
+  info: function (msg, redirect) {
+    return this._autoDetect(msg, this.map.info, redirect);
+  },
+  success: function (msg, redirect) {
+    return this._autoDetect(msg, this.map.success, redirect);
+  },
+  error: function (msg, redirect) {
+    return this._autoDetect(msg, this.map.error, redirect);
+  },
+  show: function (msg, style) {
+    /* immediately show a notification */
+    return this._show(this.msgObj(msg, style));
+  },
+  add: function (msg, style, redirect) {
+    /**
+     * Save the notification for the next page load
+     * if you included a optional redirect then redirect to it
+     */
+    return this.save(this.msgObj(msg, style)).redirect(redirect);
+  },
+  redirect: function (redirect) {
+    if (redirect) {
+      if (redirect === '@back') {
+        window.history.back();
+      } else {
+        window.location.href = redirect;
+      }
+    }
+
+    return this;
+  },
+  removeAll: function () {
+    /* remove from screen */
+    jQuery('.notice-item-wrapper').each(function () {
+      $(this).remove();
+    });
+    return this;
+  },
+  flush: function () {
+    /* on page */
+    messages = [];
+    /* in storage */
+
+    storage.removeItem(this.storageKey);
+    return this;
+  },
+  loadFromStorage: function () {
+    /**
+     * Any message saved in cold storage?
+     */
+    var inStorageMessages = storage.getItem(this.storageKey, false);
+    /* clear out */
+
+    storage.removeItem(this.storageKey);
+    return this._asArray(inStorageMessages);
+  },
+  loadFromVariable: function () {
+    /**
+     * Any messages attached to the
+     * javascript global variable message on the page?
+     * this is inserted into the page from the server code
+     *
+     * <script>var messages = [{msg:'Foo',style:'success'},{msg:'Bar',style:'danger'}];</script>
+     */
+    var onPageMessages = messages;
+    /* clear out */
+
+    messages = [];
+    return this._asArray(onPageMessages);
+  },
+  msgObj: function (msg, style) {
+    var msgObj = {};
+    msgObj.msg = msg || this.defaultMsg;
+    msgObj.style = this.map.hasOwnProperty(style) ? this.map[style] : this.defaultStyle;
+    return msgObj;
+  },
+  save: function (msgObj) {
+    var inStorageMessages = storage.getItem(this.storageKey, []);
+    inStorageMessages.push(msgObj);
+    storage.setItem(this.storageKey, inStorageMessages);
+    return this;
+  },
+
+  /* "Internal" Functions */
+  _show: function (msgObj) {
+    var parent = this;
+    var noticeItemOuter, noticeItemInner, noticeItemClose;
+    noticeItemOuter = jQuery('<div></div>').addClass('notice-item-wrapper');
+    noticeItemInner = jQuery('<div></div>').hide().addClass('notice-item alert alert-' + msgObj.style).attr('data-dismiss', 'alert').appendTo(this.noticeWrapAll).html(msgObj.msg).animate({
+      opacity: 'show'
+    }, 600).wrap(noticeItemOuter);
+    noticeItemClose = jQuery('<div></div>').addClass('close').prependTo(noticeItemInner).html('&times;').click(function (event) {
+      event.stopPropagation();
+
+      parent._remove(noticeItemInner);
+    });
+    /* if it's NOT in the stay array set the timer to hide it */
+
+    if (this.stay.indexOf(msgObj.style) === -1) {
+      setTimeout(function () {
+        parent._remove(noticeItemInner);
+      }, this.stayTime * 1000
+      /* convert to milliseconds */
+      );
+    }
+
+    return this;
+  },
+  _remove: function (obj) {
+    obj.animate({
+      opacity: '0'
+    }, 600, function () {
+      obj.parent().animate({
+        height: '0px'
+      }, 300, function () {
+        obj.parent().remove();
+      });
+    });
+    return this;
+  },
+  _asArray: function (messages) {
+    for (var index in messages) {
+      if (messages.hasOwnProperty(index)) {
+        this._show(messages[index]);
+      }
+    }
+
+    return this;
+  },
+  _autoDetect: function (msg, style, redirect) {
+    return redirect ? this.add(msg, style, redirect) : this.show(msg, style);
+  }
+};
+notify.init();
+/* Create the object to hold the search properties and methods */
+var BoundTableSearch = {
+  storageKey: '.search',
+  bound: false,
+  fieldSelector: '#bound-table-search-field',
+  tableSelector: 'table.bound-table-search',
+  countSelector: '#table-search-field-count',
+  highlightColor: '#F0F2F7',
+  highlightIcon: 'text-info',
+  triggerOnSearch: 'BoundTableSearch',
+  element: {},
+  init: function () {
+    if (!this.bound) {
+      var parent = this;
+      /* Save DOM elements for "quick" access */
+
+      this.element.table = this.tableSelector + ' tbody tr';
+      this.element.field = $(this.fieldSelector);
+      /* register text field search with debounce */
+
+      this.element.field.on('keyup', debounce(function () {
+        parent.search();
+      }, 500));
+      /* load anything saved into the search field */
+
+      this.load();
+      /* do search */
+
+      this.search();
+      this.bound = true;
+    }
+  },
+  uninit: function () {
+    this.bound = false;
+  },
+
+  /* Do the actual search */
+  search: function () {
+    var searchTerm = this.getField();
+
+    if (typeof searchTerm === 'string') {
+      if (searchTerm.length > 0) {
+        /* run regular expression search on table text */
+
+        /* hide the tr's */
+        $(this.element.table).hide();
+        /* wildcard - still needs to be in order of the columns */
+
+        /* build javascript regular expression object */
+
+        var searchReg = searchTerm.replace(/[-[\]{}()+?.,\\^$|#\s]/g, '\\$&');
+        searchReg = searchReg.replace(/\*/gi, '(.*)');
+        console.debug('filter regular expression ' + searchReg);
+        var rex = new RegExp(searchReg, 'img');
+        /* filter them */
+
+        $(this.element.table).filter(function () {
+          return rex.test($(this).text().replace(/(\r\n|\n|\r)/gm, " "));
+        }).show();
+        /* show this row again */
+      } else {
+        /* show all */
+        $(this.element.table).show();
+      }
+
+      jQuery('body').trigger(this.triggerOnSearch, searchTerm);
+      this.save(searchTerm);
+      this.determineIcons(searchTerm);
+      this.updateCount(searchTerm);
+    }
+  },
+  updateCount: function (searchTerm) {
+    var vis = $(this.element.table + ':visible').length;
+    var all = $(this.element.table).length;
+    var shown = vis !== all ? vis + ' of ' + all : all;
+    $(this.countSelector).html(shown);
+    console.debug('bound table search filtering on "' + searchTerm + '" showing ' + shown);
+  },
+
+  /* Load the search term into the input field and do the search */
+  load: function () {
+    var data = storage.getItem(window.location.pathname + this.storageKey, {});
+
+    if (typeof data.search === 'string') {
+      this.setField(data.search);
+    }
+  },
+
+  /* Place the last search into the search box change the background color as needed */
+  save: function (search) {
+    storage.setItem(window.location.pathname + this.storageKey, {
+      search: search
+    });
+  },
+
+  /* Set and Get the search from the search field */
+  setField: function (searchTerm) {
+    this.element.field.val(searchTerm);
+  },
+  getField: function () {
+    return this.element.field ? this.element.field.val() : false;
+  },
+  determineIcons: function (searchTerm) {
+    if (searchTerm.length > 0) {
+      this.element.field.css({
+        'background-color': this.highlightColor
+      });
+      this.element.field.next().addClass(this.highlightIcon);
+    } else {
+      this.element.field.css({
+        'background-color': ''
+      });
+      this.element.field.next().removeClass(this.highlightIcon);
+    }
+  }
+};
+$('body').on('tiny-bind-bound', function () {
+  BoundTableSearch.init();
+});
+$('body').on('tiny-bind-unbound', function () {
+  BoundTableSearch.uninit();
+});
+/**
+ *
+ * Save the Windows Scroll Location
+ *
+ */
+$(window).scroll(function () {
+  storage.setItem(window.location.pathname + '.scroll_pos', $(window).scrollTop());
+});
+$('body').on('tiny-bind-bound', function () {
+  var ypos = storage.getItem(window.location.pathname + '.scroll_pos', null);
+
+  if (ypos > 0) {
+    $(window).scrollTop(ypos);
+  }
+});
+/* Create the object to hold the properties and methods */
+var tableSort = {
+  /* Default direction */
+  storageKey: '.sort',
+  bound: false,
+  class: 'table.table-sort',
+  triggerOnSort: 'tableSort',
+  dir: undefined,
+  index: undefined,
+  init: function () {
+    if (!this.bound) {
+      var parent = this;
+      this.addSortIcons();
+      /* handle clicks */
+
+      $(this.class + ' thead tr th:not(.nosort)').on('click', function () {
+        /* which direction are we going now? */
+        parent.dir = parent.dir === 'asc' ? 'desc' : 'asc';
+        parent.index = $(parent.class + ' thead tr th').index(this) + 1;
+        /* find out which column we clicked and send in the dir */
+
+        parent.sort(parent.index, parent.dir);
+      });
+      this.bound = true;
+      this.load();
+    }
+  },
+  uninit: function () {
+    this.bound = false;
+    $('.tablesorticon').remove();
+  },
+
+  /* Do the actual sort */
+  sort: function (index, dir) {
+    if (index > 0) {
+      console.debug('Sorting column:' + index + ' direction:' + dir + ' sorting:' + $(this.class + ' tbody tr').length);
+      this.determineIcons(index, dir);
+
+      if ($(this.class + ' tbody tr').length) {
+        tinysort(this.class + ' tbody tr', {
+          selector: 'td:nth-child(' + index + ')',
+          order: dir,
+          data: 'value'
+        }, {
+          selector: 'td:nth-child(' + index + ')',
+          order: dir
+        });
+        jQuery('body').trigger(this.triggerOnSort, 'sort');
+      }
+    }
+
+    this.save(index, dir);
+  },
+  addSortIcons: function () {
+    if (!$('.tablesorticon').length) {
+      $(this.class + ' thead tr th:not(.nosort)').prepend('<i class="fa fa-sort tablesorticon"></i> ');
+    }
+  },
+  determineIcons: function (index, dir) {
+    /* remove all previous arrows and such */
+    $(this.class + ' thead tr th i').removeClass('fa-sort-asc').removeClass('fa-sort-desc').addClass('fa-sort');
+    /* remove previous highlighted column */
+
+    $(this.class + ' thead tr th').removeClass('active');
+    /* add the correct classes to the header */
+
+    $(this.class + ' thead tr th:nth-child(' + index + ') i').addClass('fa-sort-' + dir).removeClass('fa-sort');
+    $(this.class + ' thead tr th:nth-child(' + index + ')').addClass('active');
+  },
+
+  /* Load the last sort if any */
+  load: function () {
+    if (this.exists()) {
+      var saved = storage.getItem(this.getKey(), {});
+      this.index = saved.index;
+      this.dir = saved.dir;
+      this.sort(this.index, this.dir);
+    }
+  },
+
+  /* Save the Last Sort */
+  save: function (index, dir) {
+    if (this.exists()) {
+      storage.setItem(this.getKey(), {
+        index: index,
+        dir: dir
+      });
+    }
+  },
+  getKey: function () {
+    return window.location.pathname + this.storageKey;
+  },
+  exists: function () {
+    return $(this.class + ' thead tr th:not(.nosort)').length > 0;
+  }
+};
+$('body').on('tiny-bind-bound', function () {
+  tableSort.init();
+});
+$('body').on('tiny-bind-unbound', function () {
+  tableSort.uninit();
+});
+/*! Copyright (c) Jonas Mosbech - https://github.com/jmosbech/StickyTableHeaders
+	MIT license info: https://github.com/jmosbech/StickyTableHeaders/blob/master/license.txt */
+;
+
+(function ($, window, undefined) {
+  'use strict';
+
+  var name = 'stickyTableHeaders',
+      id = 0,
+      defaults = {
+    fixedOffset: 0,
+    leftOffset: 0,
+    marginTop: 0,
+    objDocument: document,
+    objHead: 'head',
+    objWindow: window,
+    scrollableArea: window,
+    cacheHeaderHeight: false,
+    zIndex: 3
+  };
+
+  function Plugin(el, options) {
+    // To avoid scope issues, use 'base' instead of 'this'
+    // to reference this class from internal events and functions.
+    var base = this; // Access to jQuery and DOM versions of element
+
+    base.$el = $(el);
+    base.el = el;
+    base.id = id++; // Listen for destroyed, call teardown
+
+    base.$el.bind('destroyed', $.proxy(base.teardown, base)); // Cache DOM refs for performance reasons
+
+    base.$clonedHeader = null;
+    base.$originalHeader = null; // Cache header height for performance reasons
+
+    base.cachedHeaderHeight = null; // Keep track of state
+
+    base.isSticky = false;
+    base.hasBeenSticky = false;
+    base.leftOffset = null;
+    base.topOffset = null;
+
+    base.init = function () {
+      base.setOptions(options);
+      base.$el.each(function () {
+        var $this = $(this); // remove padding on <table> to fix issue #7
+
+        $this.css('padding', 0);
+        base.$originalHeader = $('thead:first', this);
+        base.$clonedHeader = base.$originalHeader.clone();
+        $this.trigger('clonedHeader.' + name, [base.$clonedHeader]);
+        base.$clonedHeader.addClass('tableFloatingHeader');
+        base.$clonedHeader.css({
+          display: 'none',
+          opacity: 0.0
+        });
+        base.$originalHeader.addClass('tableFloatingHeaderOriginal');
+        base.$originalHeader.after(base.$clonedHeader);
+        base.$printStyle = $('<style type="text/css" media="print">' + '.tableFloatingHeader{display:none !important;}' + '.tableFloatingHeaderOriginal{position:static !important;}' + '</style>');
+        base.$head.append(base.$printStyle);
+      });
+      base.$clonedHeader.find("input, select").attr("disabled", true);
+      base.updateWidth();
+      base.toggleHeaders();
+      base.bind();
+    };
+
+    base.destroy = function () {
+      base.$el.unbind('destroyed', base.teardown);
+      base.teardown();
+    };
+
+    base.teardown = function () {
+      if (base.isSticky) {
+        base.$originalHeader.css('position', 'static');
+      }
+
+      $.removeData(base.el, 'plugin_' + name);
+      base.unbind();
+      base.$clonedHeader.remove();
+      base.$originalHeader.removeClass('tableFloatingHeaderOriginal');
+      base.$originalHeader.css('visibility', 'visible');
+      base.$printStyle.remove();
+      base.el = null;
+      base.$el = null;
+    };
+
+    base.bind = function () {
+      base.$scrollableArea.on('scroll.' + name, base.toggleHeaders);
+
+      if (!base.isWindowScrolling) {
+        base.$window.on('scroll.' + name + base.id, base.setPositionValues);
+        base.$window.on('resize.' + name + base.id, base.toggleHeaders);
+      }
+
+      base.$scrollableArea.on('resize.' + name, base.toggleHeaders);
+      base.$scrollableArea.on('resize.' + name, base.updateWidth);
+    };
+
+    base.unbind = function () {
+      // unbind window events by specifying handle so we don't remove too much
+      base.$scrollableArea.off('.' + name, base.toggleHeaders);
+
+      if (!base.isWindowScrolling) {
+        base.$window.off('.' + name + base.id, base.setPositionValues);
+        base.$window.off('.' + name + base.id, base.toggleHeaders);
+      }
+
+      base.$scrollableArea.off('.' + name, base.updateWidth);
+    }; // We debounce the functions bound to the scroll and resize events
+
+
+    base.debounce = function (fn, delay) {
+      var timer = null;
+      return function () {
+        var context = this,
+            args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          fn.apply(context, args);
+        }, delay);
+      };
+    };
+
+    base.toggleHeaders = base.debounce(function () {
+      if (base.$el) {
+        base.$el.each(function () {
+          var $this = $(this),
+              newLeft,
+              newTopOffset = base.isWindowScrolling ? isNaN(base.options.fixedOffset) ? base.options.fixedOffset.outerHeight() : base.options.fixedOffset : base.$scrollableArea.offset().top + (!isNaN(base.options.fixedOffset) ? base.options.fixedOffset : 0),
+              offset = $this.offset(),
+              scrollTop = base.$scrollableArea.scrollTop() + newTopOffset,
+              scrollLeft = base.$scrollableArea.scrollLeft(),
+              headerHeight,
+              scrolledPastTop = base.isWindowScrolling ? scrollTop > offset.top : newTopOffset > offset.top,
+              notScrolledPastBottom;
+
+          if (scrolledPastTop) {
+            headerHeight = base.options.cacheHeaderHeight ? base.cachedHeaderHeight : base.$clonedHeader.height();
+            notScrolledPastBottom = (base.isWindowScrolling ? scrollTop : 0) < offset.top + $this.height() - headerHeight - (base.isWindowScrolling ? 0 : newTopOffset);
+          }
+
+          if (scrolledPastTop && notScrolledPastBottom) {
+            newLeft = offset.left - scrollLeft + base.options.leftOffset;
+            var nav = document.getElementsByTagName('nav')[0];
+            var navHeight = nav ? nav.offsetHeight : base.options.marginTop;
+            base.$originalHeader.css({
+              'position': 'fixed',
+              'margin-top': navHeight,
+              'top': 0,
+              'left': newLeft,
+              'z-index': base.options.zIndex
+            });
+            base.leftOffset = newLeft;
+            base.topOffset = newTopOffset;
+            base.$clonedHeader.css('display', '');
+
+            if (!base.isSticky) {
+              base.isSticky = true; // make sure the width is correct: the user might have resized the browser while in static mode
+
+              base.updateWidth();
+              $this.trigger('enabledStickiness.' + name);
+            }
+
+            base.setPositionValues();
+          } else if (base.isSticky) {
+            base.$originalHeader.css('position', 'static');
+            base.$clonedHeader.css('display', 'none');
+            base.isSticky = false;
+            base.resetWidth($('td,th', base.$clonedHeader), $('td,th', base.$originalHeader));
+            $this.trigger('disabledStickiness.' + name);
+          }
+        });
+      }
+    }, 0);
+    base.setPositionValues = base.debounce(function () {
+      var winScrollTop = base.$window.scrollTop(),
+          winScrollLeft = base.$window.scrollLeft();
+
+      if (!base.isSticky || winScrollTop < 0 || winScrollTop + base.$window.height() > base.$document.height() || winScrollLeft < 0 || winScrollLeft + base.$window.width() > base.$document.width()) {
+        return;
+      }
+
+      base.$originalHeader.css({
+        'top': base.topOffset - (base.isWindowScrolling ? 0 : winScrollTop),
+        'left': base.leftOffset - (base.isWindowScrolling ? 0 : winScrollLeft)
+      });
+    }, 0);
+    base.updateWidth = base.debounce(function () {
+      if (!base.isSticky) {
+        return;
+      } // Copy cell widths from clone
+
+
+      if (!base.$originalHeaderCells) {
+        base.$originalHeaderCells = $('th,td', base.$originalHeader);
+      }
+
+      if (!base.$clonedHeaderCells) {
+        base.$clonedHeaderCells = $('th,td', base.$clonedHeader);
+      }
+
+      var cellWidths = base.getWidth(base.$clonedHeaderCells);
+      base.setWidth(cellWidths, base.$clonedHeaderCells, base.$originalHeaderCells); // Copy row width from whole table
+
+      base.$originalHeader.css('width', base.$clonedHeader.width()); // If we're caching the height, we need to update the cached value when the width changes
+
+      if (base.options.cacheHeaderHeight) {
+        base.cachedHeaderHeight = base.$clonedHeader.height();
+      }
+    }, 0);
+
+    base.getWidth = function ($clonedHeaders) {
+      var widths = [];
+      $clonedHeaders.each(function (index) {
+        var width,
+            $this = $(this);
+
+        if ($this.css('box-sizing') === 'border-box') {
+          var boundingClientRect = $this[0].getBoundingClientRect();
+
+          if (boundingClientRect.width) {
+            width = boundingClientRect.width; // #39: border-box bug
+          } else {
+            width = boundingClientRect.right - boundingClientRect.left; // ie8 bug: getBoundingClientRect() does not have a width property
+          }
+        } else {
+          var $origTh = $('th', base.$originalHeader);
+
+          if ($origTh.css('border-collapse') === 'collapse') {
+            if (window.getComputedStyle) {
+              width = parseFloat(window.getComputedStyle(this, null).width);
+            } else {
+              // ie8 only
+              var leftPadding = parseFloat($this.css('padding-left'));
+              var rightPadding = parseFloat($this.css('padding-right')); // Needs more investigation - this is assuming constant border around this cell and it's neighbours.
+
+              var border = parseFloat($this.css('border-width'));
+              width = $this.outerWidth() - leftPadding - rightPadding - border;
+            }
+          } else {
+            width = $this.width();
+          }
+        }
+
+        widths[index] = width;
+      });
+      return widths;
+    };
+
+    base.setWidth = function (widths, $clonedHeaders, $origHeaders) {
+      $clonedHeaders.each(function (index) {
+        var width = widths[index];
+        $origHeaders.eq(index).css({
+          'min-width': width,
+          'max-width': width
+        });
+      });
+    };
+
+    base.resetWidth = function ($clonedHeaders, $origHeaders) {
+      $clonedHeaders.each(function (index) {
+        var $this = $(this);
+        $origHeaders.eq(index).css({
+          'min-width': $this.css('min-width'),
+          'max-width': $this.css('max-width')
+        });
+      });
+    };
+
+    base.setOptions = function (options) {
+      base.options = $.extend({}, defaults, options);
+      base.$window = $(base.options.objWindow);
+      base.$head = $(base.options.objHead);
+      base.$document = $(base.options.objDocument);
+      base.$scrollableArea = $(base.options.scrollableArea);
+      base.isWindowScrolling = base.$scrollableArea[0] === base.$window[0];
+    };
+
+    base.updateOptions = function (options) {
+      base.setOptions(options); // scrollableArea might have changed
+
+      base.unbind();
+      base.bind();
+      base.updateWidth();
+      base.toggleHeaders();
+    }; // Run initializer
+
+
+    base.init();
+  } // A plugin wrapper around the constructor,
+  // preventing against multiple instantiations
+
+
+  $.fn[name] = function (options) {
+    return this.each(function () {
+      var instance = $.data(this, 'plugin_' + name);
+
+      if (instance) {
+        if (typeof options === 'string') {
+          instance[options].apply(instance);
+        } else {
+          instance.updateOptions(options);
+        }
+      } else if (options !== 'destroy') {
+        $.data(this, 'plugin_' + name, new Plugin(this, options));
+      }
+    });
+  };
+})(jQuery, window);
+
+$('body').on('tiny-bind-bound', function () {
+  console.log('bind sticky header ' + $('.navbar-fixed-top').outerHeight());
+  $('.table-sticky-header').stickyTableHeaders({
+    marginTop: $('.navbar-fixed-top')
+  });
+});
+/**
+ *
+ * example:
+ * text field search with debounce
+ *
+ * table_search_field.field.on('keyup',debounce(function(){
+ *   table_search_field.search(table_search_field.get_field());
+ * },500));
+ *
+ */
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function () {
+    var context = this,
+        args = arguments;
+
+    var later = function () {
+      timeout = null;
+
+      if (!immediate) {
+        func.apply(context, args);
+      }
+    };
+
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+
+    if (callNow) {
+      func.apply(context, args);
+    }
+  };
+}
+
+$(document).on('click', '[appNavigate]', function (event) {
+  event.preventDefault();
+  var href = $(this).attr('href');
+  var redirect = $(this).attr('target') == '_top';
+
+  if (href) {
+    nav.router.navigate(href, redirect);
+  }
+});
+$(document).on('tiny-bind-bound', function () {
+  $('select').selectpicker();
+});
+
+function DOMRefresh(which) {
+  console.log('DOMRefresh');
+  $('.form-control').selectpicker('refresh');
+}
 /*
 Setup the Application global variable for the app "block"
 
@@ -3127,4 +3129,8 @@ nav.methods.bootstrap_nav_submenu = function (record, isRoot) {
   return html;
 };
 /* jquery free */
-document.addEventListener("DOMContentLoaded", function (e) {});
+document.addEventListener("DOMContentLoaded", function (e) {
+  app.listener('tableSort', function (e) {
+    console.log('My OnReady', e);
+  });
+});

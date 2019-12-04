@@ -1,6 +1,8 @@
 class orangeCollection {
 	/* on construction */
-	constructor(defaults) {
+	constructor(app, defaults) {
+		this.app = app;
+
 		if (defaults) {
 			this.alter(defaults);
 		}
