@@ -211,11 +211,9 @@ app.trigger("something-happened");
 
 `element()` get the DOM element for the provided id
 
-`rebind(data, then)` unbind and bind then call something else
+`bind(data, then)` (tiny)bind the DOM to the data
 
-`bind(data, then)` unbind the model from the DOM then call something else
-
-`unbind(data, then)` set the new data then rebind the "new" model back on the DOM then call something else
+`unbind(data, then)` unbind the data from the DOM
 
 ## orangeBinders.js
 
@@ -230,7 +228,6 @@ All of the bundled tinybind.js formatters.
 If you need to add additional formatters you can add them to this file
 
 https://blikblum.github.io/tinybind/docs/guide/#formatters
-
 
 ## superStorage.js
 

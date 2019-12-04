@@ -249,7 +249,11 @@ class orangeLoader {
   model(modelEndPoint, then) {
     let orangeLoader = this;
     this.app.request.on(200, function (data, status, xhr) {
-      orangeLoader.app.rebind(data, then);
+      orangeLoader.app.unbind().set(data).bind();
+
+      if (then) {
+        then();
+      }
     }).get(modelEndPoint);
     return this;
     /* allow chaining */
@@ -2002,14 +2006,8 @@ class orangeBinder {
     return element;
   }
 
-  rebind(data, then) {
-    this.unbind().bind(data, then);
-  }
-
-  unbind(then) {
-    this.trigger("tiny-bind-unbound", [then]);
+  unbind() {
     /* unbind tinybind if it's bound */
-
     if (this.bound) {
       /* tell tiny binder to unbind */
       this.bound.unbind();
@@ -2017,24 +2015,13 @@ class orangeBinder {
 
       this.bound = undefined;
     }
-    /* then do this */
 
-
-    if (then) {
-      then();
-    }
-
+    this.trigger("tiny-bind-unbound");
     return this;
   }
 
-  bind(data, then) {
-    /* update instance data */
-    if (data) {
-      this.set(data);
-    }
+  bind() {
     /* pass a "clean" object */
-
-
     this.bound = tinybind.bind(this.element(), {
       error: this.error,
       errors: this.errors,
@@ -2047,15 +2034,7 @@ class orangeBinder {
       record: this.model,
       page: this.page
     });
-    /* tell everyone we now have new data */
-
-    this.trigger("tiny-bind-bound", [data, then]);
-    /* then do this */
-
-    if (then) {
-      then();
-    }
-
+    this.trigger("tiny-bind-bound");
     return this;
   }
 
@@ -2961,8 +2940,7 @@ app.router.alter({
   },
 
   /* default route / action */
-  '(.*)': function () {//app.rebind();
-  }
+  '(.*)': function () {}
 }); //app.request.on(404, function (xhr, status, error) {
 
 /* don't show the default alert() - instead show not found */

@@ -10,7 +10,10 @@ class orangeLoader {
 		let orangeLoader = this;
 
 		this.app.request.on(200, function (data, status, xhr) {
-			orangeLoader.app.rebind(data, then);
+			orangeLoader.app.unbind().set(data).bind();
+			if (then) {
+				then();
+			}
 		}).get(modelEndPoint);
 
 		return this; /* allow chaining */

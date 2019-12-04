@@ -89,9 +89,7 @@ app.router.alter({
 	},
 
 	/* default route / action */
-	'(.*)': function () {
-		//app.rebind();
-	}
+	'(.*)': function () {}
 });
 
 //app.request.on(404, function (xhr, status, error) {

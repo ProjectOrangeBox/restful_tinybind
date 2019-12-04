@@ -225,13 +225,7 @@ class orangeBinder {
 		return element;
 	}
 
-	rebind(data, then) {
-		this.unbind().bind(data, then);
-	}
-
-	unbind(then) {
-		this.trigger("tiny-bind-unbound", [then]);
-
+	unbind() {
 		/* unbind tinybind if it's bound */
 		if (this.bound) {
 			/* tell tiny binder to unbind */
@@ -241,20 +235,12 @@ class orangeBinder {
 			this.bound = undefined;
 		}
 
-		/* then do this */
-		if (then) {
-			then();
-		}
+		this.trigger("tiny-bind-unbound");
 
 		return this;
 	}
 
-	bind(data, then) {
-		/* update instance data */
-		if (data) {
-			this.set(data);
-		}
-
+	bind() {
 		/* pass a "clean" object */
 		this.bound = tinybind.bind(this.element(), {
 			error: this.error,
@@ -269,13 +255,7 @@ class orangeBinder {
 			page: this.page
 		});
 
-		/* tell everyone we now have new data */
-		this.trigger("tiny-bind-bound", [data, then]);
-
-		/* then do this */
-		if (then) {
-			then();
-		}
+		this.trigger("tiny-bind-bound");
 
 		return this;
 	}
