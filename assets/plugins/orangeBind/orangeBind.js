@@ -47,6 +47,7 @@ class orangeBinder {
 			settable: ["page", "form", "user", "local", "config", "templates", "error", "errors", "model"],
 			gettable: ["page", "form", "error", "errors", "model"],
 			defaults: {},
+			debug: false,
 			configUrl: configUrl || "",
 			modelUrl: modelUrl || "",
 			templateUrl: templateUrl || "",
@@ -124,7 +125,7 @@ class orangeBinder {
 	 * wrapper for jQuery trigger
 	 */
 	trigger(msg, args) {
-		if (DEBUG) {
+		if (this.config.debug) {
 			console.log('#' + this.id + ' bind::trigger ' + msg);
 		}
 
@@ -177,20 +178,29 @@ class orangeBinder {
 		this.records = this.model;
 		this.record = this.model;
 
+		this.cacheMgr(this.config);
+
+		return this; /* allow chaining */
+	}
+
+	cacheMgr(config) {
 		/* do any cache cleaning based on the sent in data */
 		/* is it loaded? */
 		if (storage !== undefined) {
-			if (this.config.clearCache) {
-				storage.clear();
+			if (config.clearCache) {
+				/* only delete our cached items */
+				for (let index in storage.getKeys()) {
+					if (index.substr(-5) == '.bind') {
+						storage.removeItem(undefined, index);
+					}
+				}
 			}
 
 			/* if set clear older than X seconds... */
-			if (this.config.olderThanCache !== undefined) {
-				storage.removeOlderThan(this.config.olderThanCache);
+			if (config.olderThanCache !== undefined) {
+				storage.removeOlderThan(config.olderThanCache);
 			}
 		}
-
-		return this; /* allow chaining */
 	}
 
 	/**

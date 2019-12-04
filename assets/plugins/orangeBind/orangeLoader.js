@@ -11,7 +11,7 @@ class orangeLoader {
 
 		modelEndPoint = this.app.config.modelUrl + modelEndPoint;
 
-		if (DEBUG) {
+		if (this.app.config.debug) {
 			console.log('#' + this.app.id + ' loader::model ' + modelEndPoint);
 		}
 
@@ -31,10 +31,10 @@ class orangeLoader {
 	 */
 	template(templateEndPoint, then) {
 		let orangeLoader = this;
-		let cacheKey = templateEndPoint + '.template';
+		let cacheKey = templateEndPoint + '.template.bind';
 		let template = undefined;
 
-		if (DEBUG) {
+		if (this.app.config.debug) {
 			console.log('#' + this.app.id + ' loader::template ' + templateEndPoint);
 		}
 
@@ -63,7 +63,7 @@ class orangeLoader {
 				if (storage !== undefined) {
 					let cacheSeconds = data.template.cache ? data.template.cache : orangeLoader.app.config.templateCache;
 
-					storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
+					storage.setItem(cacheKey, data.template.source, cacheSeconds);
 				}
 
 				orangeLoader.app.html(data.template.source);

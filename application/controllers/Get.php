@@ -3,7 +3,7 @@
 class Get extends CI_Controller
 {
 	protected $superStorageCacheSeconds = 6000;
-	protected $cache = false;
+	protected $cache = true;
 
 	/* default empty */
 	public function index(): void

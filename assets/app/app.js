@@ -7,11 +7,10 @@ Setup the Application global variable for the app "block"
 
 */
 
-var DEBUG = true;
-
 var app = new orangeBinder('app', '/get/configuration', '/get/layout');
 
 app.config.alter({
+	debug: true,
 	defaults: {
 		Precision: 2,
 		ThousandSeparator: ',',

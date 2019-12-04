@@ -30,7 +30,7 @@
 
 			/* do we have any routes to listen for? */
 			if (this.routes.length) {
-				if (DEBUG) {
+				if (this.app.config.debug) {
 					console.log('#' + this.app.id + ' router::match', url);
 				}
 
@@ -39,7 +39,7 @@
 					let parameters = url.match(this.routes[key].re);
 
 					if (parameters) {
-						if (DEBUG) {
+						if (this.app.config.debug) {
 							console.log('#' + this.app.id + ' router::match::matched', parameters, this.routes[key].re.toString());
 						}
 
@@ -144,7 +144,7 @@
 			url = url ? this.app.config.routerRoot + this._clearSlashes(url) : '';
 			redirect = redirect ? redirect : this.app.config.redirect;
 
-			if (DEBUG) {
+			if (this.app.config.debug) {
 				console.log('#' + this.app.id + ' router::navigate ', url, redirect);
 			}
 

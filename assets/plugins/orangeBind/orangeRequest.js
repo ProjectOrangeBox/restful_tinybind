@@ -74,7 +74,7 @@ class orangeRequest {
 	}
 
 	send(method, url, data, callbacks) {
-		if (DEBUG) {
+		if (this.app.config.debug) {
 			console.log('#' + this.app.id + ' request::send', method, url, data);
 		}
 
