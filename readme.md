@@ -89,17 +89,16 @@ https://blikblum.github.io/tinybind/
 
 Relies on jQuery for:
 
-`.ajax(url,{settings as object})` - request.send() ajax calls
+`ajax(url,{settings as object})` - request.send() ajax calls
 
-`.extend()` - setData() object merge
-
-`.trigger()` - calling custom DOM triggers others can pick up
+`trigger()` - calling custom DOM triggers others can pick up
 
 ```javascript
-jQuery("body").trigger("something-happened");
-jQuery("body").on("something-happened", function() {
+app.listener("something-happened", function() {
 	alert("Hey! Something Happened!");
 });
+
+app.trigger("something-happened");
 ```
 
 ---
@@ -136,8 +135,6 @@ jQuery("body").on("something-happened", function() {
 
 `config: {}` storage for application configuration collection\*
 
-`trigger: {}` storage for application specific DOM triggers collection\*
-
 `method: {}` storage for user methods collection\*
 
 `events: {}` storage for tinybind events collection\*
@@ -152,19 +149,25 @@ jQuery("body").on("something-happened", function() {
 
 `router.alter(regularExpression, callback)` add or change a route
 
-`router.remove(param)` remove a route based on the regular expression
+`router.remove(regularExpression)` remove a route based on the regular expression
 
 `router.flush()` remove ALL routes
 
-`router.listen()` turn on the route listener
+`router.start()` turn on the route listener
+
+`router.stop()` turn off the route listener
 
 `router.listener()` the actual listener method
 
 `router.navigate(url, redirect)` navigate to a different url
 
-`router.stopListening()` turn off the route listener
-
 ---
+
+`request.status` last request status code
+
+`request.statusMsg` last request status message
+
+`setStatus(code, msg)` set the status code and message
 
 `request.on(code|object, callback)` add or change a response codes action(s)
 
@@ -188,21 +191,46 @@ jQuery("body").on("something-happened", function() {
 
 ---
 
-`set(data,settable)` set data based on default settable values or provided array of properties
-
-`get(data,gettable)` return the current application data on default settable values or provided array of properties
-
 `load.model(modelEndPoint, then)` load a model from the server or load a template then a model from the server
 
 `load.template(templateEndPoint, then)` load a model from the server (or locally from the browser if cached) then call something else
 
-`load.block(modelEndPoint, templateEndPoint, then)` load a model from the server or load a template then a model from the server
+`load.block(templateEndPoint, modelEndPoint , then)` load a template then a model from the server then call something else
 
-`rebind(data, then)` unbind the model from the DOM set the new data then rebind the "new" model back on the DOM then call something else
+---
 
-`replace(html)` replace the DOM element id
+`trigger(event,arguments)` trigger an event with optional arguments (wrapper for jQuery trigger - these are attached to the document body)
+
+`listener(event,callback)` listen for an event (wrapper for jQuery on - listening on the document body)
+
+`set(data,settable)` set data based on default settable values or provided array of properties
+
+`get(data,gettable)` return the current application data on default settable values or provided array of properties
+
+`html(html)` replace the DOM element id
 
 `element()` get the DOM element for the provided id
+
+`rebind(data, then)` unbind and bind then call something else
+
+`bind(data, then)` unbind the model from the DOM then call something else
+
+`unbind(data, then)` set the new data then rebind the "new" model back on the DOM then call something else
+
+## orangeBinders.js
+
+All of the bundled tinybind.js binders.
+If you need to add additional binders you can add them to this file
+
+https://blikblum.github.io/tinybind/docs/guide/#binders
+
+## orangeFormatters.js
+
+All of the bundled tinybind.js formatters.
+If you need to add additional formatters you can add them to this file
+
+https://blikblum.github.io/tinybind/docs/guide/#formatters
+
 
 ## superStorage.js
 
@@ -249,7 +277,7 @@ Alter Route Value individually or in bulk
 
 ```javascript
 app.router.alter((string) regular expression, (function) callback);
-app.router.alter((object) regular expression);
+app.router.alter((object) );
 ```
 
 Alter TinyBind Event Values individually or in bulk
@@ -263,9 +291,9 @@ app.events.collect();
 Alter Trigger Values individually or in bulk
 
 ```javascript
-app.triggers.alter((string) name,(function) callback);
-app.triggers.alter((object) name);
-app.triggers.collect();
+app.trigger((string) name);
+
+app.listener((string) name, (function) callback);
 ```
 
 Alter User Method Values individually or in bulk
@@ -288,20 +316,6 @@ app.response.alter((object) code);
 ## application.js
 
 File to place your own javascript which is combined in the distro.
-
-## binders.js
-
-All of the bundled tinybind.js binders.
-If you need to add additional binders you can add them to this file
-
-https://blikblum.github.io/tinybind/docs/guide/#binders
-
-## formatters.js
-
-All of the bundled tinybind.js formatters.
-If you need to add additional formatters you can add them to this file
-
-https://blikblum.github.io/tinybind/docs/guide/#formatters
 
 ## onReady.js
 

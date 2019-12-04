@@ -158,8 +158,6 @@ class orangeBinder {
 
 		console.log("set", data, settable);
 
-		this.request.setStatus(data.status, data.statusMsg);
-
 		for (let index in settable) {
 			let key = settable[index];
 
@@ -208,17 +206,12 @@ class orangeBinder {
 	get(gettable) {
 		gettable = gettable || this.config.gettable;
 
-		console.log("get", gettable);
-
 		let collection = {};
 
 		for (let index in gettable) {
 			let key = gettable[index];
 
-			collection[key] =
-				typeof this[key].collect === "function" ?
-				this[key].collect() :
-				this[key];
+			collection[key] = typeof this[key].collect === "function" ? this[key].collect() : this[key];
 		}
 
 		console.log(collection);
@@ -226,7 +219,7 @@ class orangeBinder {
 		return collection;
 	}
 
-	replace(html) {
+	html(html) {
 		this.element().innerHTML = html;
 	}
 
@@ -243,25 +236,57 @@ class orangeBinder {
 	}
 
 	rebind(data, then) {
-		this.trigger("tiny-bind-unbound", [data, then]);
+		this.unbind().bind(data, then);
+	}
 
-		/* unbind tinybind */
+	unbind(then) {
+		this.trigger("tiny-bind-unbound", [then]);
+
+		/* unbind tinybind if it's bound */
 		if (this.bound) {
+			/* tell tiny binder to unbind */
 			this.bound.unbind();
+
+			/* clear our variable out */
+			this.bound = undefined;
 		}
 
+		/* then do this */
+		if (then) {
+			then();
+		}
+
+		return this;
+	}
+
+	bind(data, then) {
 		/* update instance data */
 		if (data) {
 			this.set(data);
 		}
 
-		this.bound = tinybind.bind(this.element(), this);
+		/* pass a "clean" object */
+		this.bound = tinybind.bind(this.element(), {
+			error: this.error,
+			errors: this.errors,
+			events: this.events,
+			form: this.form,
+			id: this.id,
+			local: this.local,
+			model: this.model,
+			records: this.model,
+			record: this.model,
+			page: this.page
+		});
 
 		/* tell everyone we now have new data */
 		this.trigger("tiny-bind-bound", [data, then]);
 
+		/* then do this */
 		if (then) {
 			then();
 		}
+
+		return this;
 	}
 }

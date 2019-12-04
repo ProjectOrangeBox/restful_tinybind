@@ -2,9 +2,9 @@ class orangeRequest {
 	/* on construction */
 	constructor(app) {
 		this.app = app;
+		this.self = this;
 
-		this.status = 0;
-		this.statusMsg = 'INIT';
+		this.setStatus(0, 'init');
 
 		this.defaultCallbacks = {
 			/* standard get layout or get model */
@@ -50,15 +50,22 @@ class orangeRequest {
 		};
 
 		this.callbacks = this.defaultCallbacks;
+
+		/* register a complete action */
+		jQuery(document).ajaxComplete(this.ajaxComplete);
+	}
+
+	ajaxComplete(event, xhr, options) {
+		options.requestObj.setStatus(xhr.responseJSON.status, xhr.responseJSON.statusMsg);
 	}
 
 	setStatus(code, msg) {
 		this.status = code || 0;
 
 		if (msg) {
-			this.statusMsg = msg.toUpperCase();
+			this.statusMsg = msg.toLowerCase();
 		} else {
-			this.statusMsg = 'UNKNOWN';
+			this.statusMsg = 'unknown';
 		}
 	}
 
@@ -96,6 +103,7 @@ class orangeRequest {
 			timeout: this.app.config.ajaxTimeout,
 			/* 5 seconds */
 			statusCode: this.callbacks,
+			requestObj: this,
 		});
 
 		return this;

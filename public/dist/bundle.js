@@ -199,6 +199,7 @@ var storage = {
 class orangeCollection {
   /* on construction */
   constructor(app, defaults) {
+    /* don't forget to filter this out of collect() */
     this.app = app;
 
     if (defaults) {
@@ -226,7 +227,7 @@ class orangeCollection {
     let collection = {};
 
     for (let propertyName in this) {
-      if (typeof this[propertyName] !== 'function' && propertyName !== '_p') {
+      if (typeof this[propertyName] !== 'function' && propertyName !== 'app') {
         collection[propertyName] = this[propertyName];
       }
     }
@@ -276,7 +277,7 @@ class orangeLoader {
 
 
     if (template !== undefined) {
-      this.app.replace(template);
+      this.app.html(template);
 
       if (then) {
         then();
@@ -294,7 +295,7 @@ class orangeLoader {
           storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
         }
 
-        orangeLoader.app.replace(data.template.source);
+        orangeLoader.app.html(data.template.source);
 
         if (then) {
           then();
@@ -404,7 +405,7 @@ class orangeRouter {
 
 
     if (!this.intervalID) {
-      this.listen();
+      this.start();
     }
 
     return this;
@@ -430,29 +431,29 @@ class orangeRouter {
 
   flush() {
     this.routes = [];
-    return this.stopListening();
-    /* allow chaining */
-  }
-
-  stopListening() {
-    if (this.intervalID) {
-      clearInterval(this.intervalID);
-    }
-
-    return this;
+    return this.stop();
     /* allow chaining */
   }
   /* start router listener matching for changes in the url */
 
 
-  listen() {
+  start() {
     /* Do we have any routes to listen for? */
     if (this.routes.length) {
       /* if we are already listening let's just make sure we stop first */
-      this.stopListening();
+      this.stop();
       /* we are now listening for url changes */
 
       this.intervalID = setInterval(this.listener, 100, this);
+    }
+
+    return this;
+    /* allow chaining */
+  }
+
+  stop() {
+    if (this.intervalID) {
+      clearInterval(this.intervalID);
     }
 
     return this;
@@ -537,8 +538,8 @@ class orangeRequest {
   /* on construction */
   constructor(app) {
     this.app = app;
-    this.status = 0;
-    this.statusMsg = 'INIT';
+    this.self = this;
+    this.setStatus(0, 'init');
     this.defaultCallbacks = {
       /* standard get layout or get model */
       200: function (data, status, xhr) {
@@ -589,15 +590,22 @@ class orangeRequest {
       }
     };
     this.callbacks = this.defaultCallbacks;
+    /* register a complete action */
+
+    jQuery(document).ajaxComplete(this.ajaxComplete);
+  }
+
+  ajaxComplete(event, xhr, options) {
+    options.requestObj.setStatus(xhr.responseJSON.status, xhr.responseJSON.statusMsg);
   }
 
   setStatus(code, msg) {
     this.status = code || 0;
 
     if (msg) {
-      this.statusMsg = msg.toUpperCase();
+      this.statusMsg = msg.toLowerCase();
     } else {
-      this.statusMsg = 'UNKNOWN';
+      this.statusMsg = 'unknown';
     }
   }
 
@@ -637,7 +645,8 @@ class orangeRequest {
       timeout: this.app.config.ajaxTimeout,
 
       /* 5 seconds */
-      statusCode: this.callbacks
+      statusCode: this.callbacks,
+      requestObj: this
     });
     return this;
   }
@@ -1913,7 +1922,6 @@ class orangeBinder {
   set(data, settable) {
     settable = settable || this.config.settable;
     console.log("set", data, settable);
-    this.request.setStatus(data.status, data.statusMsg);
 
     for (let index in settable) {
       let key = settable[index];
@@ -1967,7 +1975,6 @@ class orangeBinder {
 
   get(gettable) {
     gettable = gettable || this.config.gettable;
-    console.log("get", gettable);
     let collection = {};
 
     for (let index in gettable) {
@@ -1979,7 +1986,7 @@ class orangeBinder {
     return collection;
   }
 
-  replace(html) {
+  html(html) {
     this.element().innerHTML = html;
   }
 
@@ -1996,27 +2003,60 @@ class orangeBinder {
   }
 
   rebind(data, then) {
-    this.trigger("tiny-bind-unbound", [data, then]);
-    /* unbind tinybind */
+    this.unbind().bind(data, then);
+  }
+
+  unbind(then) {
+    this.trigger("tiny-bind-unbound", [then]);
+    /* unbind tinybind if it's bound */
 
     if (this.bound) {
+      /* tell tiny binder to unbind */
       this.bound.unbind();
+      /* clear our variable out */
+
+      this.bound = undefined;
     }
-    /* update instance data */
+    /* then do this */
 
-
-    if (data) {
-      this.set(data);
-    }
-
-    this.bound = tinybind.bind(this.element(), this);
-    /* tell everyone we now have new data */
-
-    this.trigger("tiny-bind-bound", [data, then]);
 
     if (then) {
       then();
     }
+
+    return this;
+  }
+
+  bind(data, then) {
+    /* update instance data */
+    if (data) {
+      this.set(data);
+    }
+    /* pass a "clean" object */
+
+
+    this.bound = tinybind.bind(this.element(), {
+      error: this.error,
+      errors: this.errors,
+      events: this.events,
+      form: this.form,
+      id: this.id,
+      local: this.local,
+      model: this.model,
+      records: this.model,
+      record: this.model,
+      page: this.page
+    });
+    /* tell everyone we now have new data */
+
+    this.trigger("tiny-bind-bound", [data, then]);
+    /* then do this */
+
+    if (then) {
+      then();
+    }
+
+    return this;
   }
 
 }
@@ -2947,7 +2987,7 @@ app.methods.alter({
   'submit': function (redirect, method, action, data) {
     method = method || app.form.method;
     action = action || app.form.action;
-    data = data || this.get();
+    data = data || app.get();
     /* created record - create */
 
     app.request.on(201, function (data, status, xhr) {
@@ -3129,8 +3169,4 @@ nav.methods.bootstrap_nav_submenu = function (record, isRoot) {
   return html;
 };
 /* jquery free */
-document.addEventListener("DOMContentLoaded", function (e) {
-  app.listener('tableSort', function (e) {
-    console.log('My OnReady', e);
-  });
-});
+document.addEventListener("DOMContentLoaded", function (e) {});

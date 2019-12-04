@@ -117,7 +117,7 @@ app.methods.alter({
 	'submit': function (redirect, method, action, data) {
 		method = method || app.form.method;
 		action = action || app.form.action;
-		data = data || this.get();
+		data = data || app.get();
 
 		/* created record - create */
 		app.request.on(201, function (data, status, xhr) {

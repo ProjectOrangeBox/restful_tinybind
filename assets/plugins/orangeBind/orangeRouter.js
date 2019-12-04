@@ -69,7 +69,7 @@
 
 			/* turn on listening if it's not already */
 			if (!this.intervalID) {
-				this.listen();
+				this.start();
 			}
 
 			return this; /* allow chaining */
@@ -92,26 +92,26 @@
 		flush() {
 			this.routes = [];
 
-			return this.stopListening(); /* allow chaining */
+			return this.stop(); /* allow chaining */
 		}
 
-		stopListening() {
-			if (this.intervalID) {
-				clearInterval(this.intervalID);
+		/* start router listener matching for changes in the url */
+		start() {
+			/* Do we have any routes to listen for? */
+			if (this.routes.length) {
+				/* if we are already listening let's just make sure we stop first */
+				this.stop();
+
+				/* we are now listening for url changes */
+				this.intervalID = setInterval(this.listener, 100, this);
 			}
 
 			return this; /* allow chaining */
 		}
 
-		/* start router listener matching for changes in the url */
-		listen() {
-			/* Do we have any routes to listen for? */
-			if (this.routes.length) {
-				/* if we are already listening let's just make sure we stop first */
-				this.stopListening();
-
-				/* we are now listening for url changes */
-				this.intervalID = setInterval(this.listener, 100, this);
+		stop() {
+			if (this.intervalID) {
+				clearInterval(this.intervalID);
 			}
 
 			return this; /* allow chaining */

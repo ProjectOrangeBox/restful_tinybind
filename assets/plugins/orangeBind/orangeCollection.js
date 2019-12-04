@@ -1,6 +1,7 @@
 class orangeCollection {
 	/* on construction */
 	constructor(app, defaults) {
+		/* don't forget to filter this out of collect() */
 		this.app = app;
 
 		if (defaults) {
@@ -26,7 +27,7 @@ class orangeCollection {
 		let collection = {};
 
 		for (let propertyName in this) {
-			if (typeof this[propertyName] !== 'function' && propertyName !== '_p') {
+			if (typeof this[propertyName] !== 'function' && propertyName !== 'app') {
 				collection[propertyName] = this[propertyName];
 			}
 		}

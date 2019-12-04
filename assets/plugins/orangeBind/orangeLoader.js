@@ -37,7 +37,7 @@ class orangeLoader {
 
 		/* have we already loaded the template? */
 		if (template !== undefined) {
-			this.app.replace(template);
+			this.app.html(template);
 
 			if (then) {
 				then();
@@ -58,7 +58,7 @@ class orangeLoader {
 					storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
 				}
 
-				orangeLoader.app.replace(data.template.source);
+				orangeLoader.app.html(data.template.source);
 
 				if (then) {
 					then();
