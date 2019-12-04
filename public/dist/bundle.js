@@ -242,7 +242,7 @@ class orangeLoader {
     this.app = app;
   }
   /**
-   * load just a model then...
+   * load a model and then...
    */
 
 
@@ -259,7 +259,7 @@ class orangeLoader {
     /* allow chaining */
   }
   /**
-   * load just a template then...
+   * load a template and then...
    */
 
 
@@ -311,7 +311,7 @@ class orangeLoader {
     /* allow chaining */
   }
   /**
-   * load a template and then a model then...
+   * load a template and then a model and then...
    */
 
 
@@ -487,7 +487,7 @@ class orangeRouter {
     console.log('navigate', url, redirect);
     /* trigger a redirect so other javascript code knows we are redirecting */
 
-    this.app.trigger('spa-router-navgate', [url, redirect]);
+    this.app.trigger('orange-router-navgate', [url, redirect]);
 
     if (redirect) {
       /* full page reload so trigger wouldn't even be picked up */
@@ -2835,6 +2835,9 @@ function debounce(func, wait, immediate) {
   };
 }
 
+$(document).on('orange-router-navgate', function (event) {
+  notify.removeAll();
+});
 $(document).on('click', '[appNavigate]', function (event) {
   event.preventDefault();
   var href = $(this).attr('href');

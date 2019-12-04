@@ -34,6 +34,10 @@ function debounce(func, wait, immediate) {
 	};
 }
 
+$(document).on('orange-router-navgate', function (event) {
+	notify.removeAll();
+});
+
 $(document).on('click', '[appNavigate]', function (event) {
 	event.preventDefault();
 

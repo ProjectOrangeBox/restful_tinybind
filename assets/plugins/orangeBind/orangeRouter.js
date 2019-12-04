@@ -141,7 +141,7 @@
 			console.log('navigate', url, redirect);
 
 			/* trigger a redirect so other javascript code knows we are redirecting */
-			this.app.trigger('spa-router-navgate', [url, redirect]);
+			this.app.trigger('orange-router-navgate', [url, redirect]);
 
 			if (redirect) {
 				/* full page reload so trigger wouldn't even be picked up */

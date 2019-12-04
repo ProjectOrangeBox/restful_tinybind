@@ -4,13 +4,14 @@ class orangeLoader {
 		this.app = app;
 	}
 	/**
-	 * load just a model then...
+	 * load a model and then...
 	 */
 	model(modelEndPoint, then) {
 		let orangeLoader = this;
 
 		this.app.request.on(200, function (data, status, xhr) {
 			orangeLoader.app.unbind().set(data).bind();
+
 			if (then) {
 				then();
 			}
@@ -20,7 +21,7 @@ class orangeLoader {
 	}
 
 	/**
-	 * load just a template then...
+	 * load a template and then...
 	 */
 	template(templateEndPoint, then) {
 		let orangeLoader = this;
@@ -73,7 +74,7 @@ class orangeLoader {
 	}
 
 	/**
-	 * load a template and then a model then...
+	 * load a template and then a model and then...
 	 */
 	block(templateEndPoint, modelEndPoint, then) {
 		let orangeLoader = this;
