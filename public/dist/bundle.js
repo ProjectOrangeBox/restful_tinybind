@@ -2315,7 +2315,7 @@ var BoundTableSearch = {
       if (searchTerm.length > 0) {
         /* run regular expression search on table text */
 
-        /* hide the tr's */
+        /* hide all the tr's */
         $(this.element.table).hide();
         /* wildcard - still needs to be in order of the columns */
 
@@ -2323,16 +2323,23 @@ var BoundTableSearch = {
 
         var searchReg = searchTerm.replace(/[-[\]{}()+?.,\\^$|#\s]/g, '\\$&');
         searchReg = searchReg.replace(/\*/gi, '(.*)');
-        console.debug('filter regular expression ' + searchReg);
-        var rex = new RegExp(searchReg, 'img');
+        var rex = new RegExp(searchReg, 'i'); //console.log('filter regular expression ' + searchReg, rex);
+
         /* filter them */
 
-        $(this.element.table).filter(function () {
-          return rex.test($(this).text().replace(/(\r\n|\n|\r)/gm, " "));
+        $(this.element.table).filter(function (index) {
+          var rowString = $(this).text();
+          rowString = rowString.replace(/(\r\n|\n|\r)/gm, ' ');
+          rowString = rowString.replace(/\s\s+/g, ' ');
+          rowString = rowString.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
+          rowString = rowString.trim();
+          var bool = rex.test(rowString); //console.log(rex, rowString, bool);
+
+          return bool;
         }).show();
         /* show this row again */
       } else {
-        /* show all */
+        /* nothing to filter on so show all */
         $(this.element.table).show();
       }
 
@@ -2347,7 +2354,7 @@ var BoundTableSearch = {
     var all = $(this.element.table).length;
     var shown = vis !== all ? vis + ' of ' + all : all;
     $(this.countSelector).html(shown);
-    console.debug('bound table search filtering on "' + searchTerm + '" showing ' + shown);
+    console.log('bound table search filtering on "' + searchTerm + '" showing ' + shown);
   },
 
   /* Load the search term into the input field and do the search */
@@ -2418,35 +2425,39 @@ var tableSort = {
   dir: undefined,
   index: undefined,
   init: function () {
+    var parent = this;
+
     if (!this.bound) {
-      var parent = this;
       this.addSortIcons();
       /* handle clicks */
 
-      $(this.class + ' thead tr th:not(.nosort)').on('click', function () {
+      jQuery(this.class + ' thead tr th:not(.nosort)').on('click', function () {
         /* which direction are we going now? */
         parent.dir = parent.dir === 'asc' ? 'desc' : 'asc';
-        parent.index = $(parent.class + ' thead tr th').index(this) + 1;
+        parent.index = jQuery(parent.class + ' thead tr th').index(this) + 1;
         /* find out which column we clicked and send in the dir */
 
         parent.sort(parent.index, parent.dir);
+        console.log('click');
       });
       this.bound = true;
       this.load();
+      this.sort(this.index, this.dir);
     }
   },
   uninit: function () {
+    this.removeSortIcons();
+    jQuery(this.class + ' thead tr th:not(.nosort)').off('click');
     this.bound = false;
-    $('.tablesorticon').remove();
   },
 
   /* Do the actual sort */
   sort: function (index, dir) {
     if (index > 0) {
-      console.debug('Sorting column:' + index + ' direction:' + dir + ' sorting:' + $(this.class + ' tbody tr').length);
+      console.debug('Sorting column:' + index + ' direction:' + dir + ' sorting:' + jQuery(this.class + ' tbody tr').length);
       this.determineIcons(index, dir);
 
-      if ($(this.class + ' tbody tr').length) {
+      if (jQuery(this.class + ' tbody tr').length) {
         tinysort(this.class + ' tbody tr', {
           selector: 'td:nth-child(' + index + ')',
           order: dir,
@@ -2462,20 +2473,23 @@ var tableSort = {
     this.save(index, dir);
   },
   addSortIcons: function () {
-    if (!$('.tablesorticon').length) {
-      $(this.class + ' thead tr th:not(.nosort)').prepend('<i class="fa fa-sort tablesorticon"></i> ');
+    if (!jQuery('.tablesorticon').length) {
+      jQuery(this.class + ' thead tr th:not(.nosort)').prepend('<i class="fa fa-sort tablesorticon"></i> ');
     }
+  },
+  removeSortIcons: function () {
+    jQuery('.tablesorticon').remove();
   },
   determineIcons: function (index, dir) {
     /* remove all previous arrows and such */
-    $(this.class + ' thead tr th i').removeClass('fa-sort-asc').removeClass('fa-sort-desc').addClass('fa-sort');
+    jQuery(this.class + ' thead tr th i').removeClass('fa-sort-asc').removeClass('fa-sort-desc').addClass('fa-sort');
     /* remove previous highlighted column */
 
-    $(this.class + ' thead tr th').removeClass('active');
+    jQuery(this.class + ' thead tr th').removeClass('active');
     /* add the correct classes to the header */
 
-    $(this.class + ' thead tr th:nth-child(' + index + ') i').addClass('fa-sort-' + dir).removeClass('fa-sort');
-    $(this.class + ' thead tr th:nth-child(' + index + ')').addClass('active');
+    jQuery(this.class + ' thead tr th:nth-child(' + index + ') i').addClass('fa-sort-' + dir).removeClass('fa-sort');
+    jQuery(this.class + ' thead tr th:nth-child(' + index + ')').addClass('active');
   },
 
   /* Load the last sort if any */
@@ -2484,7 +2498,6 @@ var tableSort = {
       var saved = storage.getItem(this.getKey(), {});
       this.index = saved.index;
       this.dir = saved.dir;
-      this.sort(this.index, this.dir);
     }
   },
 
@@ -2501,7 +2514,7 @@ var tableSort = {
     return window.location.pathname + this.storageKey;
   },
   exists: function () {
-    return $(this.class + ' thead tr th:not(.nosort)').length > 0;
+    return jQuery(this.class + ' thead tr th:not(.nosort)').length > 0;
   }
 };
 jQuery('body').on('tiny-bind-bound', function () {

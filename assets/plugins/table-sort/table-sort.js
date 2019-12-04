@@ -8,39 +8,45 @@ var tableSort = {
 	dir: undefined,
 	index: undefined,
 	init: function () {
-		if (!this.bound) {
-			var parent = this;
+		var parent = this;
 
+		if (!this.bound) {
 			this.addSortIcons();
 
 			/* handle clicks */
-			$(this.class + ' thead tr th:not(.nosort)').on('click', function () {
+			jQuery(this.class + ' thead tr th:not(.nosort)').on('click', function () {
 				/* which direction are we going now? */
 				parent.dir = (parent.dir === 'asc') ? 'desc' : 'asc';
-				parent.index = $(parent.class + ' thead tr th').index(this) + 1;
+				parent.index = jQuery(parent.class + ' thead tr th').index(this) + 1;
 
 				/* find out which column we clicked and send in the dir */
 				parent.sort(parent.index, parent.dir);
+
+				console.log('click');
 			});
 
 			this.bound = true;
 
 			this.load();
+
+			this.sort(this.index, this.dir);
 		}
 	},
 	uninit: function () {
-		this.bound = false;
+		this.removeSortIcons();
 
-		$('.tablesorticon').remove();
+		jQuery(this.class + ' thead tr th:not(.nosort)').off('click');
+
+		this.bound = false;
 	},
 	/* Do the actual sort */
 	sort: function (index, dir) {
 		if (index > 0) {
-			console.debug('Sorting column:' + index + ' direction:' + dir + ' sorting:' + $(this.class + ' tbody tr').length);
+			console.debug('Sorting column:' + index + ' direction:' + dir + ' sorting:' + jQuery(this.class + ' tbody tr').length);
 
 			this.determineIcons(index, dir);
 
-			if ($(this.class + ' tbody tr').length) {
+			if (jQuery(this.class + ' tbody tr').length) {
 				tinysort(this.class + ' tbody tr', {
 					selector: 'td:nth-child(' + index + ')',
 					order: dir,
@@ -57,21 +63,24 @@ var tableSort = {
 		this.save(index, dir);
 	},
 	addSortIcons: function () {
-		if (!$('.tablesorticon').length) {
-			$(this.class + ' thead tr th:not(.nosort)').prepend('<i class="fa fa-sort tablesorticon"></i> ');
+		if (!jQuery('.tablesorticon').length) {
+			jQuery(this.class + ' thead tr th:not(.nosort)').prepend('<i class="fa fa-sort tablesorticon"></i> ');
 		}
+	},
+	removeSortIcons: function () {
+		jQuery('.tablesorticon').remove();
 	},
 	determineIcons: function (index, dir) {
 		/* remove all previous arrows and such */
-		$(this.class + ' thead tr th i').removeClass('fa-sort-asc').removeClass('fa-sort-desc').addClass('fa-sort');
+		jQuery(this.class + ' thead tr th i').removeClass('fa-sort-asc').removeClass('fa-sort-desc').addClass('fa-sort');
 
 		/* remove previous highlighted column */
-		$(this.class + ' thead tr th').removeClass('active');
+		jQuery(this.class + ' thead tr th').removeClass('active');
 
 		/* add the correct classes to the header */
-		$(this.class + ' thead tr th:nth-child(' + index + ') i').addClass('fa-sort-' + dir).removeClass('fa-sort');
+		jQuery(this.class + ' thead tr th:nth-child(' + index + ') i').addClass('fa-sort-' + dir).removeClass('fa-sort');
 
-		$(this.class + ' thead tr th:nth-child(' + index + ')').addClass('active');
+		jQuery(this.class + ' thead tr th:nth-child(' + index + ')').addClass('active');
 	},
 	/* Load the last sort if any */
 	load: function () {
@@ -80,8 +89,6 @@ var tableSort = {
 
 			this.index = saved.index;
 			this.dir = saved.dir;
-
-			this.sort(this.index, this.dir);
 		}
 	},
 	/* Save the Last Sort */
@@ -97,7 +104,7 @@ var tableSort = {
 		return window.location.pathname + this.storageKey;
 	},
 	exists: function () {
-		return $(this.class + ' thead tr th:not(.nosort)').length > 0;
+		return jQuery(this.class + ' thead tr th:not(.nosort)').length > 0;
 	},
 };
 
