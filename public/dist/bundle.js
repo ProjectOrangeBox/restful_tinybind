@@ -385,8 +385,9 @@ class orangeRouter {
           if (DEBUG) {
             console.log('router matched', parameters, this.routes[key].re.toString());
           }
-          /* remove matched url  */
 
+          this.app.trigger('orange-route-matched', [key, this.routes[key], parameters]);
+          /* remove matched url  */
 
           parameters.shift();
           /* call the route callback and pass in the parameters */
@@ -485,7 +486,7 @@ class orangeRouter {
 
     if (orangeRouter._url != url) {
       orangeRouter._url = url;
-      orangeRouter.app.trigger('spa-changed', [url]);
+      orangeRouter.app.trigger('orange-route-changed', [url]);
       orangeRouter.match(url);
     }
   }
@@ -1913,6 +1914,10 @@ class orangeBinder {
 
 
   trigger(msg, args) {
+    if (DEBUG) {
+      console.log('trigger #' + this.id + ' ' + msg);
+    }
+
     jQuery('body').trigger(msg, args);
   }
   /**
@@ -1937,6 +1942,7 @@ class orangeBinder {
 
   set(data, settable) {
     settable = settable || this.config.settable;
+    this.trigger('orange-bind-set', [data, settable]);
 
     for (let index in settable) {
       let key = settable[index];
@@ -1995,10 +2001,12 @@ class orangeBinder {
       collection[key] = typeof this[key].collect === "function" ? this[key].collect() : this[key];
     }
 
+    this.trigger('orange-bind-get', [collection, gettable]);
     return collection;
   }
 
   html(html) {
+    this.trigger('orange-bind-html', [html]);
     this.element().innerHTML = html;
   }
 

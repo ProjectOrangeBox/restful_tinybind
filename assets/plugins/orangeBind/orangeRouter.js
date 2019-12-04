@@ -43,6 +43,8 @@
 							console.log('router matched', parameters, this.routes[key].re.toString());
 						}
 
+						this.app.trigger('orange-route-matched', [key, this.routes[key], parameters]);
+
 						/* remove matched url  */
 						parameters.shift();
 
@@ -131,7 +133,7 @@
 			if (orangeRouter._url != url) {
 				orangeRouter._url = url;
 
-				orangeRouter.app.trigger('spa-changed', [url]);
+				orangeRouter.app.trigger('orange-route-changed', [url]);
 
 				orangeRouter.match(url);
 			}

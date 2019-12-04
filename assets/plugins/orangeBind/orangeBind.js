@@ -124,6 +124,10 @@ class orangeBinder {
 	 * wrapper for jQuery trigger
 	 */
 	trigger(msg, args) {
+		if (DEBUG) {
+			console.log('trigger #' + this.id + ' ' + msg);
+		}
+
 		jQuery('body').trigger(msg, args);
 	}
 
@@ -146,6 +150,8 @@ class orangeBinder {
 	 */
 	set(data, settable) {
 		settable = settable || this.config.settable;
+
+		this.trigger('orange-bind-set', [data, settable]);
 
 		for (let index in settable) {
 			let key = settable[index];
@@ -201,10 +207,14 @@ class orangeBinder {
 			collection[key] = typeof this[key].collect === "function" ? this[key].collect() : this[key];
 		}
 
+		this.trigger('orange-bind-get', [collection, gettable]);
+
 		return collection;
 	}
 
 	html(html) {
+		this.trigger('orange-bind-html', [html]);
+
 		this.element().innerHTML = html;
 	}
 
