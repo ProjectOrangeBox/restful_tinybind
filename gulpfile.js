@@ -31,7 +31,7 @@ let css = {
 	],
 	user: [
 		"assets/plugins/notify/notify.css",
-		"assets/plugins/table_sort/table_sort.css"
+		"assets/plugins/table-sort/table-sort.css"
 	],
 	scss: ["assets/css/application.scss"]
 };
@@ -58,9 +58,9 @@ let js = {
 
 		"assets/plugins/notify/notify.js",
 		"assets/plugins/bound-table-search/bound-table-search.js",
-		"assets/plugins/table_remember_position/table_remember_position.js",
-		"assets/plugins/table_sort/table_sort.js",
-		"assets/plugins/table_sticky_header/jquery.stickytableheaders.js",
+		"assets/plugins/table-remember-position/table-remember-position.js",
+		"assets/plugins/table-sort/table-sort.js",
+		"assets/plugins/table-sticky-header/jquery.stickytableheaders.js",
 
 		"assets/js/application.js",
 

@@ -40,7 +40,7 @@ var storage = {
 
   /* local reference */
   config: {
-    dbPrefix: 'ss.',
+    dbPrefix: 'sbs',
 
     /* every key must start with this */
     storage: 'localStorage',
@@ -80,6 +80,9 @@ var storage = {
   /* clear all of the storage key that match our prefix passing no argument uses right now as the timestamp */
   clear: function () {
     this.removeOlderThan();
+  },
+  getKeys: function () {
+    return this.storage;
   },
   getDetailed: function (key) {
     return this._getByComplete(this.config.dbPrefix + key);
@@ -248,7 +251,7 @@ class orangeLoader {
     let orangeLoader = this;
     modelEndPoint = this.app.config.modelUrl + modelEndPoint;
 
-    if (DEBUG) {
+    if (this.app.config.debug) {
       console.log('#' + this.app.id + ' loader::model ' + modelEndPoint);
     }
 
@@ -269,10 +272,10 @@ class orangeLoader {
 
   template(templateEndPoint, then) {
     let orangeLoader = this;
-    let cacheKey = templateEndPoint + '.template';
+    let cacheKey = templateEndPoint + '.template.bind';
     let template = undefined;
 
-    if (DEBUG) {
+    if (this.app.config.debug) {
       console.log('#' + this.app.id + ' loader::template ' + templateEndPoint);
     }
     /* is this stored in our local template cache */
@@ -302,7 +305,7 @@ class orangeLoader {
         /* if storage is setup than store a copy */
         if (storage !== undefined) {
           let cacheSeconds = data.template.cache ? data.template.cache : orangeLoader.app.config.templateCache;
-          storage.setItem('setItem', cacheKey, data.template.source, cacheSeconds);
+          storage.setItem(cacheKey, data.template.source, cacheSeconds);
         }
 
         orangeLoader.app.html(data.template.source);
@@ -372,7 +375,7 @@ class orangeRouter {
     /* do we have any routes to listen for? */
 
     if (this.routes.length) {
-      if (DEBUG) {
+      if (this.app.config.debug) {
         console.log('#' + this.app.id + ' router::match', url);
       }
       /* loop though the routes */
@@ -382,7 +385,7 @@ class orangeRouter {
         let parameters = url.match(this.routes[key].re);
 
         if (parameters) {
-          if (DEBUG) {
+          if (this.app.config.debug) {
             console.log('#' + this.app.id + ' router::match::matched', parameters, this.routes[key].re.toString());
           }
 
@@ -497,7 +500,7 @@ class orangeRouter {
     url = url ? this.app.config.routerRoot + this._clearSlashes(url) : '';
     redirect = redirect ? redirect : this.app.config.redirect;
 
-    if (DEBUG) {
+    if (this.app.config.debug) {
       console.log('#' + this.app.id + ' router::navigate ', url, redirect);
     }
     /* trigger a redirect so other javascript code knows we are redirecting */
@@ -635,7 +638,7 @@ class orangeRequest {
   }
 
   send(method, url, data, callbacks) {
-    if (DEBUG) {
+    if (this.app.config.debug) {
       console.log('#' + this.app.id + ' request::send', method, url, data);
     }
     /* did they send in any callbacks? */
@@ -1837,6 +1840,7 @@ class orangeBinder {
       settable: ["page", "form", "user", "local", "config", "templates", "error", "errors", "model"],
       gettable: ["page", "form", "error", "errors", "model"],
       defaults: {},
+      debug: false,
       configUrl: configUrl || "",
       modelUrl: modelUrl || "",
       templateUrl: templateUrl || "",
@@ -1914,7 +1918,7 @@ class orangeBinder {
 
 
   trigger(msg, args) {
-    if (DEBUG) {
+    if (this.config.debug) {
       console.log('#' + this.id + ' bind::trigger ' + msg);
     }
 
@@ -1968,24 +1972,31 @@ class orangeBinder {
 
     this.records = this.model;
     this.record = this.model;
+    this.cacheMgr(this.config);
+    return this;
+    /* allow chaining */
+  }
+
+  cacheMgr(config) {
     /* do any cache cleaning based on the sent in data */
 
     /* is it loaded? */
-
     if (storage !== undefined) {
-      if (this.config.clearCache) {
-        storage.clear();
+      if (config.clearCache) {
+        /* only delete our cached items */
+        for (let index in storage.getKeys()) {
+          if (index.substr(-5) == '.bind') {
+            storage.removeItem(undefined, index);
+          }
+        }
       }
       /* if set clear older than X seconds... */
 
 
-      if (this.config.olderThanCache !== undefined) {
-        storage.removeOlderThan(this.config.olderThanCache);
+      if (config.olderThanCache !== undefined) {
+        storage.removeOlderThan(config.olderThanCache);
       }
     }
-
-    return this;
-    /* allow chaining */
   }
   /**
    * get the data about this element
@@ -2493,10 +2504,10 @@ var tableSort = {
     return $(this.class + ' thead tr th:not(.nosort)').length > 0;
   }
 };
-$('body').on('tiny-bind-bound', function () {
+jQuery('body').on('tiny-bind-bound', function () {
   tableSort.init();
 });
-$('body').on('tiny-bind-unbound', function () {
+jQuery('body').on('tiny-bind-unbound', function () {
   tableSort.uninit();
 });
 /*! Copyright (c) Jonas Mosbech - https://github.com/jmosbech/StickyTableHeaders
@@ -2811,7 +2822,6 @@ $('body').on('tiny-bind-unbound', function () {
 })(jQuery, window);
 
 $('body').on('tiny-bind-bound', function () {
-  console.log('bind sticky header ' + $('.navbar-fixed-top').outerHeight());
   $('.table-sticky-header').stickyTableHeaders({
     marginTop: $('.navbar-fixed-top')
   });
@@ -2878,9 +2888,9 @@ Setup the Application global variable for the app "block"
 3. prefix all layout requests with...
 
 */
-var DEBUG = true;
 var app = new orangeBinder('app', '/get/configuration', '/get/layout');
 app.config.alter({
+  debug: true,
   defaults: {
     Precision: 2,
     ThousandSeparator: ',',
