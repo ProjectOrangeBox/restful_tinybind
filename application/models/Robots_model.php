@@ -36,9 +36,7 @@ class Robots_model extends MY_Model
 		if ($success = $this->check($data, false)) {
 			$data['mselect'] = json_encode($data['mselect']);
 
-			$this->db->insert($this->table, $data);
-
-			$success = $this->db->insert_id();
+			$success = parent::insert($data);
 		}
 
 		return $success;
@@ -55,9 +53,7 @@ class Robots_model extends MY_Model
 		if ($success = $this->check($data, true)) {
 			$data['mselect'] = json_encode($data['mselect']);
 
-			$this->db->update($this->table, $data, [$this->primary_key => $data[$this->primary_key]]);
-
-			$success = $this->db->affected_rows();
+			$success = parent::update($data);
 		}
 
 		return $success;

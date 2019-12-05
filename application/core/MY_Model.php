@@ -48,6 +48,10 @@ class MY_Model extends CI_Model
 	 */
 	public function insert(array $data)
 	{
+		if (isset($data[$this->primary_key])) {
+			unset($data[$this->primary_key]);
+		}
+
 		if ($success = $this->check($data, false)) {
 			$this->db->insert($this->table, $data);
 
@@ -98,8 +102,9 @@ class MY_Model extends CI_Model
 	{
 		$ci = get_instance();
 
-		$columns = explode(',', $this->required);
+		$columns = (array) explode(',', $this->required);
 
+		/* take out the primary key */
 		if (!$primaryKeyRequired) {
 			$columns = array_diff($columns, [$this->primary_key]);
 		}
