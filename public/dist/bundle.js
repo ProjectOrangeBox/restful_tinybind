@@ -2905,7 +2905,7 @@ var app = new orangeBinder('app', '/ServerConfiguration', '/Template');
 /* setup the application defaults */
 
 app.config.alter({
-  debug: true,
+  debug: false,
   defaults: {
     Precision: 2,
     ThousandSeparator: ',',
@@ -2995,57 +2995,86 @@ app.router.alter({
  */
 
 app.events.alter({
+  /*
+  create & edit could have simply used events.navigate
+  but this allow us a little more control and unified naming
+  */
+
+  /* <a rv-on-click="events.create | args page.path">create</a> */
   create: function (url, event) {
     event.preventDefault();
     app.router.navigate(url + '/create');
   },
+
+  /* <a rv-on-click="events.edit | args page.path record.id">edit</a> */
   edit: function (url, primaryId, event) {
     event.preventDefault();
     app.router.navigate(url + '/edit/' + primaryId);
   },
-  navigate: function () {
-    /* single page application navigate - to the first argument passed */
-    app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), false);
-  },
-  goto: function (element) {
-    app.router.navigate(sprintf(app.methods.getData(element, 'format'), app.methods.getData(element, 'path')), false);
-  },
 
-  /*
-  <a class="btn btn-default btn-sm js-esc" rv-path="page.path" rv-on-click="events.inspect">
-  	<i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back
-  </a>
-  */
-  inspect: function (element, rootObject) {
-    /* get an attribute from a DOM element */
-    console.log(element.target.getAttribute('data-path'));
-    console.log(element.target.getAttribute('data-format'));
-    /* root Orange Bind Element */
-
-    console.log(rootObject);
-  },
-  redirect: function () {
-    /* multi page application redirect - to the first argument passed */
-    app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), true);
-  },
+  /* <a rv-on-click="events.delete | args page.path record.id">delete</a> */
   delete: function (url, primaryId, event) {
     event.preventDefault();
     app.method.deleteRow(url, primaryId, this);
   },
+
+  /*
+  just switch the URL
+  	<a rv-on-click="events.navigate | args '%s/goto/%s' page.path page.method">navigate</a>
+  */
+  navigate: function () {
+    /* convert the arguments to an array */
+    var args = Array.from(arguments);
+    /* blast off the extra stuff attached */
+
+    args = args.slice(0, -2);
+    /* get the sprintf format string */
+
+    var format = args.shift();
+    app.router.navigate(vsprintf(format, args), false);
+  },
+
+  /*
+  preform an actual http redirect
+  	<a rv-on-click="events.navigate | args '%s/goto/%s' page.path page.method">redirect</a>
+  */
+  redirect: function () {
+    /* convert the arguments to an array */
+    var args = Array.from(arguments);
+    /* blast off the extra stuff attached */
+
+    args = args.slice(0, -2);
+    /* get the sprintf format string */
+
+    var format = args.shift();
+    /* using the format send what's left in */
+
+    app.router.navigate(vsprintf(format, args), true);
+  },
+
+  /* go to somewhere based on html data attrubutes */
+  dataAttrExample: function (element) {
+    /*
+    <a class="btn btn-default btn-sm js-esc" data-format="%s/foobar" rv-data-path="page.path" rv-on-click="events.goto">
+    	<i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back
+    </a>
+    */
+    var url = sprintf(app.methods.getData(element, 'format'), app.methods.getData(element, 'path'));
+    app.router.navigate(url, false);
+  },
+
+  /* submit the model but don't redirect */
   submit: function (event) {
     event.preventDefault();
     app.methods.submit(false);
   },
+
+  /* submit the model and redirect */
   submitRedirect: function (event) {
     event.preventDefault();
     app.methods.submit(true);
   }
-}); //app.request.on(404, function (xhr, status, error) {
-
-/* don't show the default alert() - instead show not found */
-//app.load.template('/notfound');
-//});
-
+});
 /* A "safe" place to attach reuseable application methods */
 
 app.methods.alter({
@@ -3091,14 +3120,6 @@ app.methods.alter({
         }
       }
     });
-  },
-
-  /* let url = app.methods.buildUrl('/foo/%s/bar','123'); */
-  'buildUrl': function (args) {
-    let that = args.pop();
-    let event = args.pop();
-    event.preventDefault();
-    return sprintf.apply(args[0], args);
   },
 
   /**

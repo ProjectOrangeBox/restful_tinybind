@@ -1,7 +1,9 @@
 <div class="container">
 	<div class="row heading">
 		<div class="col-md-6">
-			<h3><i class="fa fa-th"></i><span rv-text="page.titles"></span><small id="table-search-field-count"></small></h3>
+			<h3>
+				<i class="fa fa-th"></i><span rv-text="page.titles"></span><small id="table-search-field-count"></small>
+			</h3>
 		</div>
 		<div class="col-md-6">
 			<div class="pull-right">
@@ -24,7 +26,14 @@
 				<tr rv-each-record="records" rv-data-id="record.id">
 					<td class="text-center" rv-text="record.id"></td>
 					<td rv-text="record.value"></td>
-					<td class="text-center actions"><a rv-on-click="events.edit | args page.path record.id"><i class="fa fa-edit fa-lg"></i></a><a rv-on-click="events.delete | args page.path record.id"><i class="fa fa-trash fa-lg"></i></a></td>
+					<td class="text-center actions">
+						<a rv-on-click="events.edit | args page.path record.id">
+							<i class="fa fa-edit fa-lg"></i>
+						</a>
+						<a rv-on-click="events.delete | args page.path record.id">
+							<i class="fa fa-trash fa-lg"></i>
+						</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>

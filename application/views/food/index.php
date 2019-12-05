@@ -4,7 +4,8 @@
 	<div class="container">
 		<div class="row heading">
 			<div class="col-md-6">
-				<h3><i class="fa fa-th"></i><span rv-text="page.titles"></span><small id="table-search-field-count"></small>
+				<h3>
+					<i class="fa fa-th"></i><span rv-text="page.titles"></span><small id="table-search-field-count"></small>
 				</h3>
 			</div>
 			<div class="col-md-6">
