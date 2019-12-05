@@ -5,7 +5,8 @@ class GetNavModel extends CI_Controller
 	/* Get the nav model data */
 	public function index(): void
 	{
-		$this->Restful_model
+		/* return restful model */
+		$this->restful
 			->model($this->nav_model->get(2))
 			->send(200);
 	}

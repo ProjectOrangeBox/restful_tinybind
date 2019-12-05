@@ -5,7 +5,7 @@ class Food extends MY_Controller
 	public $controller_path = '/food';
 	public $controller_title = 'Food';
 	public $controller_titles = 'Foods';
-	public $controller_model = 'Food_model';
+	public $controller_model = 'food_model';
 
 	public function indexGet(): void
 	{

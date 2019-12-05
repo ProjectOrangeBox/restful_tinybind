@@ -8,7 +8,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="pull-right">
-					<a class="btn btn-default btn-sm js-esc" rv-on-click="events.redirect | wrap '%s' page.path"><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
+					<a class="btn btn-default btn-sm js-esc" rv-on-click="events.redirect | args '%s' page.path"><i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
 				</div>
 			</div>
 		</div>

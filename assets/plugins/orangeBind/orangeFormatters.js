@@ -858,7 +858,7 @@ tinybind.formatters.join = function (target, val) {
 	Example:
 
 	<div rv-each-item="collection">
-		<div rv-on-click="aClickHandler | wrap collectionItem"></div>
+		<div rv-on-click="aClickHandler | args collectionItem"></div>
 	</div>
 
 	function aClickHandler(collectionItem, event) {
@@ -871,7 +871,7 @@ tinybind.formatters.join = function (target, val) {
 		...
 	}
 */
-tinybind.formatters.wrap = function (target) {
+tinybind.formatters.args = function (target) {
 	var args = Array.prototype.slice.call(arguments);
 	args.splice(0, 1);
 

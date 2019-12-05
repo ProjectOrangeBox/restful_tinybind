@@ -98,7 +98,7 @@ app.router.alter({
 /**
  * TinyBind Events
  *
- * <a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i	class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
+ * <a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | args page.path"><i	class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
  */
 app.events.alter({
 	create: function (url, event) {
@@ -116,6 +116,10 @@ app.events.alter({
 		app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), false);
 	},
 
+	goto: function (element) {
+		app.router.navigate(sprintf(app.methods.getData(element, 'format'), app.methods.getData(element, 'path')), false);
+	},
+
 	/*
 	<a class="btn btn-default btn-sm js-esc" rv-path="page.path" rv-on-click="events.inspect">
 		<i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back
@@ -123,7 +127,8 @@ app.events.alter({
 	*/
 	inspect: function (element, rootObject) {
 		/* get an attribute from a DOM element */
-		console.log(element.target.getAttribute('path'));
+		console.log(element.target.getAttribute('data-path'));
+		console.log(element.target.getAttribute('data-format'));
 
 		/* root Orange Bind Element */
 		console.log(rootObject);
@@ -156,6 +161,14 @@ app.events.alter({
 
 /* A "safe" place to attach reuseable application methods */
 app.methods.alter({
+	/* get a data attribute from a DOM element */
+	'getData': function (element, name, defaultValue) {
+		defaultValue = defaultValue || '';
+
+		var value = element.target.getAttribute('data-' + name);
+
+		return (value == null) ? defaultValue : value;
+	},
 	'deleteRow': function (url, primaryId, that) {
 		/* we need to save this for the 202 responds */
 		app.local.closest_tr = jQuery(that).closest('tr');

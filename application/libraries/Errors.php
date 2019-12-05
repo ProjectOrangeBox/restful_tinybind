@@ -1,6 +1,6 @@
 <?php
 
-class Errors_model
+class Errors
 {
 	public $errors = [];
 
@@ -33,7 +33,7 @@ class Errors_model
 	 *
 	 * @return void
 	 */
-	public function errors(): array
+	public function collect(): array
 	{
 		return $this->errors;
 	}

@@ -4,8 +4,11 @@
 			<h3><i class="fa fa-tags"></i><span rv-text="page.action"></span><span rv-text="page.title"></span></h3>
 		</div>
 		<div class="col-md-6">
-			<div class="pull-right"><a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i
-						class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a></div>
+			<div class="pull-right">
+				<a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | args page.path">
+					<i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back
+				</a>
+			</div>
 		</div>
 	</div>
 	<hr />

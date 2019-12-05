@@ -20,7 +20,7 @@
  * status: ###
  *
  */
-class Restful_model
+class Restful
 {
 	public $status = 200; /* int */
 	public $statusMsg = ''; /* string */
@@ -121,7 +121,7 @@ class Restful_model
 	 * @param string $template
 	 * @return void
 	 */
-	public function template(string $template, int $cache_seconds = 0): Restful_model
+	public function template(string $template, int $cache_seconds = 0): Restful
 	{
 		$this->payload['template'] = ['source' => $template, 'cache' => $cache_seconds];
 
@@ -141,10 +141,10 @@ class Restful_model
 
 		/* test for a fail */
 		if ($fail) {
-			$this->payload['error'] = get_instance()->Errors_model->has_error();
+			$this->payload['error'] = get_instance()->errors->has_error();
 
 			if ($this->payload['error']) {
-				$this->payload['errors'] = get_instance()->Errors_model->errors();
+				$this->payload['errors'] = get_instance()->errors->collect();
 			}
 		}
 

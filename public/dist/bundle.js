@@ -72,7 +72,7 @@ var storage = {
   removeItem: function (key, completeKey) {
     if (this.capable()) {
       /* if they didn't send in the complete key build it */
-      key = completeKey ? key : this.config.dbPrefix + key;
+      key = completeKey || this.config.dbPrefix + key;
       this.storage.removeItem(key);
     }
   },
@@ -1646,7 +1646,7 @@ tinybind.formatters.join = function (target, val) {
 	Example:
 
 	<div rv-each-item="collection">
-		<div rv-on-click="aClickHandler | wrap collectionItem"></div>
+		<div rv-on-click="aClickHandler | args collectionItem"></div>
 	</div>
 
 	function aClickHandler(collectionItem, event) {
@@ -1661,7 +1661,7 @@ tinybind.formatters.join = function (target, val) {
 */
 
 
-tinybind.formatters.wrap = function (target) {
+tinybind.formatters.args = function (target) {
   var args = Array.prototype.slice.call(arguments);
   args.splice(0, 1);
   return function (evt) {
@@ -2991,7 +2991,7 @@ app.router.alter({
 /**
  * TinyBind Events
  *
- * <a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i	class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
+ * <a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | args page.path"><i	class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
  */
 
 app.events.alter({
@@ -3007,6 +3007,9 @@ app.events.alter({
     /* single page application navigate - to the first argument passed */
     app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), false);
   },
+  goto: function (element) {
+    app.router.navigate(sprintf(app.methods.getData(element, 'format'), app.methods.getData(element, 'path')), false);
+  },
 
   /*
   <a class="btn btn-default btn-sm js-esc" rv-path="page.path" rv-on-click="events.inspect">
@@ -3015,7 +3018,8 @@ app.events.alter({
   */
   inspect: function (element, rootObject) {
     /* get an attribute from a DOM element */
-    console.log(element.target.getAttribute('path'));
+    console.log(element.target.getAttribute('data-path'));
+    console.log(element.target.getAttribute('data-format'));
     /* root Orange Bind Element */
 
     console.log(rootObject);
@@ -3045,6 +3049,12 @@ app.events.alter({
 /* A "safe" place to attach reuseable application methods */
 
 app.methods.alter({
+  /* get a data attribute from a DOM element */
+  'getData': function (element, name, defaultValue) {
+    defaultValue = defaultValue || '';
+    var value = element.target.getAttribute('data-' + name);
+    return value == null ? defaultValue : value;
+  },
   'deleteRow': function (url, primaryId, that) {
     /* we need to save this for the 202 responds */
     app.local.closest_tr = jQuery(that).closest('tr');

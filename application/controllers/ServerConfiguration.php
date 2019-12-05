@@ -12,7 +12,7 @@ class ServerConfiguration extends CI_Controller
 	 */
 	public function index(): void
 	{
-		$this->Restful_model
+		$this->restful
 			->config('clearCache', !$this->cache) /* clear ALL cached records */
 			->config('olderThanCache', $this->superStorageCacheSeconds) /* in production clear records older than (this way if you need to flush out old records you can without new records being deleted */
 			->send(200);

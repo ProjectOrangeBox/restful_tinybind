@@ -111,10 +111,10 @@ class MY_Model extends CI_Model
 
 		foreach ($columns as $c) {
 			if (empty($data[$c])) {
-				$ci->Errors_model->add(ucfirst($c) . ' is required.');
+				$ci->errors->add(ucfirst($c) . ' is required.');
 			}
 		}
 
-		return !$ci->Errors_model->has_error();
+		return !$ci->errors->has_error();
 	}
 } /* end class */

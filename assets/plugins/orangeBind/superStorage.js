@@ -32,7 +32,7 @@ var storage = {
 	removeItem: function (key, completeKey) {
 		if (this.capable()) {
 			/* if they didn't send in the complete key build it */
-			key = (completeKey) ? key : this.config.dbPrefix + key;
+			key = completeKey || this.config.dbPrefix + key;
 
 			this.storage.removeItem(key);
 		}

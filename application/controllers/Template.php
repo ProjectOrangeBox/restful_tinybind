@@ -15,7 +15,7 @@ class Template extends CI_Controller
 		$template = '/' . preg_replace("/[^\/a-zA-Z0-9]+/", '', implode('/', $segment)) . '.html';
 
 		/* simple clean up */
-		$this->Restful_model
+		$this->restful
 			->template($this->load->view($template, [], true), $this->superStorageCacheSeconds)
 			->send(200);
 	}

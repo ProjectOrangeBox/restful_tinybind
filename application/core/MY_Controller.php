@@ -27,7 +27,7 @@ class MY_Controller extends CI_Controller
 
 		$method = $method . ucwords($this->input->method()) . (($isAjax || $isJson) ? 'Ajax' : '');
 
-		//$this->Restful_model->page('method', $method);
+		//$this->restful->page('method', $method);
 
 		if (method_exists($this, $method)) {
 			call_user_func_array([$this, $method], $params);
@@ -45,7 +45,7 @@ class MY_Controller extends CI_Controller
 	 */
 	public function indexGetAjax(): void
 	{
-		$this->Restful_model
+		$this->restful
 			->page('title', $this->controller_title)
 			->page('titles', $this->controller_titles)
 			->page('path', $this->controller_path)
@@ -62,7 +62,7 @@ class MY_Controller extends CI_Controller
 	 */
 	public function createGetAjax(): void
 	{
-		$this->Restful_model
+		$this->restful
 			->page('title', $this->controller_title)
 			->page('titles', $this->controller_titles)
 			->page('path', $this->controller_path)
@@ -84,10 +84,10 @@ class MY_Controller extends CI_Controller
 	{
 		if ($request = $this->input->request('model')) {
 			if ($id = $this->{$this->controller_model}->insert($request)) {
-				$this->Restful_model->model('id', $id);
+				$this->restful->model('id', $id);
 			} else {
-				if (!$this->Errors_model->has_error()) {
-					$this->Errors_model->add('Error on Insert.');
+				if (!$this->errors->has_error()) {
+					$this->errors->add('Error on Insert.');
 				}
 			}
 		}
@@ -105,7 +105,7 @@ class MY_Controller extends CI_Controller
 	public function editGetAjax($id = null): void
 	{
 		/* edit */
-		$this->Restful_model
+		$this->restful
 			->page('title', $this->controller_title)
 			->page('titles', $this->controller_titles)
 			->page('path', $this->controller_path)
@@ -114,9 +114,9 @@ class MY_Controller extends CI_Controller
 			->form('action', $this->controller_path . '/edit/' . $id);
 
 		if ($record = $this->{$this->controller_model}->get($id)) {
-			$this->Restful_model->model($record);
+			$this->restful->model($record);
 		} else {
-			$this->Errors_model->add('Record not Found.');
+			$this->errors->add('Record not Found.');
 		}
 
 		$this->send(200, 404);
@@ -133,8 +133,8 @@ class MY_Controller extends CI_Controller
 		if ($request = $this->input->request('model')) {
 			$this->{$this->controller_model}->update($request);
 		} else {
-			if (!$this->Errors_model->has_error()) {
-				$this->Errors_model->add('Error on Update.');
+			if (!$this->errors->has_error()) {
+				$this->errors->add('Error on Update.');
 			}
 		}
 
@@ -151,8 +151,8 @@ class MY_Controller extends CI_Controller
 	public function deleteDeleteAjax($id = null): void
 	{
 		if ($this->{$this->controller_model}->delete($id)) {
-			if (!$this->Errors_model->has_error()) {
-				$this->Errors_model->add('Error on Delete.');
+			if (!$this->errors->has_error()) {
+				$this->errors->add('Error on Delete.');
 			}
 		}
 
@@ -169,6 +169,6 @@ class MY_Controller extends CI_Controller
 	 */
 	protected function send(int $success, int $fail): void
 	{
-		$this->Restful_model->send($success, $fail);
+		$this->restful->send($success, $fail);
 	}
 } /* end class */

@@ -9,7 +9,9 @@
 					<input class="form-control input-sm" id="bound-table-search-field" type="text" style="width:222px;" placeholder="search" />
 					<i class="fa fa-search form-control-feedback"></i>
 				</div>
-				<a class="btn btn-default btn-sm js-new" rv-on-click="events.create | wrap page.path"><i class="fa fa-magic"></i> New {page.title}</a>
+				<a class="btn btn-default btn-sm js-new" rv-on-click="events.create | args page.path">
+					<i class="fa fa-magic"></i> New {page.title}
+				</a>
 			</div>
 		</div>
 	</div>
@@ -27,10 +29,10 @@
 					<td class="text-center" rv-text="record.id"></td>
 					<td rv-text="record.zipcode"></td>
 					<td class="text-center actions">
-						<a rv-on-click="events.edit | wrap page.path record.id">
+						<a rv-on-click="events.edit | args page.path record.id">
 							<i class="fa fa-edit fa-lg"></i>
 						</a>
-						<a rv-on-click="events.delete | wrap page.path record.id">
+						<a rv-on-click="events.delete | args page.path record.id">
 							<i class="fa fa-trash fa-lg"></i>
 						</a>
 					</td>
