@@ -5,7 +5,7 @@ the "base" configuration is loaded from the second parameter
 prefix all template request with the third parameter
 prefix all models request with the fourth parameter
 */
-var app = new orangeBinder('app', '/get/configuration', '/get/layout');
+var app = new orangeBinder('app', '/ServerConfiguration', '/Template');
 
 /* setup the application defaults */
 app.config.alter({

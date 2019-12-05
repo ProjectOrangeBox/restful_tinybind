@@ -2901,7 +2901,7 @@ the "base" configuration is loaded from the second parameter
 prefix all template request with the third parameter
 prefix all models request with the fourth parameter
 */
-var app = new orangeBinder('app', '/get/configuration', '/get/layout');
+var app = new orangeBinder('app', '/ServerConfiguration', '/Template');
 /* setup the application defaults */
 
 app.config.alter({
@@ -3162,7 +3162,7 @@ nav.config.alter({
 /* for ANY page request use the same model */
 
 nav.router.alter("(.*)", function () {
-  nav.load.model("/get/navModel", function () {
+  nav.load.model("/GetNavModel", function () {
     nav.methods.updateBootstrapNav();
   });
 });

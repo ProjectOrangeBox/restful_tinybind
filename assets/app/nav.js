@@ -25,7 +25,7 @@ nav.config.alter({
 
 /* for ANY page request use the same model */
 nav.router.alter("(.*)", function () {
-	nav.load.model("/get/navModel", function () {
+	nav.load.model("/GetNavModel", function () {
 		nav.methods.updateBootstrapNav();
 	});
 });

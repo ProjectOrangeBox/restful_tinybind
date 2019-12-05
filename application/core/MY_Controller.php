@@ -6,7 +6,7 @@ class MY_Controller extends CI_Controller
 	public $controller_title;
 	public $controller_titles;
 	public $controller_model;
-	public $default_view = 'index';
+	public $default_view = 'main/index';
 	public $data = [];
 
 	/**
