@@ -34,10 +34,12 @@ function debounce(func, wait, immediate) {
 	};
 }
 
-$(document).on('orange-router-navgate', function (event) {
+/* when the router navgates to something new */
+$(document).on('orange::router-navgate', function (event) {
 	notify.removeAll();
 });
 
+/* navbar menu item clicks */
 $(document).on('click', '[appNavigate]', function (event) {
 	event.preventDefault();
 
@@ -49,12 +51,7 @@ $(document).on('click', '[appNavigate]', function (event) {
 	}
 });
 
-$(document).on('tiny-bind-bound', function () {
+/* when we bind then refresh the pickers */
+$(document).on('orange::bind-bind', function () {
 	$('select').selectpicker();
 });
-
-function DOMRefresh(which) {
-	console.log('DOMRefresh');
-
-	$('.form-control').selectpicker('refresh');
-}

@@ -108,10 +108,10 @@ var tableSort = {
 	},
 };
 
-jQuery('body').on('tiny-bind-bound', function () {
+jQuery('body').on('orange::bind-bind', function () {
 	tableSort.init();
 });
 
-jQuery('body').on('tiny-bind-unbound', function () {
+jQuery('body').on('orange::bind-unbind', function () {
 	tableSort.uninit();
 });

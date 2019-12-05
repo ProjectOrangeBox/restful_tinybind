@@ -1,10 +1,10 @@
 <?php
 
-class Main extends MY_Controller {
+class Main extends MY_Controller
+{
 
-	public function indexGet() : void
+	public function indexGet(): void
 	{
-		$this->load->view('/main/index.html');
+		$this->load->view('/main/index');
 	}
-
 } /* end class */

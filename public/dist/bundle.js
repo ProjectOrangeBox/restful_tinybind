@@ -389,7 +389,7 @@ class orangeRouter {
             console.log('#' + this.app.id + ' router::match::matched', parameters, this.routes[key].re.toString());
           }
 
-          this.app.trigger('orange-route-matched', [key, this.routes[key], parameters]);
+          this.app.trigger('orange::router-matched', [key, this.routes[key], parameters]);
           /* remove matched url  */
 
           parameters.shift();
@@ -489,7 +489,7 @@ class orangeRouter {
 
     if (orangeRouter._url != url) {
       orangeRouter._url = url;
-      orangeRouter.app.trigger('orange-route-changed', [url]);
+      orangeRouter.app.trigger('orange::router-changed', [url]);
       orangeRouter.match(url);
     }
   }
@@ -506,7 +506,7 @@ class orangeRouter {
     /* trigger a redirect so other javascript code knows we are redirecting */
 
 
-    this.app.trigger('orange-router-navgate', [url, redirect]);
+    this.app.trigger('orange::router-navgate', [url, redirect]);
 
     if (redirect) {
       /* full page reload so trigger wouldn't even be picked up */
@@ -1946,7 +1946,7 @@ class orangeBinder {
 
   set(data, settable) {
     settable = settable || this.config.settable;
-    this.trigger('orange-bind-set', [data, settable]);
+    this.trigger('orange::bind-set', [data, settable]);
 
     for (let index in settable) {
       let key = settable[index];
@@ -2012,12 +2012,12 @@ class orangeBinder {
       collection[key] = typeof this[key].collect === "function" ? this[key].collect() : this[key];
     }
 
-    this.trigger('orange-bind-get', [collection, gettable]);
+    this.trigger('orange::bind-get', [collection, gettable]);
     return collection;
   }
 
   html(html) {
-    this.trigger('orange-bind-html', [html]);
+    this.trigger('orange::bind-html', [html]);
     this.element().innerHTML = html;
   }
 
@@ -2041,7 +2041,7 @@ class orangeBinder {
       this.bound = undefined;
     }
 
-    this.trigger("tiny-bind-unbound");
+    this.trigger("orange-bind-unbind");
     return this;
   }
 
@@ -2059,7 +2059,7 @@ class orangeBinder {
       record: this.model,
       page: this.page
     });
-    this.trigger("tiny-bind-bound");
+    this.trigger("orange-bind-bind");
     return this;
   }
 
@@ -2394,10 +2394,10 @@ var BoundTableSearch = {
     }
   }
 };
-$('body').on('tiny-bind-bound', function () {
+$('body').on('orange::bind-bind', function () {
   BoundTableSearch.init();
 });
-$('body').on('tiny-bind-unbound', function () {
+$('body').on('orange::bind-unbind', function () {
   BoundTableSearch.uninit();
 });
 /**
@@ -2408,7 +2408,7 @@ $('body').on('tiny-bind-unbound', function () {
 $(window).scroll(function () {
   storage.setItem(window.location.pathname + '.scroll_pos', $(window).scrollTop());
 });
-$('body').on('tiny-bind-bound', function () {
+$('body').on('orange::bind-bind', function () {
   var ypos = storage.getItem(window.location.pathname + '.scroll_pos', null);
 
   if (ypos > 0) {
@@ -2517,10 +2517,10 @@ var tableSort = {
     return jQuery(this.class + ' thead tr th:not(.nosort)').length > 0;
   }
 };
-jQuery('body').on('tiny-bind-bound', function () {
+jQuery('body').on('orange::bind-bind', function () {
   tableSort.init();
 });
-jQuery('body').on('tiny-bind-unbound', function () {
+jQuery('body').on('orange::bind-unbind', function () {
   tableSort.uninit();
 });
 /*! Copyright (c) Jonas Mosbech - https://github.com/jmosbech/StickyTableHeaders
@@ -2834,7 +2834,7 @@ jQuery('body').on('tiny-bind-unbound', function () {
   };
 })(jQuery, window);
 
-$('body').on('tiny-bind-bound', function () {
+$('body').on('orange::bind-bind', function () {
   $('.table-sticky-header').stickyTableHeaders({
     marginTop: $('.navbar-fixed-top')
   });
@@ -2872,10 +2872,14 @@ function debounce(func, wait, immediate) {
     }
   };
 }
+/* when the router navgates to something new */
 
-$(document).on('orange-router-navgate', function (event) {
+
+$(document).on('orange::router-navgate', function (event) {
   notify.removeAll();
 });
+/* navbar menu item clicks */
+
 $(document).on('click', '[appNavigate]', function (event) {
   event.preventDefault();
   var href = $(this).attr('href');
@@ -2885,23 +2889,21 @@ $(document).on('click', '[appNavigate]', function (event) {
     nav.router.navigate(href, redirect);
   }
 });
-$(document).on('tiny-bind-bound', function () {
+/* when we bind then refresh the pickers */
+
+$(document).on('orange::bind-bind', function () {
   $('select').selectpicker();
 });
-
-function DOMRefresh(which) {
-  console.log('DOMRefresh');
-  $('.form-control').selectpicker('refresh');
-}
 /*
-Setup the Application global variable for the app "block"
-
-1. we request tell bind what the id is
-2. then where to get it's config from the server
-3. prefix all layout requests with...
-
+Setup the global variable app
+this is attached to the DOM element with the id of the first parameter
+the "base" configuration is loaded from the second parameter
+prefix all template request with the third parameter
+prefix all models request with the fourth parameter
 */
 var app = new orangeBinder('app', '/get/configuration', '/get/layout');
+/* setup the application defaults */
+
 app.config.alter({
   debug: true,
   defaults: {
@@ -2913,6 +2915,8 @@ app.config.alter({
     DatetimeFormat: 'YYYY-MM-DD HH:mm:ss'
   }
 });
+/* setup the application routes */
+
 app.router.alter({
   'multi/edit/(:num)': function (primary_id) {
     app.load.block('/multi/details', '/multi/edit/' + primary_id);
@@ -2957,41 +2961,128 @@ app.router.alter({
     app.load.block('/catalog/index', '/catalog/index');
   },
   'robot/edit/(:num)': function (primary_id) {
-    app.load.block('/robot/details', '/robot/edit/' + primary_id, DOMRefresh);
+    app.load.block('/robot/details', '/robot/edit/' + primary_id);
   },
   'robot/create': function () {
-    app.load.block('/robot/details', '/robot/create', DOMRefresh);
+    app.load.block('/robot/details', '/robot/create');
   },
   'robot': function () {
     app.load.block('/robot/index', '/robot/index');
   },
 
-  /* mpa example page - when this page loads load this model */
+  /*
+  full page refresh example pages
+  there is no template load because the entire page is included in the refresh
+  so when this page loads load this model
+  */
   'food/edit/(:num)': function (primary_id) {
     app.load.model('/food/edit/' + primary_id);
   },
-
-  /* mpa example page - when this page loads load this model */
   'food/create': function () {
     app.load.model('/food/create');
   },
-
-  /* mpa example page - when this page loads load this model */
   'food': function () {
     app.load.model('/food/index');
   },
 
   /* default route / action */
   '(.*)': function () {}
+});
+/**
+ * TinyBind Events
+ *
+ * <a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i	class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
+ */
+
+app.events.alter({
+  create: function (url, event) {
+    event.preventDefault();
+    app.router.navigate(url + '/create');
+  },
+  edit: function (url, primaryId, event) {
+    event.preventDefault();
+    app.router.navigate(url + '/edit/' + primaryId);
+  },
+  navigate: function () {
+    /* single page application navigate - to the first argument passed */
+    app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), false);
+  },
+
+  /*
+  <a class="btn btn-default btn-sm js-esc" rv-path="page.path" rv-on-click="events.inspect">
+  	<i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back
+  </a>
+  */
+  inspect: function (element, rootObject) {
+    /* get an attribute from a DOM element */
+    console.log(element.target.getAttribute('path'));
+    /* root Orange Bind Element */
+
+    console.log(rootObject);
+  },
+  redirect: function () {
+    /* multi page application redirect - to the first argument passed */
+    app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), true);
+  },
+  delete: function (url, primaryId, event) {
+    event.preventDefault();
+    app.method.deleteRow(url, primaryId, this);
+  },
+  submit: function (event) {
+    event.preventDefault();
+    app.methods.submit(false);
+  },
+  submitRedirect: function (event) {
+    event.preventDefault();
+    app.methods.submit(true);
+  }
 }); //app.request.on(404, function (xhr, status, error) {
 
 /* don't show the default alert() - instead show not found */
 //app.load.template('/notfound');
 //});
 
-/* avaiable methods on app */
+/* A "safe" place to attach reuseable application methods */
 
 app.methods.alter({
+  'deleteRow': function (url, primaryId, that) {
+    /* we need to save this for the 202 responds */
+    app.local.closest_tr = jQuery(that).closest('tr');
+    /**
+     * if result is true then they pressed ok
+     * if result is false then they pressed cancel
+     */
+
+    bootbox.confirm({
+      /* build the dialog */
+      message: 'Are you sure you want to delete this record?',
+      buttons: {
+        cancel: {
+          label: '<i class="fa fa-times"></i> Cancel'
+        },
+        confirm: {
+          label: '<i class="fa fa-trash"></i> Delete',
+          className: 'btn-danger'
+        }
+      },
+
+      /* add the button callbacks */
+      callback: function (confirm) {
+        /* confirm = true */
+        if (confirm) {
+          /* setup the 202 (accepted) responds */
+          app.request.change(202, function (data, status, xhr) {
+            /* delete row */
+            app.local.closest_tr.remove();
+          });
+          /* send the delete request */
+
+          app.request.delete(url + '/delete/' + primaryId);
+        }
+      }
+    });
+  },
+
   /* let url = app.methods.buildUrl('/foo/%s/bar','123'); */
   'buildUrl': function (args) {
     let that = args.pop();
@@ -3001,8 +3092,10 @@ app.methods.alter({
   },
 
   /**
-   * submit this.get() object to action (app.form.action) using method (app.form.method)
-   * app.method.submit(true)
+   * Submit Button
+   * Use the action and method in the <form...>
+   * To determine the url and method
+   *
    */
   'submit': function (redirect, method, action, data) {
     method = method || app.form.method;
@@ -3042,91 +3135,16 @@ app.methods.alter({
     app.request[method](action, data);
   }
 });
-/**
- * Button Events
- *
- * <a class="btn btn-default btn-sm js-esc" rv-on-click="events.navigate | wrap page.path"><i	class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back</a>
- */
-
-app.events.alter({
-  create: function (url, event) {
-    event.preventDefault();
-    app.router.navigate(url + '/create');
-  },
-  edit: function (url, primaryId, event) {
-    event.preventDefault();
-    app.router.navigate(url + '/edit/' + primaryId);
-  },
-  navigate: function () {
-    /* spa navigate - to the first argument passed */
-    app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), false);
-  },
-
-  /*
-  <a class="btn btn-default btn-sm js-esc" rv-path="page.path" rv-on-click="events.inspect">
-  	<i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i> Go Back
-  </a>
-  */
-  inspect: function (element, rootObject) {
-    /* get an attribute from a DOM element */
-    console.log(element.target.getAttribute('path'));
-    /* root Orange Bind Element */
-
-    console.log(rootObject);
-  },
-  redirect: function () {
-    /* mpa redirect - to the first argument passed */
-    app.router.navigate(app.methods.buildUrl([].slice.call(arguments)), true);
-  },
-  delete: function (url, primaryId, event) {
-    event.preventDefault();
-    /* we need to save this for the 202 responds */
-
-    app.local.closest_tr = jQuery(this).closest('tr');
-    /**
-     * if result is true then they pressed ok
-     * if result is false then they pressed cancel
-     */
-
-    bootbox.confirm({
-      message: 'Are you sure you want to delete this record?',
-      buttons: {
-        cancel: {
-          label: '<i class="fa fa-times"></i> Cancel'
-        },
-        confirm: {
-          label: '<i class="fa fa-trash"></i> Delete',
-          className: 'btn-danger'
-        }
-      },
-      callback: function (confirm) {
-        if (confirm) {
-          /* accepted record - delete */
-          app.request.change(202, function (data, status, xhr) {
-            app.local.closest_tr.remove();
-          });
-          app.request.delete(url + '/delete/' + primaryId);
-        }
-      }
-    });
-  },
-  submit: function (event) {
-    event.preventDefault();
-    app.methods.submit(false);
-  },
-  submitRedirect: function (event) {
-    event.preventDefault();
-    app.methods.submit(true);
-  }
-});
 /*
-Setup the nav global variable for the nav "block"
-
-1. we request tell bind what the id is
-2. then where to get it's config from the server
-
+Setup the global variable nav
+this is attached to the DOM element with the id of the first parameter
+the "base" configuration is loaded from the second parameter
+prefix all template request with the third parameter
+prefix all models request with the fourth parameter
 */
 var nav = new orangeBinder('nav');
+/* setup the nav block defaults */
+
 nav.config.alter({
   nav: {
     open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/" target="_top">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
@@ -3141,13 +3159,14 @@ nav.config.alter({
     }
   }
 });
-/* for any page request use the same model and template */
+/* for ANY page request use the same model */
 
 nav.router.alter("(.*)", function () {
   nav.load.model("/get/navModel", function () {
     nav.methods.updateBootstrapNav();
   });
 });
+/* reuseable methods to build a bootstrap navigation */
 
 nav.methods.updateBootstrapNav = function () {
   let html = nav.config.nav.open;

@@ -329,7 +329,7 @@
 
 })(jQuery, window);
 
-$('body').on('tiny-bind-bound', function () {
+$('body').on('orange::bind-bind', function () {
 	$('.table-sticky-header').stickyTableHeaders({
 		marginTop: $('.navbar-fixed-top')
 	});

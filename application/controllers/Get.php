@@ -8,7 +8,7 @@ class Get extends CI_Controller
 	/* default empty */
 	public function index(): void
 	{
-		$this->load->view('index.html');
+		$this->load->view('index');
 	}
 
 	/* get binable template */

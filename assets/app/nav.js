@@ -1,13 +1,13 @@
 /*
-Setup the nav global variable for the nav "block"
-
-1. we request tell bind what the id is
-2. then where to get it's config from the server
-
+Setup the global variable nav
+this is attached to the DOM element with the id of the first parameter
+the "base" configuration is loaded from the second parameter
+prefix all template request with the third parameter
+prefix all models request with the fourth parameter
 */
-
 var nav = new orangeBinder('nav');
 
+/* setup the nav block defaults */
 nav.config.alter({
 	nav: {
 		open: '<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a appNavigate class="navbar-brand" href="/" target="_top">O</a></div><div id="navbar" class="navbar-collapse collapse"><ul class="nav navbar-nav">',
@@ -23,13 +23,14 @@ nav.config.alter({
 	}
 });
 
-/* for any page request use the same model and template */
+/* for ANY page request use the same model */
 nav.router.alter("(.*)", function () {
 	nav.load.model("/get/navModel", function () {
 		nav.methods.updateBootstrapNav();
 	});
 });
 
+/* reuseable methods to build a bootstrap navigation */
 nav.methods.updateBootstrapNav = function () {
 	let html = nav.config.nav.open;
 

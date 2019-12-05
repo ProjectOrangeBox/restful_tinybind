@@ -43,7 +43,7 @@
 							console.log('#' + this.app.id + ' router::match::matched', parameters, this.routes[key].re.toString());
 						}
 
-						this.app.trigger('orange-route-matched', [key, this.routes[key], parameters]);
+						this.app.trigger('orange::router-matched', [key, this.routes[key], parameters]);
 
 						/* remove matched url  */
 						parameters.shift();
@@ -133,7 +133,7 @@
 			if (orangeRouter._url != url) {
 				orangeRouter._url = url;
 
-				orangeRouter.app.trigger('orange-route-changed', [url]);
+				orangeRouter.app.trigger('orange::router-changed', [url]);
 
 				orangeRouter.match(url);
 			}
@@ -149,7 +149,7 @@
 			}
 
 			/* trigger a redirect so other javascript code knows we are redirecting */
-			this.app.trigger('orange-router-navgate', [url, redirect]);
+			this.app.trigger('orange::router-navgate', [url, redirect]);
 
 			if (redirect) {
 				/* full page reload so trigger wouldn't even be picked up */

@@ -152,7 +152,7 @@ class orangeBinder {
 	set(data, settable) {
 		settable = settable || this.config.settable;
 
-		this.trigger('orange-bind-set', [data, settable]);
+		this.trigger('orange::bind-set', [data, settable]);
 
 		for (let index in settable) {
 			let key = settable[index];
@@ -217,13 +217,13 @@ class orangeBinder {
 			collection[key] = typeof this[key].collect === "function" ? this[key].collect() : this[key];
 		}
 
-		this.trigger('orange-bind-get', [collection, gettable]);
+		this.trigger('orange::bind-get', [collection, gettable]);
 
 		return collection;
 	}
 
 	html(html) {
-		this.trigger('orange-bind-html', [html]);
+		this.trigger('orange::bind-html', [html]);
 
 		this.element().innerHTML = html;
 	}
@@ -248,7 +248,7 @@ class orangeBinder {
 			this.bound = undefined;
 		}
 
-		this.trigger("tiny-bind-unbound");
+		this.trigger("orange-bind-unbind");
 
 		return this;
 	}
@@ -268,7 +268,7 @@ class orangeBinder {
 			page: this.page
 		});
 
-		this.trigger("tiny-bind-bound");
+		this.trigger("orange-bind-bind");
 
 		return this;
 	}

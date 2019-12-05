@@ -128,9 +128,9 @@ var BoundTableSearch = {
 	},
 };
 
-$('body').on('tiny-bind-bound', function () {
+$('body').on('orange::bind-bind', function () {
 	BoundTableSearch.init();
 });
-$('body').on('tiny-bind-unbound', function () {
+$('body').on('orange::bind-unbind', function () {
 	BoundTableSearch.uninit();
 });
