@@ -273,6 +273,7 @@ app.methods.alter({
 			}
 		});
 
+		/* make the ajax request */
 		app.request[method](action, data);
 	}
 });
