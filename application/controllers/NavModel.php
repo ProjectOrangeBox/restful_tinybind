@@ -1,6 +1,6 @@
 <?php
 
-class GetNavModel extends CI_Controller
+class NavModel extends CI_Controller
 {
 	/* Get the nav model data */
 	public function index(): void

@@ -2,7 +2,7 @@
 
 class Template extends CI_Controller
 {
-	protected $superStorageCacheSeconds = 6000;
+	protected $cacheFor = 6000;
 
 	/* Request a Block Template */
 	public function _remap(): void
@@ -16,7 +16,7 @@ class Template extends CI_Controller
 
 		/* simple clean up */
 		$this->restful
-			->template($this->load->view($template, [], true), $this->superStorageCacheSeconds)
+			->template($this->load->view($template, [], true), $this->cacheFor)
 			->send(200);
 	}
 } /* end class */

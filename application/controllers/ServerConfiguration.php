@@ -2,7 +2,7 @@
 
 class ServerConfiguration extends CI_Controller
 {
-	protected $superStorageCacheSeconds = 6000;
+	protected $flushOlderThan = 6000;
 	protected $cache = false;
 
 	/**
@@ -14,7 +14,7 @@ class ServerConfiguration extends CI_Controller
 	{
 		$this->restful
 			->config('clearCache', !$this->cache) /* clear ALL cached records */
-			->config('olderThanCache', $this->superStorageCacheSeconds) /* in production clear records older than (this way if you need to flush out old records you can without new records being deleted */
+			->config('olderThanCache', $this->flushOlderThan) /* in production clear records older than (this way if you need to flush out old records you can without new records being deleted */
 			->send(200);
 	}
 } /* end class */

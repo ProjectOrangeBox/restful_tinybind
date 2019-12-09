@@ -3195,7 +3195,7 @@ nav.config.alter({
 /* for ANY page request use the same model */
 
 nav.router.alter("(.*)", function () {
-  nav.load.model("/GetNavModel", function () {
+  nav.load.model("/NavModel", function () {
     nav.methods.updateBootstrapNav();
   });
 });
